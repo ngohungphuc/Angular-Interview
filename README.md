@@ -166,23 +166,33 @@
     Het host-element is het custom HTML-element dat bij de selector van je component hoort (bijvoorbeeld <app-basis>). Je kunt styling toepassen op dit buitenste element of er events aan koppelen met de :host pseudo-selector in je CSS, of via de decorator-optie host: { ... }.
 
 23. Wat is de rol van zone.js in traditionele Change Detection?
+
     zone.js is een bibliotheek die alle asynchrone taken in de browser (zoals setTimeout, clicks en HTTP-verzoeken) onderschept ("monkey-patched"). Zodra zo'n taak klaar is, activeert zone.js automatisch Angular's veranderingsdetectie om te kijken of de UI moet worden bijgewerkt.
     Opmerking (2026): Met de komst van Angular Signals is het nu mogelijk om applicaties volledig Zoneless te draaien, wat leidt tot betere prestaties en kleinere bundels.
+
 24. Wat is het verschil tussen Angular pakketten (@angular/core, @angular/common, enz.)?
+
     @angular/core: Bevat de absolute kernfunctionaliteiten zoals decorators (@Component), lifecycle hooks en het dependency injection systeem.
     @angular/common: Bevat basisonderdelen die je in templates gebruikt, zoals de ingebouwde pipes (DatePipe, CurrencyPipe) en directives.
+
 25. Wat is de compiler-optie strict in een Angular project?
+
     Wanneer strict: true staat ingeschakeld in tsconfig.json, dwingt de TypeScript-compiler strenge regels af. Dit omvat onder andere strictNullChecks (variabelen mogen niet stiekem null of undefined zijn) en type-veiligheid voor component-templates. Dit voorkomt veelvoorkomende runtime-fouten in productie.
 
 ## TypeScript en Architectuur (26-50)
 
 26. Waarom dwingt Angular het gebruik van TypeScript af in plaats van pure ES6?
+
     TypeScript biedt compile-time type-checking en ondersteuning voor geavanceerde objectgeoriënteerde concepten zoals interfaces, abstracte klassen en decorators. Dit stelt Angular in staat om dependency injection (DI) op basis van types te implementeren en zorgt ervoor dat fouten in grote bedrijfsapplicaties direct tijdens het typen worden opgevangen in plaats van live bij de eindgebruiker.
+
 27. Wat is het verschil tussen een Interface en een Type alias in Angular?
+
     Beide definiëren de vorm van een object, maar er zijn structurele verschillen:
     Interface: Is uitbreidbaar via overerving (extends) en ondersteunt declaration merging (als je twee interfaces met dezelfde naam declareert, worden ze samengevoegd). Ideaal voor datamodellen van API's.
     Type: Is flexibeler en kan worden gebruikt voor union types (type Status = 'open' | 'closed'), primitives of tuples. Types kunnen na creatie niet meer worden gewijzigd of uitgebreid via declaration merging.
+
 28. Hoe gebruik je Type Assertions (as en <>) veilig in Angular-services?
+
     Type assertion vertelt de TypeScript-compiler dat jij de specifieke structuur van een variabele beter weet dan de compiler zelf. Het verandert niets aan de runtime-data. Gebruik bij voorkeur de as syntax:
 
 ```typescript
@@ -194,11 +204,13 @@ this.http.get("https://api.example.com/data").subscribe((response) => {
 ```
 
 29. Wat is de rol van de tsconfig.json en de bijbehorende sub-bestanden?
+
     tsconfig.json is de hoofdconfiguratie voor de TypeScript-compiler. Angular splitst dit op voor specifieke taken:
     tsconfig.app.json: Specifieke instellingen voor de applicatiecode (compiled voor de browser).
     tsconfig.spec.json: Configuratie voor de unit tests (bevat test-specifieke types zoals Jasmine of Vitest).
 
 30. Wat is het nut van de path mapping configuratie in een Angular workspace?
+
     Met path mapping in tsconfig.json vervang je complexe, relatieve imports (../../../../shared/services/auth) door strakke, absolute aliassen (@shared/services/auth). Dit verhoogt de leesbaarheid en voorkomt dat imports breken wanneer je een bestand verplaatst.
 
 ```json
@@ -210,21 +222,26 @@ this.http.get("https://api.example.com/data").subscribe((response) => {
 ```
 
 31. Wat zijn TypeScript Decorators en hoe gebruikt Angular ze onder de motorkap?
+
     Decorators zijn functies die beginnen met een @ en metadata toevoegen aan een klasse, methode of property. De Angular-compiler (ngc) leest deze metadata (zoals @Component of @Injectable) tijdens het build-proces om te bepalen hoe de klasse gecompileerd, geïnstantieerd en gekoppeld moet worden aan templates of services.
 
 32. Hoe implementeer je het 'Smart-Dumb Component' architectuurpatroon?
+
     Dit patroon scheidt logica van weergave:
     Smart Component (Container): Haalt data op uit services, beheert de state en communiceert met de backend.
     Dumb Component (Presentational): Heeft geen idee waar data vandaan komt. Ontvangt puur data via @Input (of moderne input()) en vuurt events af via @Output (of output()). Dit maakt dumb componenten 100% herbruikbaar.
 
 33. Wat is de 'Core' en 'Shared' mappenstructuur in een moderne Angular architectuur?
+
     Core-map: Bevat singletons (services die slechts één keer bestaan in de app), zoals authenticatie-services, HTTP-interceptors en globale configuraties.
     Shared-map: Bevat herbruikbare componenten (zoals buttons, spinners), custom directives en pipes die in meerdere feature-modules of standalone componenten gebruikt worden.
 
 34. Wat is Feature-Based Routing en hoe ondersteunt dit een schaalbare architectuur?
+
     Feature-based routing deelt de applicatie op in logische domeinen (bijv. pakket-beheer, facturatie). Elke feature heeft zijn eigen route-bestand. Hierdoor blijft de hoofdrouting compact en kunnen complete features onafhankelijk van elkaar worden ontwikkeld en door middel van lazy loading pas worden ingeladen wanneer de gebruiker erheen navigeert.
 
 35. Hoe dwing je 'Readonly Data Structures' af in TypeScript binnen Angular?
+
     Om onverwachte neveneffecten te voorkomen (side-effects waarbij een component stiekem data in een service aanpast), gebruik je het readonly keyword of de TypeScript utility Readonly<T>:
 
 ```typescript
@@ -239,6 +256,7 @@ readonly users = signal<readonly UserProfile[]>([]);
 ```
 
 36. Wat is de 'Barrel Import' techniek (index.ts)?
+
     Een barrel is een index.ts bestand dat exports uit verschillende bestanden in dezelfde map bundelt en doorgeeft. Hierdoor hoeft een externe component niet vijf losse bestanden te importeren, maar is één importregel voldoende:
 
 ```typescript
@@ -250,6 +268,7 @@ export \* from './modal.component';
 ```
 
 37. Wat zijn Utility Types en hoe pas je Partial<T> of Pick<T, K> toe?
+
     Utility types transformeren bestaande types in nieuwe varianten:
     Partial<User>: Maakt alle properties van User optioneel (handig bij het updaten van een formulier).
     Pick<User, 'email' 'id' |>: Maakt een nieuw type aan met uitsluitend de properties id en email.
@@ -263,6 +282,7 @@ return this.http.patch(`/api/users/${userId}`, changes);
 ```
 
 38. Wat is het voordeel van 'Discriminated Unions' in Angular state management?
+
     Een discriminated union combineert types die een gemeenschappelijke literal property (de discriminator) delen. Hiermee dwing je type-veiligheid af in complexe processen, zoals bij het afhandelen van API-states:
 
 ```typescript
@@ -293,6 +313,7 @@ function handleState(state: ApiState) {
 ```
 
 39. Hoe werkt de inject() functie versus Constructor Injection?
+
     Sinds Angular 14+ kun je afhankelijkheden injecteren via de inject() runtime-functie in plaats van via de constructor. Dit maakt code korter, elimineert de noodzaak voor type-duplicatie in constructors en maakt het mogelijk om herbruikbare functies (functions) te schrijven buiten klassen om.
 
 ```typescript
@@ -308,9 +329,11 @@ export class ProductComponent {
 ```
 
 40. Wat is de betekenis van Strict Property Initialization?
+
     Onder strict: true eist TypeScript dat alle niet-optionele class properties een waarde krijgen in de constructor of direct bij de declaratie. Doe je dit niet, dan krijg je een compile-fout. Je kunt dit oplossen door een beginwaarde mee te geven, het type optioneel te maken (?), of in specifieke Angular-gevallen de definite assignment assertion (!) te gebruiken als je zeker weet dat Angular de variabele later vult.
 
 41. Hoe werken TypeScript Generics (<T>) in Angular Services?
+
     Generics maken code herbruikbaar over verschillende datatypes heen zonder aan type-veiligheid in te boeten. Een typisch voorbeeld is een generieke data-service:
 
 ```typescript
@@ -330,10 +353,12 @@ export class CacheService {
 ```
 
 42. Wat is het verschil tussen de unknown en any types?
+
     any: Zet de type-checker volledig uit. Je kunt elke methode of property aanroepen op een any variabele, wat kan leiden tot runtime-crashes.
     unknown: Is de type-veilige tegenhanger van any. Je mag alles toewijzen aan unknown, maar je kunt er pas acties op uitvoeren of eigenschappen van opvragen nadat je het type expliciet hebt gecontroleerd via een type guard (zoals typeof of instanceof).
 
 43. Hoe schrijf je een Custom Type Guard in TypeScript?
+
     Een custom type guard is een functie die controleert of een object aan een specifiek interface voldoet, met behulp van de parameter is Type syntax:
 
 ```typescript
@@ -350,22 +375,28 @@ function isAdmin(gebruiker: Admin | Klant): gebruiker is Admin {
 ```
 
 44. Wat is de 'OnPush' Change Detection Strategy op architectuurniveau?
+
     Standaard controleert Angular bij elk event de gehele applicatie op wijzigingen (ChangeDetectionStrategy.Default). Door een component op ChangeDetectionStrategy.OnPush te zetten, kijkt Angular alléén naar deze component als een @Input referentie verandert, er een event vanuit de component zelf wordt afgevuurd, of als er handmatig een Signal wijzigt. Dit verbetert de prestaties van grote applicaties aanzienlijk.
 
 45. Wat is de impact van Object.freeze() versus TypeScript readonly?
+
     readonly is een puur hulpmiddel voor de TypeScript-compiler tijdens de ontwikkelfase. Zodra de code is gecompileerd naar JavaScript, verdwijnt readonly en kan het object runtime alsnog worden aangepast.
     Object.freeze() is een native JavaScript runtime-functie. Het bevriest het object daadwerkelijk in de browser; pogingen om eigenschappen aan te passen mislukken (en gooien een foutmelding in strict mode).
 
 46. Hoe configureer en gebruik je Omgevingsvariabelen (Environments) in moderne Angular versies?
+
     In recente versies genereert Angular niet standaard een environments-map. Je maakt deze aan via ng g environments. Dit levert een environment.ts (voor dev) en environment.development.ts op. In angular.json geef je bij de productie-build aan dat het dev-bestand vervangen moet worden door de productie-variant (fileReplacements).
 
 47. Wat is 'Tree Shaking' en hoe beïnvloedt het je architectuur?
+
     Tree shaking is een optimalisatieproces tijdens de productie-build waarbij ongebruikte JavaScript-code letterlijk uit de uiteindelijke bundel wordt "geschud" (verwijderd). Standalone componenten en services met @Injectable({ providedIn: 'root' }) zijn uitstekend tree-shakable: als je ze nergens importeert, belanden ze niet in de code van de eindgebruiker.
 
 48. Wat is het gevaar van circulaire afhankelijkheden (Circular Dependencies)?
+
     Een circulaire afhankelijkheid ontstaat wanneer Klasse A Klasse B importeert, en Klasse B op haar beurt direct of indirect weer Klasse A importeert. Dit leidt tot runtime-fouten waarbij variabelen onverwacht undefined zijn, omdat de runtime de volgorde van initialisatie niet kan bepalen. De CLI waarschuwt je hier gelukkig voor tijdens het builden.
 
 49. Wat is de rol van Enum types en wat is het alternatief (Union Types)?
+
     Enums definiëren een set benoemde constanten. Hoewel ze handig zijn, genereren ze extra JavaScript-code na compilatie. Een lichter en in Angular veelgebruikt alternatief zijn String Literal Union Types, die puur in TypeScript bestaan en nul overhead opleveren:
 
 ```typescript
@@ -380,19 +411,23 @@ export type RolType = "ADMIN" | "USER";
 ```
 
 50. Hoe ga je architectonisch om met API-foutafhandeling middels TypeScript types?
+
     In plaats van overal in de UI losse try-catch blokken te schrijven, structureer je foutafhandeling centraal in services of interceptors. Je kunt een type definiëren dat ofwel de succesvolle data, ofwel een gestructureerd error-object teruggeeft, zodat de component dwingend verplicht wordt om beide scenario's correct af te handelen.
 
 ## Components en Templates (51-75)
 
 51. Wat is de levenscyclus (Lifecycle) van een Angular Component?
+
     Een component doorloopt een reeks fases vanaf de initialisatie tot aan de vernietiging. Angular biedt hooks (omvat interfaces en methoden) waarmee je op specifieke momenten kunt ingrijpen. De belangrijkste traditionele hooks zijn: ngOnInit, ngOnChanges, ngDoCheck, ngAfterViewInit, en ngOnDestroy.
     Opmerking: In moderne Angular-versies (met Signals) verschuift de focus steeds meer naar constructoren, effect(), en de nieuwe afterNextRender en afterRender globale functies voor DOM-interacties.
 
 52. Wat is het verschil tussen ngOnInit en de constructor van een klasse?
+
     Constructor: Dit is een native TypeScript-feature. Het is uitsluitend bedoeld voor de basis-initialisatie van de klasse en het injecteren van afhankelijkheden. De component-inputs en de DOM-omgeving zijn op dit moment nog niet beschikbaar.
     ngOnInit: Dit is een Angular lifecycle hook. Deze vuurt zodra Angular klaar is met het initialiseren van de data-bound inputs van de component. Dit is dé plek om API-aanroepen te starten of initiële logica uit te voeren op basis van inputs.
 
 53. Hoe werken de nieuwe Signal-gebaseerde Inputs (input())?
+
     In plaats van de traditionele @Input() decorator gebruikt modern Angular de input() macro. Dit creëert een read-only Signal van de ingekomen waarde. Dit maakt het opvangen van wijzigingen veel eenvoudiger, omdat je nu direct reactief kunt reageren via computed of effect().
 
 ```typescript
@@ -416,6 +451,7 @@ export class UserCardComponent {
 ```
 
 54. Wat is de betekenis en werking van de nieuwe output() macro?
+
     De output() macro vervangt de traditionele @Output() decorator en EventEmitter. Het werkt lichter en biedt betere type-veiligheid onder de motorkap.
 
 ```typescript
@@ -437,6 +473,7 @@ export class AlertComponent {
 ```
 
 55. Wat is Two-Way Data Binding met de nieuwe model() functie?
+
     Voorheen moest je two-way binding opzetten met een combinatie van @Input() en @Output() (volgens het banana-in-a-box [(prop)] patroon). Nu biedt Angular de model() macro. Dit creëert een Signal dat zowel gelezen kan worden door de component, als rechtstreeks gemuteerd kan worden door zowel de ouder- als de kind-component.
 
 ```typescript
@@ -448,6 +485,7 @@ checked = model(false); // Maakt een read-write signal aan
 ```
 
 56. Hoe werkt de nieuwe @let syntax in Angular templates?
+
     De @let syntax stelt je in staat om direct in je HTML-template lokale variabelen te declareren. Dit is ideaal om complexe expressies, herhaalde Signal-aanroepen of het resultaat van een async pipe op te slaan, zonder dat je daarvoor onnodige wrapper-elementen (zoals <ng-container>) hoeft te introduceren.
 
 ```html
@@ -465,6 +503,7 @@ checked = model(false); // Maakt een read-write signal aan
 ```
 
 57. Wat is @defer en hoe revolutioneert dit het laden van componenten?
+
     De @defer control flow syntax maakt Deferrable Views mogelijk. Hiermee kun je zware componenten, directives of pipes in je template automatisch lazy-loaden (uitgesteld inladen) op basis van specifieke condities of gebruikersinteracties (zoals scrollen, swipen of hoveren). Dit verlaagt de initiële laadtijd van je pagina gigantisch.
 
 ```html
@@ -482,6 +521,7 @@ checked = model(false); // Maakt een read-write signal aan
 ```
 
 58. Welke pre-built triggers ondersteunt de @defer syntax?
+
     De @defer syntax ondersteunt krachtige ingebouwde condities:
     on idle: Laadt de component zodra de browser in ruststand is (standaardgedrag).
     on viewport: Laadt zodra het placeholder-element in beeld scrollt.
@@ -489,12 +529,16 @@ checked = model(false); // Maakt een read-write signal aan
     on hover: Laadt zodra de muis over de placeholder beweegt.
     on timer(5s): Laadt na een vertraging van 5 seconden.
     when conditie: Een custom boolean expressie of Signal.
+
 59. Wat is het verschil tussen View Encapsulation modi: Emulated, ShadowDom en None?
+
     View Encapsulation bepaalt hoe stijlen (CSS) van een component worden geïsoleerd:
     Emulated (Standaard): Angular hernoemt je CSS-classes onder de motorkap door er unieke attributen aan te geven (bijv. \_ngcontent-c1). Hierdoor lekt de CSS niet naar andere componenten.
     ShadowDom: Maakt gebruik van de native Shadow DOM-functionaliteit van de browser. Het isoleert de component volledig in een eigen web component capsule.
     None: CSS wordt globaal toegepast. De stijlen van deze component kunnen de rest van de hele applicatie beïnvloeden.
+
 60. Hoe selecteer en manipuleer je elementen met viewChild() en viewChildren()?
+
     In plaats van de oude @ViewChild decorator gebruikt modern Angular de signaal-gebaseerde functies viewChild() en viewChildren(). Dit geeft een Signal terug dat het gezochte element bevat, wat veel betere integratie biedt met het reactieve systeem.
 
 ```typescript
@@ -519,6 +563,7 @@ export class FocusComponent {
 ```
 
 61. Wat is Content Projection en hoe gebruik je <ng-content>?
+
     Content Projection stelt je in staat om HTML of andere componenten van buitenaf in een component te injecteren (vergelijkbaar met children in React). Je gebruikt <ng-content> als placeholder in de template van het ontvangende component.
 
 ```html
@@ -535,13 +580,20 @@ export class FocusComponent {
 ```
 
 62. Wat is het verschil tussen contentChild() en viewChild()?
+
     viewChild(): Zoekt naar elementen of kind-componenten die direct in de eigen template van de component staan.
     contentChild(): Zoekt naar elementen die via Content Projection (<ng-content>) vanuit een ouder-component tussen de tags van deze component zijn geplaatst.
+
 63. Wat is de functie van <ng-template>?
+
     <ng-template> definieert een stuk HTML-code dat niet direct door Angular wordt gerenderd. Het fungeert als een blauwdruk. Je kunt het dynamisch tonen met behulp van structurele logica, @defer blokken of via code met een ViewContainerRef.
+
 64. Wat is het nut van <ng-container>?
+
     <ng-container> is een logische groeperingstag die zelf niet in de uiteindelijke HTML-DOM terechtkomt. Dit is uiterst nuttig als je styling-neutraal logica wilt toepassen, of als je meerdere elementen wilt groeperen zonder de HTML-structuur te vervuilen met overbodige <div> elementen.
+
 65. Wat is een 'Template Reference Variable' en hoe gebruik je deze?
+
     Met een hashtag (#naam) kun je een referentie naar een specifiek DOM-element of een Angular-component rechtstreeks in je HTML aanmaken. Je kunt deze variabele vervolgens elders in dezelfde template gebruiken.
 
 ```html
@@ -553,6 +605,7 @@ export class FocusComponent {
 ```
 
 66. Hoe werkt de :host selector in component-styling?
+
     De :host pseudo-class selector wordt gebruikt om de buitenkant (het omhullende HTML-element) van de component zelf te stylen.
 
 ```css
@@ -572,6 +625,7 @@ border-color: green;
 ```
 
 67. Wat doet de :host-context() selector?
+
     Met :host-context() kun je de component stylen op basis van een conditie buiten de component. Het zoekt naar een specifieke class of attribuut in de voorouders (parent elementen) van de component. Dit is ideaal voor het implementeren van dark-mode of theming.
 
 ```css
@@ -599,9 +653,11 @@ border-color: green;
 ```
 
 68. Waarom mag je de DOM niet direct manipuleren via native JavaScript (document.querySelector)?
+
     Directe DOM-manipulatie omzeilt Angular's Change Detection en het abstractieniveau van het framework. Dit kan leiden tot visuele bugs, security-risico's (XSS) en zorgt ervoor dat je applicatie crasht als je deze probeert te draaien in Server-Side Rendering (SSR) omgevingen waar document simpelweg niet bestaat. Gebruik in plaats daarvan template bindings of de Renderer2 API.
 
 69. Wat is de taak van de Renderer2 service?
+
     Renderer2 is een ingebouwde Angular service die een veilige abstractielaag biedt voor het manipuleren van DOM-elementen. Door Renderer2 te gebruiken in plaats van native methoden, blijft je code veilig voor SSR (Server-Side Rendering) en web workers.
 
 ```typescript
@@ -618,13 +674,16 @@ export class StyleDirective {
 ```
 
 70. Hoe werkt 'Event Bubbling' in Angular componenten?
+
     Net als in standaard HTML/JavaScript bubbelen events in Angular standaard omhoog door de DOM-boom. Als een gebruiker op een knop klikt in een diep geneste component, zal het click-event omhoog reizen naar alle bovenliggende elementen, tenzij je dit expliciet stopt met $event.stopPropagation().
 
 71. Wat is het verschil tussen een Component en een Directive?
+
     Component: Is een directive met een eigen template (HTML) en stijlen (CSS). Het representeert een visueel bouwblok op de pagina.
     Directive: Heeft geen template. Het wordt als attribuut toegevoegd aan een bestaand HTML-element of component om het gedrag of de weergave daarvan te veranderen of uit te breiden (bijvoorbeeld een custom scroll-gedrag).
 
 72. Hoe ga je om met asynchrone data in templates zonder de async pipe?
+
     Met de introductie van Angular Signals hoef je asynchrone RxJS streams niet meer per se met de async pipe af te handelen. Je kunt een Observable binnen je TypeScript klasse omzetten naar een Signal met de toSignal() functie. De template kan dit Signal vervolgens synchroon uitlezen.
 
 ```typescript
@@ -649,6 +708,7 @@ export class AsyncDataComponent {
 ```
 
 73. Wat is de functie van NgZone en wanneer gebruik je runOutsideAngular()?
+
     NgZone beheert de executie-context van Angular. Soms voer je zware asynchrone taken uit (zoals een intensieve animatie of een setInterval die elke milliseconde tikt) die de interface niet beïnvloeden. Om te voorkomen dat Angular continu Change Detection uitvoert en de app traag wordt, draai je die code buiten Angular:
 
 ```typescript
@@ -669,9 +729,11 @@ export class AnimatieComponent implements OnInit {
 ```
 
 74. Wat is het gevaar van geheugenlekken (Memory Leaks) in components?
+
     Wanneer een component destructs (ngOnDestroy) maar nog actieve abonnementen (.subscribe()) heeft lopen op globale services of RxJS stromen, blijft het component-object in het geheugen van de browser bestaan. Dit bouwt op termijn op en maakt de applicatie traag. Je lost dit op door over te stappen op Signals, de async pipe te gebruiken, of .unsubscribe() toe te passen.
 
 75. Hoe dwing je strikte types af voor component selectors?
+
     Je kunt de @Component selector zo configureren dat deze uitsluitend als HTML-attribuut of specifiek element gebruikt mag worden. Dit is handig voor herbruikbare componenten binnen design systems.
 
 ```typescript
@@ -686,6 +748,7 @@ export class CustomBtnComponent {}
 ## Directives en Pipes (76-95)
 
 76. Welke drie hoofdtypen Directives kent Angular?
+
     Angular kent de volgende drie categorieën directives:
     Components: Directives met een eigen, ingebouwde template (HTML) en styling (CSS).
     Attribute Directives: Veranderen het uiterlijk of het gedrag van een bestaand DOM-element, component of ingebouwde tag (bijv. NgStyle of een custom highlight-directive).
