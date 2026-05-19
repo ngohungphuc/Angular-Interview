@@ -2,7 +2,6 @@
 
 ## Summary
 
-- Topics count: 16
 - Sections:
   - Basisconcepten;
   - TypeScript en Architectuur; - Components en Templates;
@@ -109,27 +108,35 @@
     Een Angular Workspace is de mappenstructuur die wordt gegenereerd door ng new. Eén workspace kan out-of-the-box meerdere applicaties en bibliotheken (libraries) bevatten. Dit wordt geconfigureerd in angular.json onder de sectie projects.
 
 12. Wat is de rol van index.html in een Angular app?
+
     Dit is de hoofdpagina die naar de browser wordt gestuurd. Het bevat de standaard HTML-boilerplates en de root-tag (bijvoorbeeld <app-root></app-root>). Tijdens de build injecteert Angular automatisch de gegenereerde JavaScript-bundels onderaan dit bestand.
 
 13. Wat is de 'Root Component'?
+
     De Root Component (meestal AppComponent) is de allereerste component die Angular inlaadt via bootstrapApplication(). Het fungeert als de basis van de componentenboom. Alle andere componenten van je applicatie worden direct of indirect binnen deze root component getoond.
 
 14. Wat doet het commando ng update?
+
     ng update is een krachtige CLI-tool die je dependencies (zoals @angular/core en @angular/cli) bijwerkt naar de nieuwste versie. Het unieke is dat het ook automatisch schematics (scripts) uitvoert die je bestaande broncode herschrijven naar de nieuwste Angular-syntax.
 
 15. Wat is het verschil tussen een Framework en een Library?
+
     Een bibliotheek (library) roep jij aan wanneer jij dat wilt (jij hebt de controle, zoals bij React). Een framework (zoals Angular) bepaalt de architectuur en roept jóúw code aan op de momenten dat het framework dat nodig acht (Inversion of Control).
 
 16. Waarom gebruikt Angular TypeScript in plaats van regulier JavaScript?
+
     TypeScript voegt statische typering toe aan JavaScript. Dit zorgt ervoor dat fouten al tijdens het typen (in de IDE) of tijdens het compileren worden ontdekt, in plaats van pas wanneer de app crasht in de browser van de gebruiker. Daarnaast maakt het refactoring van grote codebases vele malen veiliger.
 
 17. Wat is de betekenis van poly-fills in Angular?
+
     Polyfills zijn code-scripts die ontbrekende moderne webfunctionaliteiten toevoegen aan oudere browsers. Angular regelt dit tegenwoordig grotendeels automatisch onder de motorkap via de build-engine, waardoor handmatige configuratie in polyfills.ts zelden nog nodig is.
 
 18. Wat is het doel van de map public/ (voorheen assets/)?
+
     Deze map bevat statische bestanden die ongewijzigd naar de productieomgeving moeten worden gekopieerd. Denk hierbij aan afbeeldingen, iconen, lettertypen (fonts) en lokale JSON-bestanden. Je kunt deze binnen je CSS of HTML aanroepen met relatieve paden.
 
 19. Hoe werkt de nieuwe Built-in Control Flow in Angular templates?
+
     Vanaf Angular 17 is de oude syntax met *ngIf en *ngFor vervangen door een ingebouwde, veel snellere control flow syntax die begint met een @-teken. Dit vereist geen extra imports en presteert aanzienlijk beter.
 
 ```html
@@ -147,11 +154,17 @@
 ```
 
 20. Waarom is de track property verplicht in de nieuwe @for loop?
+
     De track expressie vertelt Angular hoe unieke items in een lijst geïdentificeerd kunnen worden (bijvoorbeeld via een id). Hierdoor kan Angular bij een wijziging in de lijst puur dat ene gewijzigde DOM-element aanpassen, in plaats van de gehele lijst opnieuw te moeten renderen. Dit levert een enorme prestatiewinst op.
+
 21. Wat is de Declaratieve programmeerstijl van Angular?
+
     In plaats van dat je stap-voor-stap in code programmeert hoe de DOM moet veranderen (imperatief), beschrijf je in Angular templates wat er getoond moet worden op basis van de huidige status (declaratief). Angular zorgt er vervolgens automatisch voor dat de UI synchroon blijft met de data.
+
 22. Wat is een 'Host Element'?
+
     Het host-element is het custom HTML-element dat bij de selector van je component hoort (bijvoorbeeld <app-basis>). Je kunt styling toepassen op dit buitenste element of er events aan koppelen met de :host pseudo-selector in je CSS, of via de decorator-optie host: { ... }.
+
 23. Wat is de rol van zone.js in traditionele Change Detection?
     zone.js is een bibliotheek die alle asynchrone taken in de browser (zoals setTimeout, clicks en HTTP-verzoeken) onderschept ("monkey-patched"). Zodra zo'n taak klaar is, activeert zone.js automatisch Angular's veranderingsdetectie om te kijken of de UI moet worden bijgewerkt.
     Opmerking (2026): Met de komst van Angular Signals is het nu mogelijk om applicaties volledig Zoneless te draaien, wat leidt tot betere prestaties en kleinere bundels.
