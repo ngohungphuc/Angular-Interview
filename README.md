@@ -1380,8 +1380,8 @@ const completeData = this.form.getRawValue();
 ```typescript
 
 verwerkEnWis() {
-// Verwerk data...
-this.form.reset(); // Volledig schoonpoetsen van waarden en status
+    // Verwerk data...
+    this.form.reset(); // Volledig schoonpoetsen van waarden en status
 }
 
 ```
