@@ -806,20 +806,20 @@ export class HoverDirective {
     Je kunt de moderne input() macro gebruiken binnen een directive om parameters te accepteren. Als de selector van de directive overeenkomt met de inputnaam, kun je de directive en de waarde in één attribuut combineren.
 
 ```typescript
-
-import { Directive, input, inject, effect, ElementRef } from '@angular/core';
+import { Directive, input, inject, effect, ElementRef } from "@angular/core";
 
 @Directive({
-selector: '[appTooltip]',
-standalone: true,
-host: { '[attr.title]': 'text()' }
+  selector: "[appTooltip]",
+  standalone: true,
+  host: { "[attr.title]": "text()" },
 })
 export class TooltipDirective {
-// Inputnaam matcht de selector voor strakke HTML-syntax
-text = input.required<string>({ alias: 'appTooltip' });
+  // Inputnaam matcht de selector voor strakke HTML-syntax
+  text = input.required<string>({ alias: "appTooltip" });
 }
-Gebruik in HTML: <span appTooltip="Dit is een tip!">Hover mij</span>
 ```
+
+Gebruik in HTML: `<span appTooltip="Dit is een tip!">Hover mij</span>`
 
 80. Wat is een Structural Directive en hoe werkt het onder de motorkap?
 
@@ -1796,14 +1796,17 @@ export const routes: Routes = [
 
      Cold Observable: Begint pas met het produceren van data op het moment dat er een subscriber is. Elke subscriber krijgt zijn eigen, unieke datastroom vanaf het begin te zien (bijv. een HttpClient request).
      Hot Observable: Produceert data onafhankelijk van het aantal subscribers. De databron leeft buiten de observable (bijv. muisbewegingen of een live websocket). Nieuwe subscribers horen de stroom pas vanaf het moment dat ze aanhaken en missen eerdere emissies.
+
 159. Wat is de rol van een Subject en hoe verschilt deze van een reguliere Observable?
 
      Een reguliere Observable is uitsluitend unicast (één producer per subscriber) en passief (je kunt er van buitenaf geen data in duwen). Een Subject is een speciale variant die zowel een Observable (je kunt erop subscriben) als een Observer (je kunt er data in duwen met .next()) is. Bovendien is een Subject multicast: hij deelt één enkele executie met meerdere subscribers tegelijk.
+
 160. Wat zijn de specifieke verschillen tussen Subject, BehaviorSubject en ReplaySubject?
 
      Subject: Heeft geen beginwaarde. Subscribers ontvangen alleen waarden die na hun inschrijving worden uitgezonden.
      BehaviorSubject: Vereist een verplichte beginwaarde. Nieuwe subscribers krijgen direct bij inschrijving de allerlaatste uitgezonden waarde (of de beginwaarde) te horen. Je kunt de huidige waarde ook synchroon opvragen via .value.
      ReplaySubject: Onthoudt een specifiek aantal oude waarden (buffer). Nieuwe subscribers krijgen direct die set aan historische waarden om de oren, ongeacht hoe lang geleden ze zijn uitgezonden.
+
 161. Wat doet de pipe() functie in RxJS?
 
      De pipe() functie is de montagestroomlijn van je datastroom. Het stelt je in staat om pure functies (operators) achter elkaar te schakelen om de data stap voor stap te transformeren, filteren of combineren voordat deze de uiteindelijke subscriber bereikt.
@@ -2095,6 +2098,7 @@ export class ChecklistComponent {
      dirty: De gebruiker heeft de waarde in het veld wél actief aangepast.
      untouched: De gebruiker heeft nog niet in het veld geklikt (en er weer uit geklikt).
      touched: Het veld heeft de focus verloren (blur event). De gebruiker is er dus in geweest en weer uit gegaan.
+
 184. Hoe kun je de performance van grote formulieren optimalisieren met updateOn?
 
      Standaard valideert en streamt Angular elke wijziging bij elke toetsaanslag (change). Bij gigantische formulieren of zware asynchrone validatie kan dit voor vertraging zorgen. Je kunt dit gedrag per control of per groep aanpassen naar 'blur' (valideer pas zodra de gebruiker het veld verlaat) of 'submit' (valideer pas bij het verzenden).
@@ -2198,10 +2202,9 @@ return this.http.get<Product[]>('/api/producten', { params });
      Bij een POST-verzoek geef je de data-body mee als het tweede argument. Angular herkent objecten automatisch en converteert ze onder de motorkap direct naar een geldige JSON-string, waarbij de HTTP-header Content-Type: application/json automatisch wordt klaargezet.
 
 ```typescript
-
 voegProductToe(nieuwProduct: Product): Observable<Product> {
-// Tweede argument is de payload/body
-return this.http.post<Product>('/api/producten', nieuwProduct);
+   // Tweede argument is de payload/body
+  return this.http.post<Product>('/api/producten', nieuwProduct);
 }
 ```
 
@@ -2724,9 +2727,11 @@ Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nu
      on idle: Vuurt automatisch zodra de browser klaar is met de initiële taken (via requestIdleCallback). Dit is de standaardtrigger.
      on interaction: Vuurt wanneer de gebruiker klikt of typt in het placeholder-gebied.
      on hover: Vuurt zodra de muis van de gebruiker over het placeholder-gebied beweegt.
+
 226. Wat is Cross-Site Scripting (XSS) en hoe beschermt Angular je hier standaard tegen?
 
      XSS is een kwetsbaarheid waarbij kwaadwillende scripts in een vertrouwde website worden geïnjecteerd. Angular beschermt je hiertegen door alle waarden die via databinding ({{ waarde }} of [innerHtml]) in de DOM worden geplaatst, automatisch te sanitizen (opschonen). Potentieel gevaarlijke HTML-, CSS- of script-tags worden geneutraliseerd voordat ze worden gerenderd.
+
 227. Hoe omzeil je bewust Angular's ingebouwde XSS-beveiliging met de DomSanitizer?
 
      Als je expliciet vertrouwde code (zoals een ingesloten YouTube iFrame of vertrouwde HTML uit een CMS) moet tonen, kun je Angular's sanitization passeren met de DomSanitizer service. Gebruik dit uiterst voorzichtig.
