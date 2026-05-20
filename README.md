@@ -1325,9 +1325,9 @@ export const wachtwoordenMatchenValidator: ValidatorFn = (
 ```typescript
 
 wijzigNaarVerplicht() {
-const veld = this.form.get('bedrijfsnaam');
-veld?.setValidators([Validators.required]);
-veld?.updateValueAndValidity(); // Cruciale stap!
+    const veld = this.form.get('bedrijfsnaam');
+    veld?.setValidators([Validators.required]);
+    veld?.updateValueAndValidity(); // Cruciale stap!
 }
 ```
 
