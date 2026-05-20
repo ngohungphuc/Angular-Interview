@@ -1313,9 +1313,10 @@ export const wachtwoordenMatchenValidator: ValidatorFn = (
 114. Wat doet de optie updateOn en welke drie modi kent het?
 
      De updateOn optie bepaalt op welk moment Angular de validatie en de status-updates van een formulier of veld uitvoert. Je kunt dit configureren bij het aanmaken van een control:
-     'change' (Standaard): Valideert direct bij elke toetsaanslag.
-     'blur': Voert de validatie pas uit zodra de gebruiker uit het invoerveld klikt. Ideaal om flikkerende foutmeldingen tijdens het typen te voorkomen.
-     'submit': Valideert pas op het moment dat de gebruiker het formulier verstuurt.
+
+- 'change' (Standaard): Valideert direct bij elke toetsaanslag.
+- 'blur': Voert de validatie pas uit zodra de gebruiker uit het invoerveld klikt. Ideaal om flikkerende foutmeldingen tijdens het typen te voorkomen.
+- 'submit': Valideert pas op het moment dat de gebruiker het formulier verstuurt.
 
 115. Hoe kun je programmatisch validatieregels dynamisch toevoegen of slopen?
 
