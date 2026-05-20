@@ -1463,10 +1463,10 @@ export class EditorComponent {
 130. Hoe werken de DI Resolution Modifiers (@Optional, @Self, @SkipSelf, @Host) met inject()?
 
      Resolution modifiers veranderen de manier waarop Angular door de hiërarchie zoekt naar een service. In moderne code geef je deze mee als opties-object aan de inject() functie:
-     optional: true: Voorkomt een crash als de service niet bestaat; geeft null terug.
-     self: true: Zoekt alleen in de injector van de component zelf, niet daarboven.
-     skipSelf: true: Slaat de eigen injector over en begint direct te zoeken bij de ouders.
-     host: true: Zoekt tot en met het host-element van de huidige component.
+     - optional: true: Voorkomt een crash als de service niet bestaat; geeft null terug.
+     - self: true: Zoekt alleen in de injector van de component zelf, niet daarboven.
+     - skipSelf: true: Slaat de eigen injector over en begint direct te zoeken bij de ouders.
+     - host: true: Zoekt tot en met het host-element van de huidige component.
 
 ```typescript
 // Voorbeeld met moderne modifiers
