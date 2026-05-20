@@ -1508,10 +1508,10 @@ export class ApiService {
 133. Wat is het verschil tussen useClass, useValue, useExisting en useFactory?
 
      Dit zijn de vier manieren (provider-strategieën) om een token te koppelen aan een concrete waarde:
-     useClass: Vertelt Angular om een nieuwe instantie van een opgegeven klasse aan te maken.
-     useValue: Koppelt het token aan een statische, kant-en-klare waarde (zoals een configuratie-object).
-     useExisting: Maakt een alias aan naar een ander, reeds geregistreerd token.
-     useFactory: Gebruikt een op maat gemaakte functie om de waarde dynamisch te berekenen. Perfect voor scenario's waarbij je eerst parameters moet controleren.
+     - useClass: Vertelt Angular om een nieuwe instantie van een opgegeven klasse aan te maken.
+     - useValue: Koppelt het token aan een statische, kant-en-klare waarde (zoals een configuratie-object).
+     - useExisting: Maakt een alias aan naar een ander, reeds geregistreerd token.
+     - useFactory: Gebruikt een op maat gemaakte functie om de waarde dynamisch te berekenen. Perfect voor scenario's waarbij je eerst parameters moet controleren.
 
 134. Hoe implementeer je de useFactory provider met dependencies?
 
