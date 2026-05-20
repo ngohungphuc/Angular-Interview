@@ -332,7 +332,7 @@ export class ProductComponent {
 
     Onder strict: true eist TypeScript dat alle niet-optionele class properties een waarde krijgen in de constructor of direct bij de declaratie. Doe je dit niet, dan krijg je een compile-fout. Je kunt dit oplossen door een beginwaarde mee te geven, het type optioneel te maken (?), of in specifieke Angular-gevallen de definite assignment assertion (!) te gebruiken als je zeker weet dat Angular de variabele later vult.
 
-41. Hoe werken TypeScript Generics (<T>) in Angular Services?
+41. Hoe werken TypeScript Generics (`<T>`) in Angular Services?
 
     Generics maken code herbruikbaar over verschillende datatypes heen zonder aan type-veiligheid in te boeten. Een typisch voorbeeld is een generieke data-service:
 
@@ -486,7 +486,7 @@ checked = model(false); // Maakt een read-write signal aan
 
 56. Hoe werkt de nieuwe @let syntax in Angular templates?
 
-    De @let syntax stelt je in staat om direct in je HTML-template lokale variabelen te declareren. Dit is ideaal om complexe expressies, herhaalde Signal-aanroepen of het resultaat van een async pipe op te slaan, zonder dat je daarvoor onnodige wrapper-elementen (zoals <ng-container>) hoeft te introduceren.
+    De @let syntax stelt je in staat om direct in je HTML-template lokale variabelen te declareren. Dit is ideaal om complexe expressies, herhaalde Signal-aanroepen of het resultaat van een async pipe op te slaan, zonder dat je daarvoor onnodige wrapper-elementen (zoals `<ng-container>`) hoeft te introduceren.
 
 ```html
 @let gebruikersNaam = profiel().naam.voornaam;
@@ -508,7 +508,6 @@ checked = model(false); // Maakt een read-write signal aan
 
 ```html
 @defer (on viewport) {
-
 <!-- Deze component wordt pas gedownload en getoond zodra hij in het scherm scrollt -->
 <app-zware-grafiek />
 } @placeholder {
@@ -582,7 +581,7 @@ export class FocusComponent {
 62. Wat is het verschil tussen contentChild() en viewChild()?
 
     viewChild(): Zoekt naar elementen of kind-componenten die direct in de eigen template van de component staan.
-    contentChild(): Zoekt naar elementen die via Content Projection (<ng-content>) vanuit een ouder-component tussen de tags van deze component zijn geplaatst.
+    contentChild(): Zoekt naar elementen die via Content Projection (`<ng-content>`) vanuit een ouder-component tussen de tags van deze component zijn geplaatst.
 
 63. Wat is de functie van <ng-template>?
 
@@ -897,26 +896,27 @@ export class CustomInputComponent {}
     Een custom pipe implementeert de transform methode. Hier is een voorbeeld dat tekst inkort (truncate):
 
 ```typescript
-
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-name: 'truncate',
-standalone: true,
-pure: true // Standaard gedrag, maar goed om expliciet te vermelden
+  name: "truncate",
+  standalone: true,
+  pure: true, // Standaard gedrag, maar goed om expliciet te vermelden
 })
 export class TruncatePipe implements PipeTransform {
-transform(value: string, limit = 20, suffix = '...'): string {
-if (!value) return '';
-return value.length > limit ? value.substring(0, limit) + suffix : value;
+  transform(value: string, limit = 20, suffix = "..."): string {
+    if (!value) return "";
+    return value.length > limit ? value.substring(0, limit) + suffix : value;
+  }
 }
-}
-Gebruik: {{ langeTekst | truncate:30:'...' }}
 ```
+
+Gebruik
+`{{ langeTekst | truncate:30:'...' }}`
 
 86. Waarom is het aanroepen van functies in een template een anti-patroon, en hoe lossen Pipes dit op?
 
-    Wanneer je een functie aanroept in een template binding (<p>{{ berekenTotaal(item) }}</p>), wordt deze functie bij elke Change Detection cyclus opnieuw uitgevoerd. Angular weet namelijk niet of de uitkomst van de functie veranderd is. Een Pure Pipe lost dit op doordat Angular de transformatie cachet; zolang de inputreferentie van item niet wijzigt, slaat Angular de executie over en hergebruikt de oude waarde.
+    Wanneer je een functie aanroept in een template binding `<p>{{ berekenTotaal(item) }}</p>`, wordt deze functie bij elke Change Detection cyclus opnieuw uitgevoerd. Angular weet namelijk niet of de uitkomst van de functie veranderd is. Een Pure Pipe lost dit op doordat Angular de transformatie cachet; zolang de inputreferentie van item niet wijzigt, slaat Angular de executie over en hergebruikt de oude waarde.
 
 87. Wat is het doel en de werking van de ingebouwde AsyncPipe?
 
@@ -925,6 +925,20 @@ Gebruik: {{ langeTekst | truncate:30:'...' }}
 88. Hoe verhoudt de AsyncPipe zich tot Angular Signals?
 
     Met de komst van Signals is de noodzaak voor de AsyncPipe drastisch verminderd. In plaats van een Observable met een async pipe in de template te hangen, converteren we Observables in de TypeScript klasse vaak direct naar Signals via toSignal(). Hierdoor blijft de template synchroon en vrij van RxJS-syntaxis.
+
+    ```ts
+    import { toSignal } from "@angular/core/rxjs-interop";
+
+    users = toSignal(this.userService.getUsers(), {
+      initialValue: [],
+    });
+    ```
+
+    ```html
+    @for (user of users(); track user.id) {
+    <li>{{ user.name }}</li>
+    }
+    ```
 
 89. Wat doet de ingebouwde KeyValuePipe?
 
@@ -1441,7 +1455,7 @@ export class EditorComponent {
 
 129. Wat is de rol van viewProviders in een component?
 
-     viewProviders lijkt sterk op providers, maar met een belangrijk verschil in bereik (scope). Services die in viewProviders zijn gedefinieerd, zijn uitsluitend beschikbaar voor de elementen in de eigen template van de component. Ze zijn onzichtbaar voor componenten of HTML die via Content Projection (<ng-content>) van buitenaf in de component zijn geprojecteerd.
+     viewProviders lijkt sterk op providers, maar met een belangrijk verschil in bereik (scope). Services die in viewProviders zijn gedefinieerd, zijn uitsluitend beschikbaar voor de elementen in de eigen template van de component. Ze zijn onzichtbaar voor componenten of HTML die via Content Projection (`<ng-content>`) van buitenaf in de component zijn geprojecteerd.
 
 130. Hoe werken de DI Resolution Modifiers (@Optional, @Self, @SkipSelf, @Host) met inject()?
 
