@@ -1143,16 +1143,17 @@ export class HobbysComponent {
 
 103. Wat is het verschil tussen setValue() en patchValue()?
 
-     setValue(): Dwingt je om de structuur van het volledige formulier exact te vullen. Als je één sleutel (key) weglaat of te veel meegeeft, gooit Angular direct een runtime error. Veilig voor complete updates.
-     patchValue(): Staat je toe om slechts een subset (een deel) van de formulierwaarden te updaten. Velden die je weglaat in het object worden simpelweg overgeslagen en behouden hun huidige waarde.
+- setValue(): Dwingt je om de structuur van het volledige formulier exact te vullen. Als je één sleutel (key) weglaat of te veel meegeeft, gooit Angular direct een runtime error. Veilig voor complete updates.
+- patchValue(): Staat je toe om slechts een subset (een deel) van de formulierwaarden te updaten. Velden die je weglaat in het object worden simpelweg overgeslagen en behouden hun huidige waarde.
 
 104. Wat betekenen de statussen pristine, dirty, untouched en touched?
 
-     Dit zijn booleans die Angular op elk formulierelement bijhoudt om interactie te tracken:
-     pristine: De gebruiker heeft de waarde van het veld nog niet aangepast.
-     dirty: De gebruiker heeft de waarde wel aangepast.
-     untouched: De gebruiker heeft nog niet in het veld geklikt en er daarna buiten geklikt (geen blur event).
-     touched: De gebruiker heeft het element wel bezocht en verlaten. Ideaal om pas validatiefouten te tonen als de gebruiker klaar is met typen.
+Dit zijn booleans die Angular op elk formulierelement bijhoudt om interactie te tracken:
+
+- pristine: De gebruiker heeft de waarde van het veld nog niet aangepast.
+- dirty: De gebruiker heeft de waarde wel aangepast.
+- untouched: De gebruiker heeft nog niet in het veld geklikt en er daarna buiten geklikt (geen blur event).
+- touched: De gebruiker heeft het element wel bezocht en verlaten. Ideaal om pas validatiefouten te tonen als de gebruiker klaar is met typen.
 
 105. Hoe schrijf je een Custom Synchrone Validator voor Reactive Forms?
 
@@ -1237,10 +1238,10 @@ formulierWaarde = toSignal(this.loginForm.valueChanges, {
 
 111. Welke vier methoden moet een klasse implementeren voor ControlValueAccessor?
 
-     writeValue(value: any): Wordt door Angular aangeroepen om de waarde vanuit de code naar de UI van jouw component te pushen.
-     registerOnChange(fn: any): Geeft je een callback-functie die jij moet aanroepen zodra de gebruiker de waarde in jouw UI aanpast.
-     registerOnTouched(fn: any): Geeft je een callback die je moet aanroepen zodra de gebruiker interactie heeft gehad met de component (blur).
-     setDisabledState(isDisabled: boolean): (Optioneel) Wordt aangeroepen wanneer Angular de status van het formulierveld verandert naar disabled of enabled.
+- writeValue(value: any): Wordt door Angular aangeroepen om de waarde vanuit de code naar de UI van jouw component te pushen.
+- registerOnChange(fn: any): Geeft je een callback-functie die jij moet aanroepen zodra de gebruiker de waarde in jouw UI aanpast.
+- registerOnTouched(fn: any): Geeft je een callback die je moet aanroepen zodra de gebruiker interactie heeft gehad met de component (blur).
+- setDisabledState(isDisabled: boolean): (Optioneel) Wordt aangeroepen wanneer Angular de status van het formulierveld verandert naar disabled of enabled.
 
 112. Hoe registreer je een CVA component correct in de @Component providers?
 
