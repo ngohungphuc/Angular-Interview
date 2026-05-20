@@ -1022,20 +1022,21 @@ export class OverzichtComponent {
 96. Wat zijn de vier vormen van Data Binding in Angular?
 
     Angular kent vier manieren om data uit te wisselen tussen de TypeScript-klasse en de HTML-template:
-    Interpolatie ({{ waarde }}): Stroomt data van de component naar de template (one-way). Zet expressies om in tekst.
-    Property Binding ([property]="waarde"): Stroomt data van de component naar een attribuut of property van een DOM-element of kind-component (one-way).
-    Event Binding (event)="methode()": Stroomt data van de template naar de component (one-way) om te reageren op gebruikersacties zoals kliks of toetsaanslagen.
-    Two-Way Data Binding ([(ngModel)] of [(modelSignal)]): Synchroniseert data in beide richtingen simultaan. Wijzigingen in de UI updaten de klasse en vice versa.
+    - Interpolatie (`{{ waarde }}`): Stroomt data van de component naar de template (one-way). Zet expressies om in tekst.
+
+    - Property Binding ([property]="waarde"): Stroomt data van de component naar een attribuut of property van een DOM-element of kind-component (one-way).
+
+    - Event Binding (event)="methode()": Stroomt data van de template naar de component (one-way) om te reageren op gebruikersacties zoals kliks of toetsaanslagen.
+
+    - Two-Way Data Binding ([(ngModel)] of [(modelSignal)]): Synchroniseert data in beide richtingen simultaan. Wijzigingen in de UI updaten de klasse en vice versa.
 
 97. Wat is het verschil tussen een DOM Property en een HTML Attribuut?
-
-    HTML Attribuut: Gedefinieerd in de HTML-broncode en initialiseert de initiële status van het element. Attributen veranderen nooit van waarde.
-    DOM Property: De actuele, levende representatie van het element in de browser-DOM. Properties kunnen veranderen door gebruikersinteractie. Angular Property Binding ([disabled], [value]) grijpt altijd in op DOM properties, niet op HTML attributen.
+    - HTML Attribuut: Gedefinieerd in de HTML-broncode en initialiseert de initiële status van het element. Attributen veranderen nooit van waarde.
+    - DOM Property: De actuele, levende representatie van het element in de browser-DOM. Properties kunnen veranderen door gebruikersinteractie. Angular Property Binding ([disabled], [value]) grijpt altijd in op DOM properties, niet op HTML attributen.
 
 98. Wat zijn de twee hoofdtypen formulieren binnen Angular en wanneer kies je welke?
-
-    Template-Driven Forms: De formulierstructuur en validatieregels worden direct in de HTML-template geschreven (met behulp van FormsModule en directives zoals ngModel). Geschikt voor zeer eenvoudige formulieren.
-    Reactive Forms: De formulierstructuur en validatie worden programmatisch opgebouwd in de TypeScript-klasse (via ReactiveFormsModule). Dit biedt volledige controle, superieure testbaarheid, diepe type-veiligheid en krachtige asynchrone datastromen via RxJS of Signals. Dit is de industriestandaard voor serieuze applicaties.
+    - Template-Driven Forms: De formulierstructuur en validatieregels worden direct in de HTML-template geschreven (met behulp van FormsModule en directives zoals ngModel). Geschikt voor zeer eenvoudige formulieren.
+    - Reactive Forms: De formulierstructuur en validatie worden programmatisch opgebouwd in de TypeScript-klasse (via ReactiveFormsModule). Dit biedt volledige controle, superieure testbaarheid, diepe type-veiligheid en krachtige asynchrone datastromen via RxJS of Signals. Dit is de industriestandaard voor serieuze applicaties.
 
 99. Wat zijn Strongly Typed Reactive Forms?
 
@@ -1082,9 +1083,9 @@ export class LoginComponent {
 
 100. Wat is het verschil tussen FormGroup, FormControl en FormArray?
 
-     FormControl: Beheert de waarde, validatiestatus en interactiegeschiedenis (zoals dirty of touched) van één individueel invoerveld.
-     FormGroup: Bundelt een groep van FormControl, FormGroup of FormArray objecten tot een logische eenheid. De validatiestatus van de groep is afhankelijk van de kinderen.
-     FormArray: Beheert een dynamische, lineaire lijst van formulier-elementen. Handig voor scenario's waar gebruikers dynamisch velden kunnen toevoegen (zoals een lijst met telefoonnummers).
+- FormControl: Beheert de waarde, validatiestatus en interactiegeschiedenis (zoals dirty of touched) van één individueel invoerveld.
+- FormGroup: Bundelt een groep van FormControl, FormGroup of FormArray objecten tot een logische eenheid. De validatiestatus van de groep is afhankelijk van de kinderen.
+- FormArray: Beheert een dynamische, lineaire lijst van formulier-elementen. Handig voor scenario's waar gebruikers dynamisch velden kunnen toevoegen (zoals een lijst met telefoonnummers).
 
 101. Wat is het nut van de NonNullableFormBuilder?
 
