@@ -2478,8 +2478,8 @@ twee manieren muteren:
 - update(fn): Berekent een nieuwe waarde op basis van de huidige waarde (perfect voor
   tellers of het toevoegen van items aan een array).
 
-TypeScript
-import { signal } from '@angular/core';
+```ts
+import { signal } from "@angular/core";
 // Initialisatie
 const teller = signal(0);
 // Waarde uitlezen (altijd met haakjes aanroepen)
@@ -2487,227 +2487,237 @@ console.log(teller()); // Output: 0
 // Direct overschrijven
 teller.set(10);
 // Updaten op basis van huidige waarde
-teller.update(huidigeWaarde => huidigeWaarde + 1); 204. Wat is een computed signal en hoe werkt 'dependency tracking'?
+teller.update((huidigeWaarde) => huidigeWaarde + 1);
+```
+
+204. Wat is een computed signal en hoe werkt 'dependency tracking'?
+
 Een computed signal creëert een afgeleid, alleen-lezen (read-only) signal op basis van andere
 signals. Angular maakt gebruik van automatische dependency tracking: runtime ontdekt Angular
 welke signals er binnen de computed functie worden aangeroepen en registreert deze als
 afhankelijkheid. Als een van die onderliggende signals verandert, wordt de computed waarde
 automatisch opnieuw berekent.
-TypeScript
+
+```ts
 import { signal, computed } from '@angular/core';
 const aantal = signal(3);
 const prijsPerStuk = signal(10);
-// Wordt automatisch bijgewerkt zodra 'aantal' of
-'prijsPerStuk' verandert
+// Wordt automatisch bijgewerkt zodra 'aantal' of 'prijsPerStuk' verandert
 const totaalPrijs = computed(() => aantal() \*
-prijsPerStuk()); 205. Wat verstaat men onder de 'lazy evaluation' en 'caching' van een
-computed signal?
+prijsPerStuk());
+```
+
+205. Wat verstaat men onder de 'lazy evaluation' en 'caching' van een computed signal?
+
 Een computed signal is uiterst efficiënt dankzij twee principes:
-• Lazy Evaluation: De berekening binnen de computed functie wordt niet uitgevoerd op
-het moment dat onderliggende signals veranderen, maar pas op het exacte moment dat
-iemand de waarde van het computed signal daadwerkelijk probeert uit te lezen
-(bijvoorbeeld in de HTML-template).
-• Caching (Memoization): Als de waarde eenmaal is berekend, wordt het resultaat
-opgeslagen in een cache. Zolang de onderliggende signals niet muteren, zal herhaaldelijk
-uitlezen van het computed signal direct de gecachte waarde opleveren zonder de
-rekenformule opnieuw uit te voeren. 206. Wat is de functie van een effect en wanneer gebruik je deze?
-Een effect is een operatie die automatisch wordt uitgevoerd telkens wanneer de signals die erin
-worden uitgelezen van waarde veranderen. Omdat een effect asynchroon draait tijdens het
-veranderingsdetectieproces, mag je er nooit direct andere signals in muteren (tenzij expliciet
-toegestaan via speciale configuratie, wat sterk wordt afgeraden).
-Gebruik effecten uitsluitend voor side-effects buiten het Angular-ecosysteem, zoals:
-• Data synchroniseren met localStorage.
-• Handmatige DOM-manipulaties uitvoeren met externe bibliotheken (bijv. een chart
-tekenen).
-• Aangepaste logging bijhouden voor analytics.
-TypeScript
-import { effect } from '@angular/core';
-export class ThemeComponent {
-theme = signal('light');
-constructor() {
-effect(() => {
-// Synchroniseer de status live met de browser cache
-localStorage.setItem('app-theme', this.theme());
-});
-}
-} 207. Hoe werkt de opruimfunctie (onCleanup) binnen een effect?
-Vaak start een effect een asynchrone handeling (zoals een setTimeout of een websocket-
-connectie) die moet worden stopgezet zodra het effect opnieuw vuurt of de component wordt
-vernietigd. De effect functie geeft een onCleanup callback mee waarmee je deze resources
-netjes kunt opruimen om memory leaks te voorkomen.
-TypeScript
-effect((onCleanup) => {
-const query = ditZoekSignal();
-const timerId = setTimeout(() => console.log('Zoeken
-naar:', query), 500);
-// Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist
-deze callback de oude timer
-onCleanup(() => clearTimeout(timerId));
-}); 208. Waarom mag je een effect niet overal declareren?
-Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf
-moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor,
-als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect
-probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een
-runtime-fout gooien. 209. Wat is de untracked functie en hoe voorkom je ongewenste dependency
-tracking?
-Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
-zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
-signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
-TypeScript
-import { untracked } from '@angular/core';
-effect(() => {
-tracking
-const huidigeStatus = logInStatusSignal(); // Dit activeert
-// We willen de gebruikersnaam loggen, maar het effect mag
-NIET opnieuw vuren
-// puur en alleen omdat de gebruikersnaam verandert.
-const naam = untracked(() => gebruikersNaamSignal());
-console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
-}); 210. Wat zijn Signal-based Inputs (input en input.required)?
-De traditionele @Input() decorator is vervangen door de modernere, type-safe input() API.
-Dit genereert een read-only signal in je component dat automatisch updates ontvangt vanuit de
-parent-template.
-TypeScript
-export class GebruikerKaartComponent {
-// Optionele input met een standaardwaarde
-titel = input('Gast'); // Signal<string>
-// Verplichte input zonder standaardwaarde
-id = input.required<string>(); // Signal<string>
-} 211. Hoe transformeer je invoerwaarden met de transform optie in een
-Signal Input?
-Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten
-naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform
-property.
-TypeScript
-export class ToggleComponent {
-// Zorgt ervoor dat <app-toggle disabled /> correct wordt
-geïnterpreteerd als true
-disabled = input(false, {
-transform: (value: boolean | string) => typeof value ===
-'string' ? true : value
-});
-}
-Binding? 212. Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data
-Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data
-binding. De component kan de waarde zelf muteren via .set() of .update(), en deze
-wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je
-dit via de bekende "banana-in-a-box" [(waarde)] syntax.
-TypeScript
-// Binnen kind-component:
-export class TellerComponent {
-waarde = model(0); // Writable signal!
-increment() {
-this.waarde.update(w => w + 1); // Parent ziet dit direct
-}
-}
-// Binnen parent-template:
-// <app-teller [(waarde)]="mijnParentTeller" /> 213. Wat zijn Signal-based Queries (viewChild, viewChildren,
-contentChild)?
-De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct
-een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit
-lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief
-op reageren via een computed of effect.
-TypeScript
-export class CanvasComponent {
-// Haalt de referentie naar <canvas #mijnCanvas> op als
-Signal
-canvasEl =
-viewChild.required<ElementRef<HTMLCanvasElement>>('mijnCanvas
-');
-constructor() {
-effect(() => {
-// Zodra het element beschikbaar is in de DOM, tekent
-het effect direct
-const ctx =
-this.canvasEl().nativeElement.getContext('2d');
-});
-}
-} 214. Hoe ontwerp je een lichtgewicht 'Signal Store' patroon met een Angular
-Service?
-Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer
-nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-
-only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
-TypeScript
-@Injectable({ providedIn: 'root' })
-export class WinkelwagenStore {
-// 1. Private state (alleen binnen de service muteerbaar)
-private \_items = signal<Product[]>([]);
-// 2. Publieke state (alleen-lezen voor componenten)
-items = this.\_items.asReadonly();
-aantalItems = computed(() => this.\_items().length);
-// 3. Gecontroleerde mutaties (Actions)
-voegToe(product: Product) {
-this.\_items.update(huidigeItems => [...huidigeItems,
-product]);
-}
-} 215. Hoe ga je om met asynchrone state (zoals API-calls) binnen een Signal-
-architectuur?
-Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen
-naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het
-resultaat in een synchroon leesbaar signal.
-TypeScript
-export class ProductenComponent {
-private api = inject(ApiService);
-// Converteert de Observable direct naar een Signal
-producten = toSignal(this.api.getProducts(),
-{ initialValue: [] });
-}
-management? 216. Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state
-De @angular/core/rxjs-interop module levert de cruciale brugfuncties
-toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen
-van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven
-operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module
-stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-
-architectuur. 217. Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
-Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een
-eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal
-de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable)
-muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
-TypeScript
-// FOUTIEF (UI update niet, referentie blijft gelijk):
-gebruikerSignal().naam = 'Piet';
-// CORRECT (Nieuw object referentie gecreëerd):
-gebruikerSignal.set({ ...gebruikerSignal(), naam: 'Piet' }); 218. Wat is de impact van 'Zoneless Angular' op de toekomst van State
-Management?
-Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via
-provideExperimentalZonelessChangeDetection() in app.config.ts).
-Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait
-hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige
-betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat
-het belang van een solide Signal-based state management-architectuur alleen maar vergroot. 219. Kun je een Signal hergebruiken in meerdere componenten?
-Ja, mits de instantie van het signal gedeeld wordt. Als je een signal definieert in een root-service
-(providedIn: 'root'), dan delen alle componenten die deze service injecteren exact
-hetzelfde signal. Verandert Component A de waarde, dan reageert Component B daar direct op. Als
-je een signal in de component-klasse zelf declareert, krijgt elke instantie van die component
-uiteraard zijn eigen, unieke signal-waarde. 220. Hoe test je een component of service die intensief gebruikmaakt van
-Signals?
-Het testen van Signals is extreem eenvoudig omdat ze synchroon van aard zijn. Je hoeft niet te
-werken met complexe asynchrone test-helpers zoals fakeAsync, tick of waitForAsync
-om gewijzigde waarden uit te lezen; je roept simpelweg het signal aan en controleert direct de
-waarde.
-TypeScript
-it('zou het aantal items in de winkelwagen correct moeten
-verhogen', () => {
-const store = TestBed.inject(WinkelwagenStore);
-// Controleer initiële waarde synchroon
-expect(store.aantalItems()).toBe(0);
-// Voer actie uit
-store.voegToe({ id: 1, naam: 'Laptop' });
-// Controleer direct de geupdate computed waarde
-expect(store.aantalItems()).toBe(1);
-});
-Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nummering en inhoud
-zijn naadloos gestructureerd en volledig bijgewerkt naar de modernste standaarden, inclusief
-Zoneless change detection, Deferrable Views, Event Dispatch (Hydration), Module Federation
-v2, en geavanceerde Signal-patronen.
-Performance en Security (191-200) 191. Wat zijn Deferrable Views (@defer) en hoe verbeteren ze de Initial Page
-Load?
-@defer is een ingebouwde control flow feature waarmee je componenten, directives en pipes
-binnen een template kunt splitsen in aparte JavaScript-chunks (lazy loading). Deze code wordt pas
-gedownload en gerenderd wanneer aan een specifieke triggerconditie wordt voldaan (bijvoorbeeld
-wanneer het element in de viewport scrollt). Dit verlaagt de initiële bundelomvang drastisch.
-HTML
-@defer (on viewport) {
+
+- Lazy Evaluation: De berekening binnen de computed functie wordt niet uitgevoerd op
+  het moment dat onderliggende signals veranderen, maar pas op het exacte moment dat
+  iemand de waarde van het computed signal daadwerkelijk probeert uit te lezen
+  (bijvoorbeeld in de HTML-template).
+- Caching (Memoization): Als de waarde eenmaal is berekend, wordt het resultaat
+  opgeslagen in een cache. Zolang de onderliggende signals niet muteren, zal herhaaldelijk
+  uitlezen van het computed signal direct de gecachte waarde opleveren zonder de
+  rekenformule opnieuw uit te voeren.
+
+206. Wat is de functie van een effect en wanneer gebruik je deze?
+     Een effect is een operatie die automatisch wordt uitgevoerd telkens wanneer de signals die erin
+     worden uitgelezen van waarde veranderen. Omdat een effect asynchroon draait tijdens het
+     veranderingsdetectieproces, mag je er nooit direct andere signals in muteren (tenzij expliciet
+     toegestaan via speciale configuratie, wat sterk wordt afgeraden).
+     Gebruik effecten uitsluitend voor side-effects buiten het Angular-ecosysteem, zoals:
+     • Data synchroniseren met localStorage.
+     • Handmatige DOM-manipulaties uitvoeren met externe bibliotheken (bijv. een chart
+     tekenen).
+     • Aangepaste logging bijhouden voor analytics.
+     TypeScript
+     import { effect } from '@angular/core';
+     export class ThemeComponent {
+     theme = signal('light');
+     constructor() {
+     effect(() => {
+     // Synchroniseer de status live met de browser cache
+     localStorage.setItem('app-theme', this.theme());
+     });
+     }
+     } 207. Hoe werkt de opruimfunctie (onCleanup) binnen een effect?
+     Vaak start een effect een asynchrone handeling (zoals een setTimeout of een websocket-
+     connectie) die moet worden stopgezet zodra het effect opnieuw vuurt of de component wordt
+     vernietigd. De effect functie geeft een onCleanup callback mee waarmee je deze resources
+     netjes kunt opruimen om memory leaks te voorkomen.
+     TypeScript
+     effect((onCleanup) => {
+     const query = ditZoekSignal();
+     const timerId = setTimeout(() => console.log('Zoeken
+     naar:', query), 500);
+     // Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist
+     deze callback de oude timer
+     onCleanup(() => clearTimeout(timerId));
+     }); 208. Waarom mag je een effect niet overal declareren?
+     Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf
+     moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor,
+     als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect
+     probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een
+     runtime-fout gooien. 209. Wat is de untracked functie en hoe voorkom je ongewenste dependency
+     tracking?
+     Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
+     zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
+     signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
+     TypeScript
+     import { untracked } from '@angular/core';
+     effect(() => {
+     tracking
+     const huidigeStatus = logInStatusSignal(); // Dit activeert
+     // We willen de gebruikersnaam loggen, maar het effect mag
+     NIET opnieuw vuren
+     // puur en alleen omdat de gebruikersnaam verandert.
+     const naam = untracked(() => gebruikersNaamSignal());
+     console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
+     }); 210. Wat zijn Signal-based Inputs (input en input.required)?
+     De traditionele @Input() decorator is vervangen door de modernere, type-safe input() API.
+     Dit genereert een read-only signal in je component dat automatisch updates ontvangt vanuit de
+     parent-template.
+     TypeScript
+     export class GebruikerKaartComponent {
+     // Optionele input met een standaardwaarde
+     titel = input('Gast'); // Signal<string>
+     // Verplichte input zonder standaardwaarde
+     id = input.required<string>(); // Signal<string>
+     } 211. Hoe transformeer je invoerwaarden met de transform optie in een
+     Signal Input?
+     Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten
+     naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform
+     property.
+     TypeScript
+     export class ToggleComponent {
+     // Zorgt ervoor dat <app-toggle disabled /> correct wordt
+     geïnterpreteerd als true
+     disabled = input(false, {
+     transform: (value: boolean | string) => typeof value ===
+     'string' ? true : value
+     });
+     }
+     Binding? 212. Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data
+     Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data
+     binding. De component kan de waarde zelf muteren via .set() of .update(), en deze
+     wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je
+     dit via de bekende "banana-in-a-box" [(waarde)] syntax.
+     TypeScript
+     // Binnen kind-component:
+     export class TellerComponent {
+     waarde = model(0); // Writable signal!
+     increment() {
+     this.waarde.update(w => w + 1); // Parent ziet dit direct
+     }
+     }
+     // Binnen parent-template:
+     // <app-teller [(waarde)]="mijnParentTeller" /> 213. Wat zijn Signal-based Queries (viewChild, viewChildren,
+     contentChild)?
+     De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct
+     een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit
+     lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief
+     op reageren via een computed of effect.
+     TypeScript
+     export class CanvasComponent {
+     // Haalt de referentie naar <canvas #mijnCanvas> op als
+     Signal
+     canvasEl =
+     viewChild.required<ElementRef<HTMLCanvasElement>>('mijnCanvas
+     ');
+     constructor() {
+     effect(() => {
+     // Zodra het element beschikbaar is in de DOM, tekent
+     het effect direct
+     const ctx =
+     this.canvasEl().nativeElement.getContext('2d');
+     });
+     }
+     } 214. Hoe ontwerp je een lichtgewicht 'Signal Store' patroon met een Angular
+     Service?
+     Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer
+     nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-
+     only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
+     TypeScript
+     @Injectable({ providedIn: 'root' })
+     export class WinkelwagenStore {
+     // 1. Private state (alleen binnen de service muteerbaar)
+     private \_items = signal<Product[]>([]);
+     // 2. Publieke state (alleen-lezen voor componenten)
+     items = this.\_items.asReadonly();
+     aantalItems = computed(() => this.\_items().length);
+     // 3. Gecontroleerde mutaties (Actions)
+     voegToe(product: Product) {
+     this.\_items.update(huidigeItems => [...huidigeItems,
+     product]);
+     }
+     } 215. Hoe ga je om met asynchrone state (zoals API-calls) binnen een Signal-
+     architectuur?
+     Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen
+     naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het
+     resultaat in een synchroon leesbaar signal.
+     TypeScript
+     export class ProductenComponent {
+     private api = inject(ApiService);
+     // Converteert de Observable direct naar een Signal
+     producten = toSignal(this.api.getProducts(),
+     { initialValue: [] });
+     }
+     management? 216. Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state
+     De @angular/core/rxjs-interop module levert de cruciale brugfuncties
+     toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen
+     van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven
+     operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module
+     stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-
+     architectuur. 217. Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
+     Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een
+     eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal
+     de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable)
+     muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
+     TypeScript
+     // FOUTIEF (UI update niet, referentie blijft gelijk):
+     gebruikerSignal().naam = 'Piet';
+     // CORRECT (Nieuw object referentie gecreëerd):
+     gebruikerSignal.set({ ...gebruikerSignal(), naam: 'Piet' }); 218. Wat is de impact van 'Zoneless Angular' op de toekomst van State
+     Management?
+     Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via
+     provideExperimentalZonelessChangeDetection() in app.config.ts).
+     Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait
+     hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige
+     betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat
+     het belang van een solide Signal-based state management-architectuur alleen maar vergroot. 219. Kun je een Signal hergebruiken in meerdere componenten?
+     Ja, mits de instantie van het signal gedeeld wordt. Als je een signal definieert in een root-service
+     (providedIn: 'root'), dan delen alle componenten die deze service injecteren exact
+     hetzelfde signal. Verandert Component A de waarde, dan reageert Component B daar direct op. Als
+     je een signal in de component-klasse zelf declareert, krijgt elke instantie van die component
+     uiteraard zijn eigen, unieke signal-waarde. 220. Hoe test je een component of service die intensief gebruikmaakt van
+     Signals?
+     Het testen van Signals is extreem eenvoudig omdat ze synchroon van aard zijn. Je hoeft niet te
+     werken met complexe asynchrone test-helpers zoals fakeAsync, tick of waitForAsync
+     om gewijzigde waarden uit te lezen; je roept simpelweg het signal aan en controleert direct de
+     waarde.
+     TypeScript
+     it('zou het aantal items in de winkelwagen correct moeten
+     verhogen', () => {
+     const store = TestBed.inject(WinkelwagenStore);
+     // Controleer initiële waarde synchroon
+     expect(store.aantalItems()).toBe(0);
+     // Voer actie uit
+     store.voegToe({ id: 1, naam: 'Laptop' });
+     // Controleer direct de geupdate computed waarde
+     expect(store.aantalItems()).toBe(1);
+     });
+     Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nummering en inhoud
+     zijn naadloos gestructureerd en volledig bijgewerkt naar de modernste standaarden, inclusief
+     Zoneless change detection, Deferrable Views, Event Dispatch (Hydration), Module Federation
+     v2, en geavanceerde Signal-patronen.
+     Performance en Security (191-200) 191. Wat zijn Deferrable Views (@defer) en hoe verbeteren ze de Initial Page
+     Load?
+     @defer is een ingebouwde control flow feature waarmee je componenten, directives en pipes
+     binnen een template kunt splitsen in aparte JavaScript-chunks (lazy loading). Deze code wordt pas
+     gedownload en gerenderd wanneer aan een specifieke triggerconditie wordt voldaan (bijvoorbeeld
+     wanneer het element in de viewport scrollt). Dit verlaagt de initiële bundelomvang drastisch.
+     HTML
+     @defer (on viewport) {
 
 <!-- Deze zware component laadt pas als hij in beeld
 scrollt -->
