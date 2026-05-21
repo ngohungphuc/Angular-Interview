@@ -2573,9 +2573,9 @@ export class ThemeComponent {
 209.  Wat is de untracked functie en hoe voorkom je ongewenste dependency
       tracking?
 
-Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
-zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
-signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
+      Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
+      zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
+      signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
 
 ```ts
 import { untracked } from "@angular/core";
@@ -2604,30 +2604,29 @@ export class GebruikerKaartComponent {
 ```
 
 211. Hoe transformeer je invoerwaarden met de transform optie in een
-
      Signal Input?
-     Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten
-     naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform
-     property.
+
+Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten
+naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform
+property.
 
 ```ts
-	export class ToggleComponent {
-	// Zorgt ervoor dat <app-toggle disabled /> correct wordt
-	geïnterpreteerd als true
-	disabled = input(false, {
-	transform: (value: boolean | string) => typeof value ===
-	'string' ? true : value
-	});
-	}
-	Binding?
+export class ToggleComponent {
+  // Zorgt ervoor dat <app-toggle disabled /> correct wordt geïnterpreteerd als true
+  disabled = input(false, {
+    transform: (value: boolean | string) =>
+      typeof value === "string" ? true : value,
+  });
+}
 ```
 
-212. Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data
+212.  Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data
+      Binding?
 
-     Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data
-     binding. De component kan de waarde zelf muteren via .set() of .update(), en deze
-     wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je
-     dit via de bekende "banana-in-a-box" [(waarde)] syntax.
+Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data
+binding. De component kan de waarde zelf muteren via .set() of .update(), en deze
+wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je
+dit via de bekende "banana-in-a-box" [(waarde)] syntax.
 
 ```ts
 // Binnen kind-component:
@@ -2641,9 +2640,7 @@ export class TellerComponent {
 // <app-teller [(waarde)]="mijnParentTeller" />
 ```
 
-213. Wat zijn Signal-based Queries (viewChild, viewChildren,
-
-     contentChild)?
+213. Wat zijn Signal-based Queries (viewChild, viewChildren, contentChild)?
      De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct
      een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit
      lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief
@@ -2651,28 +2648,24 @@ export class TellerComponent {
 
 ```ts
 	export class CanvasComponent {
-	// Haalt de referentie naar <canvas #mijnCanvas> op als
-	Signal
-	canvasEl =
-	viewChild.required<ElementRef<HTMLCanvasElement>>('mijnCanvas
+	// Haalt de referentie naar <canvas #mijnCanvas> op als Signal
+	canvasEl = viewChild.required<ElementRef<HTMLCanvasElement>>('mijnCanvas
 	');
 	constructor() {
-	effect(() => {
-	// Zodra het element beschikbaar is in de DOM, tekent
-	het effect direct
-	const ctx =
-	this.canvasEl().nativeElement.getContext('2d');
-	});
-	}
+      effect(() => {
+        // Zodra het element beschikbaar is in de DOM, teken het effect direct
+        const ctx = this.canvasEl().nativeElement.getContext('2d');
+      });
+	  }
 	}
 ```
 
 214. Hoe ontwerp je een lichtgewicht 'Signal Store' patroon met een Angular
-
      Service?
-     Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer
-     nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-
-     only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
+
+Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer
+nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-
+only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
 
 ```ts
 	@Injectable({ providedIn: 'root' })
@@ -2684,44 +2677,43 @@ export class TellerComponent {
 	aantalItems = computed(() => this.\_items().length);
 	// 3. Gecontroleerde mutaties (Actions)
 	voegToe(product: Product) {
-	this.\_items.update(huidigeItems => [...huidigeItems,
-	product]);
-	}
+      this.\_items.update(huidigeItems => [...huidigeItems,
+      product]);
+    }
 	}
 ```
 
 215. Hoe ga je om met asynchrone state (zoals API-calls) binnen een Signal-
-
      architectuur?
-     Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen
-     naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het
-     resultaat in een synchroon leesbaar signal.
+
+Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen
+naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het
+resultaat in een synchroon leesbaar signal.
 
 ```ts
-	export class ProductenComponent {
-	private api = inject(ApiService);
-	// Converteert de Observable direct naar een Signal
-	producten = toSignal(this.api.getProducts(),
-	{ initialValue: [] });
-	}
-	management?
+export class ProductenComponent {
+  private api = inject(ApiService);
+  // Converteert de Observable direct naar een Signal
+  producten = toSignal(this.api.getProducts(), { initialValue: [] });
+}
 ```
 
-216. Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state
+216.  Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state
+      management?
 
-     De @angular/core/rxjs-interop module levert de cruciale brugfuncties
-     toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen
-     van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven
-     operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module
-     stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-
-     architectuur.
+De @angular/core/rxjs-interop module levert de cruciale brugfuncties
+toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen
+van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven
+operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module
+stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-
+architectuur.
 
-217. Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
+217.  Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
 
-     Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een
-     eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal
-     de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable)
-     muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
+      Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een
+      eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal
+      de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable)
+      muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
 
 ```ts
 // FOUTIEF (UI update niet, referentie blijft gelijk):
