@@ -2723,14 +2723,14 @@ gebruikerSignal.set({ ...gebruikerSignal(), naam: "Piet" });
 ```
 
 218. Wat is de impact van 'Zoneless Angular' op de toekomst van State
-
      Management?
-     Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via
-     provideExperimentalZonelessChangeDetection() in app.config.ts).
-     Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait
-     hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige
-     betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat
-     het belang van een solide Signal-based state management-architectuur alleen maar vergroot.
+
+Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via
+provideExperimentalZonelessChangeDetection() in app.config.ts).
+Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait
+hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige
+betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat
+het belang van een solide Signal-based state management-architectuur alleen maar vergroot.
 
 219. Kun je een Signal hergebruiken in meerdere componenten?
 
