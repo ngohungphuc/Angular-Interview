@@ -2289,28 +2289,7 @@ export const logInterceptor: HttpInterceptorFn = (req, next) => {
 };
 ```
 
-195. Hoe implementeer je een automatische 'Retry'-strategie bij falende
-     netwerkverzoeken?
-
-Soms faalt een verzoek door een tijdelijke hik in de internetverbinding. Met de RxJS retry
-operator kun je Angular instrueren het verzoek automatisch een aantal keer opnieuw te
-proberen voordat de app definitief een foutmelding geeft. Je kunt hierbij een vertraging
-(delay) instellen.
-
-```ts
-import { retry, timer } from 'rxjs';
-
-getDataMetRetry() {
-  return this.http.get('/api/wankele-verbinding').pipe(
-    retry({
-      count: 3, // Probeer het maximaal 3 keer opnieuw
-      delay: (error, retryCount) => timer(retryCount * 1000) // Exponentiële vertraging (1s, 2s, 3s)
-    })
-  );
-}
-```
-
-197. Hoe hanteer je robuuste foutafhandeling bij HTTP-verzoeken met HttpErrorResponse?
+194. Hoe hanteer je robuuste foutafhandeling bij HTTP-verzoeken met HttpErrorResponse?
 
      Fouten bij netwerkverzoeken kunnen worden opgevangen met de RxJS catchError operator. Binnen deze operator inspecteer je de fout via de HttpErrorResponse klasse om te bepalen of het een client-side fout (zoals een typefout of netwerkonderbreking) of een server-side fout (zoals een 404 Not Found of 500 Server Error) betreft.
 
@@ -2336,1058 +2315,1124 @@ this.http.get("/api/beveiligd").pipe(
 );
 ```
 
-198. Hoe implementeer je een automatische 'Retry'-strategie bij falende netwerkverzoeken?
+195. Hoe implementeer je een automatische 'Retry'-strategie bij falende
+     netwerkverzoeken?
 
-     Soms faalt een verzoek door een tijdelijke hik in de internetverbinding. Met de RxJS retry operator kun je Angular instrueren het verzoek automatisch een aantal keer opnieuw te proberen voordat de app definitief een foutmelding geeft. Je kunt hierbij een vertraging (delay) instellen.
+Soms faalt een verzoek door een tijdelijke hik in de internetverbinding. Met de RxJS retry
+operator kun je Angular instrueren het verzoek automatisch een aantal keer opnieuw te
+proberen voordat de app definitief een foutmelding geeft. Je kunt hierbij een vertraging
+(delay) instellen.
 
-```typescript
-
+```ts
 import { retry, timer } from 'rxjs';
 
 getDataMetRetry() {
-return this.http.get('/api/wankele-verbinding').pipe(
-retry({
-count: 3, // Probeer het maximaal 3 keer opnieuw
-delay: (error, retryCount) => timer(retryCount \* 1000) // Exponentiële vertraging (1s, 2s, 3s)
-})
-);
+  return this.http.get('/api/wankele-verbinding').pipe(
+    retry({
+      count: 3, // Probeer het maximaal 3 keer opnieuw
+      delay: (error, retryCount) => timer(retryCount * 1000) // Exponentiële vertraging (1s, 2s, 3s)
+    })
+  );
 }
 ```
 
-199. Wat is de betekenis van de observe optie in de HttpClient configuratie?
+196. Wat is de betekenis van de observe optie in de HttpClient configuratie?
 
-     Standaard staat de observe property ingesteld op 'body'. Dit betekent dat Angular de HTTP-metadata (zoals statuscodes en headers) wegstript en puur de JSON-body teruggeeft. Als je de headers of de ruwe statuscode nodig hebt, verander je observe naar 'response'.
+Standaard staat de observe property ingesteld op 'body'. Dit betekent dat Angular de
+HTTP-metadata (zoals statuscodes en headers) wegstript en puur de JSON-body
+teruggeeft. Als je de headers of de ruwe statuscode nodig hebt, verander je observe naar
+'response'.
 
-```typescript
-
+```ts
 getVolledigeResponse() {
-return this.http.get<Product[]>('/api/producten', {
-observe: 'response' // Geeft een HttpResponse<Product[]> terug in plaats van Product[]
-}).subscribe(response => {
-console.log('Status Code:', response.status); // Bijv. 200
-console.log('Specifieke Header:', response.headers.get('X-Custom-Header'));
-});
+  return this.http.get<Product[]>('/api/producten', {
+     observe: 'response' // Geeft een HttpResponse<Product[]> terug in plaats van Product[]
+  }).subscribe(response => {
+    console.log('Status Code:', response.status); // Bijv. 200
+    console.log('Specifieke Header:', response.headers.get('X-Custom-Header'));
+  });
 }
 ```
 
-200. Hoe configureer je de HttpClient om voortgangsupdates (Progress Events) te ontvangen voor grote uploads of downloads?
+197. Hoe configureer je de HttpClient om voortgangsupdates (Progress
+     Events) te ontvangen voor grote uploads of downloads?
 
-     Voor het tonen van een voortgangsbalk (progress bar) bij het uploaden of downloaden van grote bestanden, moet je reportProgress: true aanzetten en observe: 'events' configureren. De stream zendt vervolgens gedurende het proces verschillende HttpEvent typen uit.
+Voor het tonen van een voortgangsbalk (progress bar) bij het uploaden of downloaden van
+grote bestanden, moet je reportProgress: true aanzetten en observe: 'events' configureren.
+De stream zendt vervolgens gedurende het proces verschillende HttpEvent typen uit.
 
-```typescript
-
+```ts
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 uploadBestand(fileData: FormData): Observable<HttpEvent<any>> {
-return this.http.post('/api/upload', fileData, {
-reportProgress: true,
-observe: 'events'
-}).pipe(
-tap((event: HttpEvent<any>) => {
-if (event.type === HttpEventType.UploadProgress && event.total) {
-const percentage = Math.round((100 \* event.loaded) / event.total);
-console.log(`Bestand is voor ${percentage}% geüpload.`);
-} else if (event.type === HttpEventType.Response) {
-console.log('Upload volledig afgerond!', event.body);
-}
-})
-);
+  return this.http.post('/api/upload', fileData, {
+    reportProgress: true,
+    observe: 'events'
+  }).pipe(
+  tap((event: HttpEvent<any>) => {
+    if (event.type === HttpEventType.UploadProgress && event.total) {
+      const percentage = Math.round((100 * event.loaded) / event.total);
+      console.log(`Bestand is voor ${percentage}% geüpload.`);
+    } else if (event.type === HttpEventType.Response) {
+      console.log('Upload volledig afgerond!', event.body);
+    }
+    })
+  );
 }
 ```
 
-201. Waarom is het annuleren (cancelen) van HTTP-verzoeken met RxJS zo krachtig?
+198. Waarom is het annuleren (cancelen) van HTTP-verzoeken met RxJS
 
-     Omdat de HttpClient met Observables werkt, stopt het HTTP-verzoek daadwerkelijk op netwerkniveau zodra er aan de client-kant wordt ge-unsubscribet. Als een gebruiker bijvoorbeeld op een knop klikt om een zwaar rapport te laden, maar direct daarna naar een andere pagina navigeert, zorgt een operator zoals takeUntilDestroyed() of switchMap ervoor dat de browser de actieve download direct afbreekt. Dit bespaart aanzienlijk veel bandbreedte en serverbelasting.
+Omdat de HttpClient met Observables werkt, stopt het HTTP-verzoek daadwerkelijk op
+netwerkniveau zodra er aan de client-kant wordt ge-unsubscribet. Als een gebruiker
+bijvoorbeeld op een knop klikt om een zwaar rapport te laden, maar direct daarna naar
+een andere pagina navigeert, zorgt een operator zoals takeUntilDestroyed() of switchMap
+ervoor dat de browser de actieve download direct afbreekt. Dit bespaart aanzienlijk veel
+bandbreedte en serverbelasting
 
-202. Wat is de rol van provideHttpClientTesting() bij het schrijven van Unit Tests?
+- `map` voor simpele data-transformaties.
+- `switchMap` gebruik ik voor live-search of als ik oude requests wil annuleren bij nieuwe input.
+- `concatMap` als ik requests serieel wil uitvoeren en de volgorde wil behouden.
+- `mergeMap` voor parallelle API-calls.
+- `exhaustMap` is handig bij submit-buttons om dubbele requests te voorkomen.
 
-     Voor het testen van services die HTTP-calls doen, wil je nooit echte verzoeken naar een live server sturen. Door provideHttpClientTesting() te registreren in je testomgeving, activeer je een mock-backend. Hiermee kun je uitgaande verzoeken onderscheppen, inspecteren en handmatig voorzien van een nep-antwoord (fake response).
+199. Wat is de rol van provideHttpClientTesting() bij het schrijven van
+     Unit Tests?
 
-```typescript
+Voor het testen van services die HTTP-calls doen, wil je nooit echte verzoeken naar een
+live server sturen. Door provideHttpClientTesting() te registreren in je testomgeving,
+activeer je een mock-backend. Hiermee kun je uitgaande verzoeken onderscheppen,
+inspecteren en handmatig voorzien van een nep-antwoord (fake response).
+
+```ts
 // data.service.spec.ts
-import {
-  provideHttpClientTesting,
-  HttpTestingController,
-} from "@angular/common/http/testing";
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/
+testing';
 
-describe("DataService", () => {
+describe('DataService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         DataService,
         provideHttpClient(),
-        provideHttpClientTesting(), // Activeert de HttpTestingController
-      ],
-    });
+        provideHttpClientTesting() // Activeert de HttpTestingController
+      ]
   });
-  // ... zie volgende vraag voor test-uitvoering ...
+});
+});
+
+// ... zie volgende vraag voor test-uitvoering ...
+```
+
+200. Hoe schrijf je een concrete Unit Test met de HttpTestingController?
+     Met de HttpTestingController kun je verifieerbare verwachtingen (expectOne) opstellen
+     voor je HTTP-verkeer en data doorsluizen via de .flush() methode.
+
+```ts
+it("zou gebruikers moeten ophalen via een GET-verzoek", () => {
+  const service = TestBed.inject(DataService);
+  const httpMock = TestBed.inject(HttpTestingController);
+  const dummyGebruikers = [{ id: 1, naam: "Test User" }];
+  // 1. Start de call
+  service.getGebruikers().subscribe((users) => {
+    expect(users.length).toBe(1);
+    expect(users).toEqual(dummyGebruikers);
+  });
+  // 2. Valideer of er exact één verzoek is gedaan naar de juiste URL
+  const req = httpMock.expectOne("https://api.voorbeeld.nl/users");
+  expect(req.request.method).toBe("GET");
+  // 3. Los het verzoek op door de dummy data erin te flushen
+  req.flush(dummyGebruikers);
+  // 4. Controleer of er geen onverwachte verzoeken meer openstaan
+  httpMock.verify();
 });
 ```
 
-203. Hoe schrijf je een concrete Unit Test met de HttpTestingController?
+Hier is het volledige, diepgaande blok voor de elfde sectie: State Management en Signals (vragen
+201 tot en met 220). Deze antwoorden weerspiegelen de absolute state-of-the-art architectuur van
+Angular, waarin Signals de primaire drijfveer zijn geworden voor fijnmazige (fine-grained)
+reactiviteit en moderne state-patronen.
 
-     Met de HttpTestingController kun je verifieerbare verwachtingen (expectOne) opstellen voor je HTTP-verkeer en data doorsluizen via de .flush() methode.
-
-```typescript
-
-it('zou gebruikers moeten ophalen via een GET-verzoek', () => {
-const service = TestBed.inject(DataService);
-const httpMock = TestBed.inject(HttpTestingController);
-const dummyGebruikers = [{ id: 1, naam: 'Test User' }];
-
-//
-```
-
-204. Start de call
-
-     service.getGebruikers().subscribe(users => {
-     expect(users.length).toBe(1);
-     expect(users).toEqual(dummyGebruikers);
-     });
-
-//
-
-205. Valideer of er exact één verzoek is gedaan naar de juiste URL
-
-     const req = httpMock.expectOne('https://api.voorbeeld.nl/users');
-     expect(req.request.method).toBe('GET');
-
-//
-
-206. Los het verzoek op door de dummy data erin te flushen
-
-     req.flush(dummyGebruikers);
-
-//
-
-207. Controleer of er geen onverwachte verzoeken meer openstaan
-
-     httpMock.verify();
-     });
-
-Hier is het volledige, diepgaande blok voor de elfde sectie: State Management en Signals (vragen 201 tot en met 220). Deze antwoorden weerspiegelen de absolute state-of-the-art architectuur van Angular, waarin Signals de primaire drijfveer zijn geworden voor fijnmazige (fine-grained) reactiviteit en moderne state-patronen.
-
-## State Management en Signals (201-220)
-
-201. Wat is State Management en waarom is het cruciaal in complexe front-end applicaties?
-
-     State (toestand) is de verzameling van alle data die op een bepaald moment de applicatie definieert, zoals ingelogde gebruikersgegevens, UI-instellingen (dark mode), gecachte API-data en formulierinvoer. State Management is het gestructureerd beheren, muteren en distribueren van deze data. Zonder centrale regie over je state leidt een applicatie al snel tot inconsistente data tussen componenten, onvoorspelbare bugs en onnodige re-renders.
-
-202. Wat zijn Angular Signals en welk fundamenteel probleem lossen ze op?
-
-     Signals zijn een reactief primitief dat een waarde bevat en de applicatie op de hoogte stelt wanneer die waarde verandert.
-     Vóór de introductie van Signals leunde Angular volledig op Zone.js voor veranderingsdetectie (Change Detection). Zone.js onderschept elk asynchroon event (zoals een klik of een HTTP-call) en controleert vervolgens de volledige componentenboom van top tot teen op wijzigingen. Signals lossen dit performance-probleem op door fijnmazige (fine-grained) reactiviteit te introduceren: Angular weet dankzij een Signal exact welke specifieke component of HTML-tag afhankelijk is van welke waarde, waardoor alleen dat specifieke stukje DOM wordt bijgewerkt zonder de rest van de app te scannen.
-
-203. Hoe maak en muteer je een basis signal?
-
-     Je maakt een writable (schrijfbaar) signal aan met de signal() functie. Je kunt de waarde op twee manieren muteren:
-     set(newValue): Overschrijft de huidige waarde direct met een gloednieuwe waarde.
-     update(fn): Berekent een nieuwe waarde op basis van de huidige waarde (perfect voor tellers of het toevoegen van items aan een array).
-
-```typescript
-import { signal } from "@angular/core";
-
+State Management en Signals (201-220) 201. Wat is State Management en waarom is het cruciaal in complexe front-end
+applicaties?
+State (toestand) is de verzameling van alle data die op een bepaald moment de applicatie definieert,
+zoals ingelogde gebruikersgegevens, UI-instellingen (dark mode), gecachte API-data en
+formulierinvoer. State Management is het gestructureerd beheren, muteren en distribueren van deze
+data. Zonder centrale regie over je state leidt een applicatie al snel tot inconsistente data tussen
+componenten, onvoorspelbare bugs en onnodige re-renders. 202. Wat zijn Angular Signals en welk fundamenteel probleem lossen ze op?
+Signals zijn een reactief primitief dat een waarde bevat en de applicatie op de hoogte stelt wanneer
+die waarde verandert.
+Vóór de introductie van Signals leunde Angular volledig op Zone.js voor veranderingsdetectie
+(Change Detection). Zone.js onderschept elk asynchroon event (zoals een klik of een HTTP-call) en
+controleert vervolgens de volledige componentenboom van top tot teen op wijzigingen. Signals
+lossen dit performance-probleem op door fijnmazige (fine-grained) reactiviteit te introduceren:
+Angular weet dankzij een Signal exact welke specifieke component of HTML-tag afhankelijk is van
+welke waarde, waardoor alleen dat specifieke stukje DOM wordt bijgewerkt zonder de rest van de
+app te scannen. 203. Hoe maak en muteer je een basis signal?
+Je maakt een writable (schrijfbaar) signal aan met de signal() functie. Je kunt de waarde op
+twee manieren muteren:
+• set(newValue): Overschrijft de huidige waarde direct met een gloednieuwe waarde.
+• update(fn): Berekent een nieuwe waarde op basis van de huidige waarde (perfect voor
+tellers of het toevoegen van items aan een array).
+TypeScript
+import { signal } from '@angular/core';
 // Initialisatie
 const teller = signal(0);
-
 // Waarde uitlezen (altijd met haakjes aanroepen)
 console.log(teller()); // Output: 0
-
 // Direct overschrijven
 teller.set(10);
-
 // Updaten op basis van huidige waarde
-teller.update((huidigeWaarde) => huidigeWaarde + 1);
-```
-
-204. Wat is een computed signal en hoe werkt 'dependency tracking'?
-
-     Een computed signal creëert een afgeleid, alleen-lezen (read-only) signal op basis van andere signals. Angular maakt gebruik van automatische dependency tracking: runtime ontdekt Angular welke signals er binnen de computed functie worden aangeroepen en registreert deze als afhankelijkheid. Als een van die onderliggende signals verandert, wordt de computed waarde automatisch opnieuw berekent.
-
-```typescript
-
+teller.update(huidigeWaarde => huidigeWaarde + 1); 204. Wat is een computed signal en hoe werkt 'dependency tracking'?
+Een computed signal creëert een afgeleid, alleen-lezen (read-only) signal op basis van andere
+signals. Angular maakt gebruik van automatische dependency tracking: runtime ontdekt Angular
+welke signals er binnen de computed functie worden aangeroepen en registreert deze als
+afhankelijkheid. Als een van die onderliggende signals verandert, wordt de computed waarde
+automatisch opnieuw berekent.
+TypeScript
 import { signal, computed } from '@angular/core';
-
 const aantal = signal(3);
 const prijsPerStuk = signal(10);
-
-// Wordt automatisch bijgewerkt zodra 'aantal' of 'prijsPerStuk' verandert
-const totaalPrijs = computed(() => aantal() \* prijsPerStuk());
-```
-
-205. Wat verstaat men onder de 'lazy evaluation' en 'caching' van een computed signal?
-
-     Een computed signal is uiterst efficiënt dankzij twee principes:
-     Lazy Evaluation: De berekening binnen de computed functie wordt niet uitgevoerd op het moment dat onderliggende signals veranderen, maar pas op het exacte moment dat iemand de waarde van het computed signal daadwerkelijk probeert uit te lezen (bijvoorbeeld in de HTML-template).
-     Caching (Memoization): Als de waarde eenmaal is berekend, wordt het resultaat opgeslagen in een cache. Zolang de onderliggende signals niet muteren, zal herhaaldelijk uitlezen van het computed signal direct de gecachte waarde opleveren zonder de rekenformule opnieuw uit te voeren.
-
-206. Wat is de functie van een effect en wanneer gebruik je deze?
-
-     Een effect is een operatie die automatisch wordt uitgevoerd telkens wanneer de signals die erin worden uitgelezen van waarde veranderen. Omdat een effect asynchroon draait tijdens het veranderingsdetectieproces, mag je er nooit direct andere signals in muteren (tenzij expliciet toegestaan via speciale configuratie, wat sterk wordt afgeraden).
-     Gebruik effecten uitsluitend voor side-effects buiten het Angular-ecosysteem, zoals:
-     Data synchroniseren met localStorage.
-     Handmatige DOM-manipulaties uitvoeren met externe bibliotheken (bijv. een chart tekenen).
-     Aangepaste logging bijhouden voor analytics.
-
-```typescript
-import { effect } from "@angular/core";
-
+// Wordt automatisch bijgewerkt zodra 'aantal' of
+'prijsPerStuk' verandert
+const totaalPrijs = computed(() => aantal() \*
+prijsPerStuk()); 205. Wat verstaat men onder de 'lazy evaluation' en 'caching' van een
+computed signal?
+Een computed signal is uiterst efficiënt dankzij twee principes:
+• Lazy Evaluation: De berekening binnen de computed functie wordt niet uitgevoerd op
+het moment dat onderliggende signals veranderen, maar pas op het exacte moment dat
+iemand de waarde van het computed signal daadwerkelijk probeert uit te lezen
+(bijvoorbeeld in de HTML-template).
+• Caching (Memoization): Als de waarde eenmaal is berekend, wordt het resultaat
+opgeslagen in een cache. Zolang de onderliggende signals niet muteren, zal herhaaldelijk
+uitlezen van het computed signal direct de gecachte waarde opleveren zonder de
+rekenformule opnieuw uit te voeren. 206. Wat is de functie van een effect en wanneer gebruik je deze?
+Een effect is een operatie die automatisch wordt uitgevoerd telkens wanneer de signals die erin
+worden uitgelezen van waarde veranderen. Omdat een effect asynchroon draait tijdens het
+veranderingsdetectieproces, mag je er nooit direct andere signals in muteren (tenzij expliciet
+toegestaan via speciale configuratie, wat sterk wordt afgeraden).
+Gebruik effecten uitsluitend voor side-effects buiten het Angular-ecosysteem, zoals:
+• Data synchroniseren met localStorage.
+• Handmatige DOM-manipulaties uitvoeren met externe bibliotheken (bijv. een chart
+tekenen).
+• Aangepaste logging bijhouden voor analytics.
+TypeScript
+import { effect } from '@angular/core';
 export class ThemeComponent {
-  theme = signal("light");
-
-  constructor() {
-    effect(() => {
-      // Synchroniseer de status live met de browser cache
-      localStorage.setItem("app-theme", this.theme());
-    });
-  }
-}
-```
-
-207. Hoe werkt de opruimfunctie (onCleanup) binnen een effect?
-
-     Vaak start een effect een asynchrone handeling (zoals een setTimeout of een websocket-connectie) die moet worden stopgezet zodra het effect opnieuw vuurt of de component wordt vernietigd. De effect functie geeft een onCleanup callback mee waarmee je deze resources netjes kunt opruimen om memory leaks te voorkomen.
-
-```typescript
-effect((onCleanup) => {
-  const query = ditZoekSignal();
-  const timerId = setTimeout(() => console.log("Zoeken naar:", query), 500);
-
-  // Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist deze callback de oude timer
-  onCleanup(() => clearTimeout(timerId));
-});
-```
-
-208. Waarom mag je een effect niet overal declareren?
-
-     Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor, als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een runtime-fout gooien.
-
-209. Wat is de untracked functie en hoe voorkom je ongewenste dependency tracking?
-
-     Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen, zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
-
-```typescript
-import { untracked } from "@angular/core";
-
+theme = signal('light');
+constructor() {
 effect(() => {
-  const huidigeStatus = logInStatusSignal(); // Dit activeert tracking
-
-  // We willen de gebruikersnaam loggen, maar het effect mag NIET opnieuw vuren
-  // puur en alleen omdat de gebruikersnaam verandert.
-  const naam = untracked(() => gebruikersNaamSignal());
-
-  console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
+// Synchroniseer de status live met de browser cache
+localStorage.setItem('app-theme', this.theme());
 });
-```
-
-210. Wat zijn Signal-based Inputs (input en input.required)?
-
-     De traditionele @Input() decorator is vervangen door de modernere, type-safe input() API. Dit genereert een read-only signal in je component dat automatisch updates ontvangt vanuit de parent-template.
-
-```typescript
+}
+} 207. Hoe werkt de opruimfunctie (onCleanup) binnen een effect?
+Vaak start een effect een asynchrone handeling (zoals een setTimeout of een websocket-
+connectie) die moet worden stopgezet zodra het effect opnieuw vuurt of de component wordt
+vernietigd. De effect functie geeft een onCleanup callback mee waarmee je deze resources
+netjes kunt opruimen om memory leaks te voorkomen.
+TypeScript
+effect((onCleanup) => {
+const query = ditZoekSignal();
+const timerId = setTimeout(() => console.log('Zoeken
+naar:', query), 500);
+// Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist
+deze callback de oude timer
+onCleanup(() => clearTimeout(timerId));
+}); 208. Waarom mag je een effect niet overal declareren?
+Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf
+moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor,
+als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect
+probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een
+runtime-fout gooien. 209. Wat is de untracked functie en hoe voorkom je ongewenste dependency
+tracking?
+Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
+zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
+signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
+TypeScript
+import { untracked } from '@angular/core';
+effect(() => {
+tracking
+const huidigeStatus = logInStatusSignal(); // Dit activeert
+// We willen de gebruikersnaam loggen, maar het effect mag
+NIET opnieuw vuren
+// puur en alleen omdat de gebruikersnaam verandert.
+const naam = untracked(() => gebruikersNaamSignal());
+console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
+}); 210. Wat zijn Signal-based Inputs (input en input.required)?
+De traditionele @Input() decorator is vervangen door de modernere, type-safe input() API.
+Dit genereert een read-only signal in je component dat automatisch updates ontvangt vanuit de
+parent-template.
+TypeScript
 export class GebruikerKaartComponent {
-  // Optionele input met een standaardwaarde
-  titel = input("Gast"); // Signal<string>
-
-  // Verplichte input zonder standaardwaarde
-  id = input.required<string>(); // Signal<string>
-}
-```
-
-211. Hoe transformeer je invoerwaarden met de transform optie in een Signal Input?
-
-     Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform property.
-
-```typescript
+// Optionele input met een standaardwaarde
+titel = input('Gast'); // Signal<string>
+// Verplichte input zonder standaardwaarde
+id = input.required<string>(); // Signal<string>
+} 211. Hoe transformeer je invoerwaarden met de transform optie in een
+Signal Input?
+Soms wil je data die via een input binnenkomt eerst converteren (bijvoorbeeld een string omzetten
+naar een getal, of een lege string omzetten naar de boolean true). Dit doe je met de transform
+property.
+TypeScript
 export class ToggleComponent {
-  // Zorgt ervoor dat <app-toggle disabled /> correct wordt geïnterpreteerd als true
-  disabled = input(false, {
-    transform: (value: boolean | string) =>
-      typeof value === "string" ? true : value,
-  });
+// Zorgt ervoor dat <app-toggle disabled /> correct wordt
+geïnterpreteerd als true
+disabled = input(false, {
+transform: (value: boolean | string) => typeof value ===
+'string' ? true : value
+});
 }
-```
-
-212. Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data Binding?
-
-     Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data binding. De component kan de waarde zelf muteren via .set() of .update(), en deze wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je dit via de bekende "banana-in-a-box" [(waarde)] syntax.
-
-```typescript
+Binding? 212. Wat zijn Model Inputs (model()) en hoe realiseren ze Two-Way Data
+Een model() input definieert een schrijfbaar (writable) signal dat fungeert als een two-way data
+binding. De component kan de waarde zelf muteren via .set() of .update(), en deze
+wijziging wordt direct teruggekoppeld naar de parent-component. In de parent-template koppel je
+dit via de bekende "banana-in-a-box" [(waarde)] syntax.
+TypeScript
 // Binnen kind-component:
 export class TellerComponent {
-  waarde = model(0); // Writable signal!
-
-  increment() {
-    this.waarde.update((w) => w + 1); // Parent ziet dit direct
-  }
+waarde = model(0); // Writable signal!
+increment() {
+this.waarde.update(w => w + 1); // Parent ziet dit direct
 }
-
+}
 // Binnen parent-template:
-// <app-teller [(waarde)]="mijnParentTeller" />
-```
-
-213. Wat zijn Signal-based Queries (viewChild, viewChildren, contentChild)?
-
-     De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief op reageren via een computed of effect.
-
-```typescript
+// <app-teller [(waarde)]="mijnParentTeller" /> 213. Wat zijn Signal-based Queries (viewChild, viewChildren,
+contentChild)?
+De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct
+een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit
+lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief
+op reageren via een computed of effect.
+TypeScript
 export class CanvasComponent {
-  // Haalt de referentie naar <canvas #mijnCanvas> op als Signal
-  canvasEl = viewChild.required<ElementRef<HTMLCanvasElement>>("mijnCanvas");
-
-  constructor() {
-    effect(() => {
-      // Zodra het element beschikbaar is in de DOM, tekent het effect direct
-      const ctx = this.canvasEl().nativeElement.getContext("2d");
-    });
-  }
+// Haalt de referentie naar <canvas #mijnCanvas> op als
+Signal
+canvasEl =
+viewChild.required<ElementRef<HTMLCanvasElement>>('mijnCanvas
+');
+constructor() {
+effect(() => {
+// Zodra het element beschikbaar is in de DOM, tekent
+het effect direct
+const ctx =
+this.canvasEl().nativeElement.getContext('2d');
+});
 }
-```
-
-214. Hoe ontwerp je een lichtgewicht 'Signal Store' patroon met een Angular Service?
-
-     Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
-
-```typescript
-
+} 214. Hoe ontwerp je een lichtgewicht 'Signal Store' patroon met een Angular
+Service?
+Je hebt voor robuust state management geen zware, complexe libraries (zoals Redux/NgRx) meer
+nodig. Een simpele Angular Service in combinatie met private writable signals en publieke read-
+only signals (of computed signals) vormt een perfect, waterdicht state-patroon.
+TypeScript
 @Injectable({ providedIn: 'root' })
 export class WinkelwagenStore {
-//
-```
-
-215. Private state (alleen binnen de service muteerbaar)
-
-     private \_items = signal<Product[]>([]);
-
-//
-
-216. Publieke state (alleen-lezen voor componenten)
-
-     items = this.\_items.asReadonly();
-     aantalItems = computed(() => this.\_items().length);
-
-//
-
-217. Gecontroleerde mutaties (Actions)
-
-     voegToe(product: Product) {
-     this.\_items.update(huidigeItems => [...huidigeItems, product]);
-     }
-     }
-
-218. Hoe ga je om met asynchrone state (zoals API-calls) binnen een Signal-architectuur?
-
-     Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het resultaat in een synchroon leesbaar signal.
-
-```typescript
-export class ProductenComponent {
-  private api = inject(ApiService);
-
-  // Converteert de Observable direct naar een Signal
-  producten = toSignal(this.api.getProducts(), { initialValue: [] });
+// 1. Private state (alleen binnen de service muteerbaar)
+private \_items = signal<Product[]>([]);
+// 2. Publieke state (alleen-lezen voor componenten)
+items = this.\_items.asReadonly();
+aantalItems = computed(() => this.\_items().length);
+// 3. Gecontroleerde mutaties (Actions)
+voegToe(product: Product) {
+this.\_items.update(huidigeItems => [...huidigeItems,
+product]);
 }
-```
-
-219. Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state management?
-
-     De @angular/core/rxjs-interop module levert de cruciale brugfuncties toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-architectuur.
-
-220. Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
-
-     Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable) muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
-
-```typescript
+} 215. Hoe ga je om met asynchrone state (zoals API-calls) binnen een Signal-
+architectuur?
+Omdat de HttpClient van Angular op RxJS leunt, transformeer je asynchrone datastromen
+naar state met de toSignal() helper. Dit vangt de asynchrone stroom op en verpakt het
+resultaat in een synchroon leesbaar signal.
+TypeScript
+export class ProductenComponent {
+private api = inject(ApiService);
+// Converteert de Observable direct naar een Signal
+producten = toSignal(this.api.getProducts(),
+{ initialValue: [] });
+}
+management? 216. Wat is de 'RxJS-Interop' module en waarom is deze belangrijk bij state
+De @angular/core/rxjs-interop module levert de cruciale brugfuncties
+toSignal() and toObservable(). Hoewel Signals perfect zijn voor het beheren en tonen
+van synchrone status in de UI, blijft RxJS onverslaanbaar voor asynchrone, event-gedreven
+operaties (zoals websockets, polling, of race-conditions met switchMap). De interop-module
+stelt je in staat om de sterke punten van beide werelden naadloos te combineren in je state-
+architectuur. 217. Hoe muteer je complexe geneste objecten of arrays veilig in een Signal?
+Signals vergelijken waarden standaard op basis van referentiegelijkheid (===). Als je een
+eigenschap binnen een object of array direct aanpast, ziet Angular dit niet als een wijziging en zal
+de UI niet updaten. Je moet objecten en arrays daarom altijd onveranderbaar (immutable)
+muteren met behulp van de spread-operator (...) of methoden zoals .map() en .filter().
+TypeScript
 // FOUTIEF (UI update niet, referentie blijft gelijk):
-gebruikerSignal().naam = "Piet";
-
+gebruikerSignal().naam = 'Piet';
 // CORRECT (Nieuw object referentie gecreëerd):
-gebruikerSignal.set({ ...gebruikerSignal(), naam: "Piet" });
-```
-
-221. Wat is de impact van 'Zoneless Angular' op de toekomst van State Management?
-
-     Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via provideExperimentalZonelessChangeDetection() in app.config.ts). Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat het belang van een solide Signal-based state management-architectuur alleen maar vergroot.
-
-222. Kun je een Signal hergebruiken in meerdere componenten?
-
-     Ja, mits de instantie van het signal gedeeld wordt. Als je een signal definieert in een root-service (providedIn: 'root'), dan delen alle componenten die deze service injecteren exact hetzelfde signal. Verandert Component A de waarde, dan reageert Component B daar direct op. Als je een signal in de component-klasse zelf declareert, krijgt elke instantie van die component uiteraard zijn eigen, unieke signal-waarde.
-
-223. Hoe test je een component of service die intensief gebruikmaakt van Signals?
-
-     Het testen van Signals is extreem eenvoudig omdat ze synchroon van aard zijn. Je hoeft niet te werken met complexe asynchrone test-helpers zoals fakeAsync, tick of waitForAsync om gewijzigde waarden uit te lezen; je roept simpelweg het signal aan en controleert direct de waarde.
-
-```typescript
-
-it('zou het aantal items in de winkelwagen correct moeten verhogen', () => {
+gebruikerSignal.set({ ...gebruikerSignal(), naam: 'Piet' }); 218. Wat is de impact van 'Zoneless Angular' op de toekomst van State
+Management?
+Sinds recente releases ondersteunt Angular een volledige Zoneless modus (te configureren via
+provideExperimentalZonelessChangeDetection() in app.config.ts).
+Dit betekent dat Zone.js compleet uit de applicatie gesloopt kan worden. De applicatie draait
+hierdoor lichter, start sneller op en verbruikt minder geheugen. In deze modus zijn Signals de enige
+betrouwbare manier geworden om Angular te vertellen wanneer de UI ververst moet worden, wat
+het belang van een solide Signal-based state management-architectuur alleen maar vergroot. 219. Kun je een Signal hergebruiken in meerdere componenten?
+Ja, mits de instantie van het signal gedeeld wordt. Als je een signal definieert in een root-service
+(providedIn: 'root'), dan delen alle componenten die deze service injecteren exact
+hetzelfde signal. Verandert Component A de waarde, dan reageert Component B daar direct op. Als
+je een signal in de component-klasse zelf declareert, krijgt elke instantie van die component
+uiteraard zijn eigen, unieke signal-waarde. 220. Hoe test je een component of service die intensief gebruikmaakt van
+Signals?
+Het testen van Signals is extreem eenvoudig omdat ze synchroon van aard zijn. Je hoeft niet te
+werken met complexe asynchrone test-helpers zoals fakeAsync, tick of waitForAsync
+om gewijzigde waarden uit te lezen; je roept simpelweg het signal aan en controleert direct de
+waarde.
+TypeScript
+it('zou het aantal items in de winkelwagen correct moeten
+verhogen', () => {
 const store = TestBed.inject(WinkelwagenStore);
-
 // Controleer initiële waarde synchroon
 expect(store.aantalItems()).toBe(0);
-
 // Voer actie uit
 store.voegToe({ id: 1, naam: 'Laptop' });
-
 // Controleer direct de geupdate computed waarde
 expect(store.aantalItems()).toBe(1);
 });
-
-Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nummering en inhoud zijn naadloos gestructureerd en volledig bijgewerkt naar de modernste standaarden, inclusief Zoneless change detection, Deferrable Views, Event Dispatch (Hydration), Module Federation v2, en geavanceerde Signal-patronen.
-```
-
-## Performance en Security (191-200)
-
-224. Wat zijn Deferrable Views (@defer) en hoe verbeteren ze de Initial Page Load?
-
-     @defer is een ingebouwde control flow feature waarmee je componenten, directives en pipes binnen een template kunt splitsen in aparte JavaScript-chunks (lazy loading). Deze code wordt pas gedownload en gerenderd wanneer aan een specifieke triggerconditie wordt voldaan (bijvoorbeeld wanneer het element in de viewport scrollt). Dit verlaagt de initiële bundelomvang drastisch.
-
-```html
+Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nummering en inhoud
+zijn naadloos gestructureerd en volledig bijgewerkt naar de modernste standaarden, inclusief
+Zoneless change detection, Deferrable Views, Event Dispatch (Hydration), Module Federation
+v2, en geavanceerde Signal-patronen.
+Performance en Security (191-200) 191. Wat zijn Deferrable Views (@defer) en hoe verbeteren ze de Initial Page
+Load?
+@defer is een ingebouwde control flow feature waarmee je componenten, directives en pipes
+binnen een template kunt splitsen in aparte JavaScript-chunks (lazy loading). Deze code wordt pas
+gedownload en gerenderd wanneer aan een specifieke triggerconditie wordt voldaan (bijvoorbeeld
+wanneer het element in de viewport scrollt). Dit verlaagt de initiële bundelomvang drastisch.
+HTML
 @defer (on viewport) {
 
-<!-- Deze zware component laadt pas als hij in beeld scrollt -->
+<!-- Deze zware component laadt pas als hij in beeld
+scrollt -->
 <app-heavy-chart />
 } @placeholder {
 <div>Laden...</div>
 }
-```
-
-225. Wat is het verschil tussen de triggers on viewport, on idle, on interaction en on hover?
-
-     on viewport: Vuurt zodra het placeholder-gebied zichtbaar wordt in het scherm van de gebruiker.
-     on idle: Vuurt automatisch zodra de browser klaar is met de initiële taken (via requestIdleCallback). Dit is de standaardtrigger.
-     on interaction: Vuurt wanneer de gebruiker klikt of typt in het placeholder-gebied.
-     on hover: Vuurt zodra de muis van de gebruiker over het placeholder-gebied beweegt.
-
-226. Wat is Cross-Site Scripting (XSS) en hoe beschermt Angular je hier standaard tegen?
-
-     XSS is een kwetsbaarheid waarbij kwaadwillende scripts in een vertrouwde website worden geïnjecteerd. Angular beschermt je hiertegen door alle waarden die via databinding ({{ waarde }} of [innerHtml]) in de DOM worden geplaatst, automatisch te sanitizen (opschonen). Potentieel gevaarlijke HTML-, CSS- of script-tags worden geneutraliseerd voordat ze worden gerenderd.
-
-227. Hoe omzeil je bewust Angular's ingebouwde XSS-beveiliging met de DomSanitizer?
-
-     Als je expliciet vertrouwde code (zoals een ingesloten YouTube iFrame of vertrouwde HTML uit een CMS) moet tonen, kun je Angular's sanitization passeren met de DomSanitizer service. Gebruik dit uiterst voorzichtig.
-
-```typescript
+192. Wat is het verschil tussen de triggers on viewport, on idle, on
+interaction en on hover?
+• on viewport: Vuurt zodra het placeholder-gebied zichtbaar wordt in het scherm van de
+gebruiker.
+• on idle: Vuurt automatisch zodra de browser klaar is met de initiële taken (via
+requestIdleCallback). Dit is de standaardtrigger.
+• on interaction: Vuurt wanneer de gebruiker klikt of typt in het placeholder-gebied.
+• on hover: Vuurt zodra de muis van de gebruiker over het placeholder-gebied beweegt.
+193. Wat is Cross-Site Scripting (XSS) en hoe beschermt Angular je hier
+standaard tegen?
+XSS is een kwetsbaarheid waarbij kwaadwillende scripts in een vertrouwde website worden
+geïnjecteerd. Angular beschermt je hiertegen door alle waarden die via databinding ({{ waarde
+}} of [innerHtml]) in de DOM worden geplaatst, automatisch te sanitizen (opschonen).
+Potentieel gevaarlijke HTML-, CSS- of script-tags worden geneutraliseerd voordat ze worden
+gerenderd.
+194. Hoe omzeil je bewust Angular's ingebouwde XSS-beveiliging met de
+DomSanitizer?
+Als je expliciet vertrouwde code (zoals een ingesloten YouTube iFrame of vertrouwde HTML uit
+een CMS) moet tonen, kun je Angular's sanitization passeren met de DomSanitizer service.
+Gebruik dit uiterst voorzichtig.
+TypeScript
 export class VeiligeComponent {
-  private sanitizer = inject(DomSanitizer);
-
-  // Markeer de URL expliciet als veilig voor gebruik in een iFrame
-  veiligeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-    "https://trusted.com/embed",
-  );
+private sanitizer = inject(DomSanitizer);
+// Markeer de URL expliciet als veilig voor gebruik in een
+iFrame
+veiligeUrl =
+this.sanitizer.bypassSecurityTrustResourceUrl('https://
+trusted.com/embed');
 }
-```
-
-228. Wat is Content Security Policy (CSP) en hoe pas je dit toe in een Angular app?
-
-     CSP is een HTTP-beveiligingsheader die bepaalt welke bronnen (scripts, afbeeldingen, stylesheets) door de browser mogen worden ingeladen. Dit vormt een krachtige verdedigingslinie tegen XSS-aanvallen. In een Angular-applicatie configureer je CSP via je webserver (Nginx/Apache), waarbij je het gebruik van unsafe-inline scripts verbiedt en eventueel werkt met cryptografische nonces voor dynamische inline stijlen.
-
-229. Wat is de 'Change Detection Strategy' en hoe optimaliseert ChangeDetectionStrategy.OnPush de prestaties?
-
-     Standaard controleert Angular bij elk asynchroon event de gehele applicatie (Default). Wanneer je een component instelt op ChangeDetectionStrategy.OnPush, reageert deze component alleen op veranderingsdetectie als:
-     Een @Input() of Signal-input verandert van waarde (referentiewijziging).
-     Er een event (zoals een klik) plaatsvindt binnen de component zelf.
-     Er handmatig om een controle wordt gevraagd via ChangeDetectorRef.markForCheck().
-
-```typescript
+app?
+195. Wat is Content Security Policy (CSP) en hoe pas je dit toe in een Angular
+CSP is een HTTP-beveiligingsheader die bepaalt welke bronnen (scripts, afbeeldingen, stylesheets)
+door de browser mogen worden ingeladen. Dit vormt een krachtige verdedigingslinie tegen XSS-
+aanvallen. In een Angular-applicatie configureer je CSP via je webserver (Nginx/Apache), waarbij
+je het gebruik van unsafe-inline scripts verbiedt en eventueel werkt met cryptografische
+nonces voor dynamische inline stijlen.
+196. Wat is de 'Change Detection Strategy' en hoe optimaliseert
+ChangeDetectionStrategy.OnPush de prestaties?
+Standaard controleert Angular bij elk asynchroon event de gehele applicatie (Default). Wanneer je
+een component instelt op ChangeDetectionStrategy.OnPush, reageert deze
+component alleen op veranderingsdetectie als:
+1. Een @Input() of Signal-input verandert van waarde (referentiewijziging).
+2. Er een event (zoals een klik) plaatsvindt binnen de component zelf.
+3. Er handmatig om een controle wordt gevraagd via
+ChangeDetectorRef.markForCheck().
+TypeScript
 @Component({
-  selector: "app-perf-kaart",
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush, // Voorkomt onnodige re-renders
-  template: `...`,
+selector: 'app-perf-kaart',
+standalone: true,
+changeDetection: ChangeDetectionStrategy.OnPush, //
+Voorkomt onnodige re-renders
+template: `...`
 })
 export class PerfKaartComponent {}
-```
-
-230. Wat is het gevaar van het aanroepen van functies rechtstreeks in je HTML-templates?
-
-     Als je een reguliere TypeScript-functie aanroept binnen een template (bijv. <p>{{ berekenNaam(gebruiker) }}</p>), wordt deze functie bij elke veranderingsdetectie-cyclus opnieuw uitgevoerd — soms wel honderden keren per seconde. Dit leidt tot ernstige prestatieproblemen. Los dit op door gebruik te maken van Pipes (die het resultaat cachen/memoizen) of door de waarde op te slaan in een Signal.
-
-231. Hoe helpt de track parameter in de moderne @for loop de prestaties van lijsten te verbeteren?
-
-     In de moderne @for loop is de track expressie verplicht. Dit vertelt Angular welke unieke eigenschap (zoals een id) hij moet gebruiken om items in een lijst te identificeren. Als de lijst verandert (bijv. er wordt één item toegevoegd), hoeft Angular dankzij track alleen dat specifieke DOM-element aan te maken, in plaats van de volledige lijst opnieuw te vernietigen en op te bouwen.
-
-```html
+197. Wat is het gevaar van het aanroepen van functies rechtstreeks in je HTML-
+templates?
+Als je een reguliere TypeScript-functie aanroept binnen een template (bijv.
+<p>{{ berekenNaam(gebruiker) }}</p>), wordt deze functie bij elke
+veranderingsdetectie-cyclus opnieuw uitgevoerd — soms wel honderden keren per seconde. Dit
+leidt tot ernstige prestatieproblemen. Los dit op door gebruik te maken van Pipes (die het resultaat
+cachen/memoizen) of door de waarde op te slaan in een Signal.
+198. Hoe helpt de track parameter in de moderne @for loop de prestaties van
+lijsten te verbeteren?
+In de moderne @for loop is de track expressie verplicht. Dit vertelt Angular welke unieke
+eigenschap (zoals een id) hij moet gebruiken om items in een lijst te identificeren. Als de lijst
+verandert (bijv. er wordt één item toegevoegd), hoeft Angular dankzij track alleen dat specifieke
+DOM-element aan te maken, in plaats van de volledige lijst opnieuw te vernietigen en op te
+bouwen.
+HTML
 @for (item of producten(); track item.id) {
-
 <li>{{ item.naam }}</li>
 }
-```
-
-232. Wat doet NgZone.runOutsideAngular() en wanneer zet je dit in?
-
-     Sommige asynchrone taken (zoals intensieve animaties met requestAnimationFrame, herhaalde setInterval tellers, of realtime muisbewegingen) triggeren continu veranderingsdetectie. Door deze code buiten de Angular-zone uit te voeren, voorkom je dat de app constant de UI probeert te herberekenen.
-
-```typescript
+199. Wat doet NgZone.runOutsideAngular() en wanneer zet je dit in?
+Sommige asynchrone taken (zoals intensieve animaties met requestAnimationFrame,
+herhaalde setInterval tellers, of realtime muisbewegingen) triggeren continu
+veranderingsdetectie. Door deze code buiten de Angular-zone uit te voeren, voorkom je dat de app
+constant de UI probeert te herberekenen.
+TypeScript
 export class AnimatieComponent {
-  private zone = inject(NgZone);
-
-  startZwareAnimatie() {
-    this.zone.runOutsideAngular(() => {
-      // Dit draait in de achtergrond zonder Angular's veranderingsdetectie te belasten
-      window.addEventListener("mousemove", this.berekenPositie);
-    });
-  }
+private zone = inject(NgZone);
+startZwareAnimatie() {
+this.zone.runOutsideAngular(() => {
+// Dit draait in de achtergrond zonder Angular's
+veranderingsdetectie te belasten
+window.addEventListener('mousemove',
+this.berekenPositie);
+});
 }
-```
-
-233. Hoe elimineer je Zone.js volledig voor maximale performance (Zoneless Angular)?
-
-     Je kunt Angular volledig 'Zoneless' draaien. Dit voorkomt dat applicatie-brede controles plaatsvinden en dwingt Angular om alleen de HTML bij te werken die daadwerkelijk gekoppeld is aan gewijzigde Signals. Je configureert dit in app.config.ts. Hierna kun je Zone.js uit je angular.json polyfills verwijderen.
-
-```typescript
+}
+200. Hoe elimineer je Zone.js volledig voor maximale performance (Zoneless
+Angular)?
+Je kunt Angular volledig 'Zoneless' draaien. Dit voorkomt dat applicatie-brede controles
+plaatsvinden en dwingt Angular om alleen de HTML bij te werken die daadwerkelijk gekoppeld is
+aan gewijzigde Signals. Je configureert dit in app.config.ts. Hierna kun je Zone.js uit je
+angular.json polyfills verwijderen.
+TypeScript
 // app.config.ts
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideExperimentalZonelessChangeDetection(), // Activeert de ultrasnelle Zoneless-modus
-  ],
+providers: [
+provideExperimentalZonelessChangeDetection() // Activeert
+de ultrasnelle Zoneless-modus
+]
 };
-```
-
-## SSR, Hydration en PWA (221-240)
-
-234. Wat is Server-Side Rendering (SSR) in Angular?
-
-     SSR is een techniek waarbij Angular de applicatie op een Node.js-server compileert en een volledig opgebouwde, statische HTML-pagina naar de browser van de gebruiker stuurt. Dit zorgt voor een razendsnelle eerste weergave (First Contentful Paint) en een sterk verbeterde SEO-indexering door zoekmachines.
-
-235. Wat is het verschil tussen SSR en Prerendering (SSG)?
-
-     SSR (Server-Side Rendering): De HTML wordt on-the-fly op de server gegenereerd op het exacte moment dat een gebruiker de pagina opvraagt. Ideaal voor dynamische data (zoals een gebruikersdashboard of voorraadsysteem).
-     SSG (Static Site Generation / Prerendering): De HTML-pagina's worden eenmalig gegenereerd tijdens het build-proces van de applicatie. Dit resulteert in statische bestanden die direct vanaf een CDN geserveerd kunnen worden. Ideaal voor blogs, documentatie of marketingpagina's.
-
-236. Wat is 'Client-Side Hydration' en hoe werkt dit in Angular?
-
-     Wanneer de server de statische HTML naar de browser stuurt, kan de gebruiker de pagina direct zien, maar is deze nog niet interactief (er draait nog geen JavaScript). Hydration is het proces waarbij Angular in de browser de statische HTML-structuur hergebruikt, de interne applicatiestructuur (componentenboom) eraan koppelt en event-listeners activeert, zonder de pagina destructief opnieuw te hoeven renderen.
-
-237. Hoe activeer je SSR en Hydration in een moderne Angular applicatie?
-
-     Je voegt SSR-ondersteuning toe aan je project via de Angular CLI met het commando: ng add @angular/ssr. Dit configureert een Node.js server (server.ts) en activeert hydration automatisch in je app.config.ts:
-
-```typescript
+SSR, Hydration en PWA (221-240)
+221. Wat is Server-Side Rendering (SSR) in Angular?
+SSR is een techniek waarbij Angular de applicatie op een Node.js-server compileert en een volledig
+opgebouwde, statische HTML-pagina naar de browser van de gebruiker stuurt. Dit zorgt voor een
+razendsnelle eerste weergave (First Contentful Paint) en een sterk verbeterde SEO-indexering door
+zoekmachines.
+222. Wat is het verschil tussen SSR en Prerendering (SSG)?
+• SSR (Server-Side Rendering): De HTML wordt on-the-fly op de server gegenereerd op het
+exacte moment dat een gebruiker de pagina opvraagt. Ideaal voor dynamische data (zoals
+een gebruikersdashboard of voorraadsysteem).
+• SSG (Static Site Generation / Prerendering): De HTML-pagina's worden eenmalig
+gegenereerd tijdens het build-proces van de applicatie. Dit resulteert in statische bestanden
+die direct vanaf een CDN geserveerd kunnen worden. Ideaal voor blogs, documentatie of
+marketingpagina's.
+223. Wat is 'Client-Side Hydration' en hoe werkt dit in Angular?
+Wanneer de server de statische HTML naar de browser stuurt, kan de gebruiker de pagina direct
+zien, maar is deze nog niet interactief (er draait nog geen JavaScript). Hydration is het proces
+waarbij Angular in de browser de statische HTML-structuur hergebruikt, de interne
+applicatiestructuur (componentenboom) eraan koppelt en event-listeners activeert, zonder de pagina
+destructief opnieuw te hoeven renderen.
+224. Hoe activeer je SSR en Hydration in een moderne Angular applicatie?
+Je voegt SSR-ondersteuning toe aan je project via de Angular CLI met het commando: ng add
+@angular/ssr. Dit configureert een Node.js server (server.ts) en activeert hydration
+automatisch in je app.config.ts:
+TypeScript
 // app.config.ts
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideClientHydration(), // Activeert het naadloze hydration-proces
-  ],
+providers: [
+provideClientHydration() // Activeert het naadloze
+hydration-proces
+]
 };
-```
-
-238. Wat is 'Event Dispatch' (onderdeel van Angular's geavanceerde Hydration)?
-
-     Als een gebruiker op een server-side gerenderde pagina klikt voordat de JavaScript in de browser volledig is ingeladen, gaan die interacties normaal gesproken verloren. Angular maakt gebruik van Event Dispatch: een lichtgewicht script vangt de vroege gebruikers-events (zoals clicks) op in de browser en bewaart deze in een wachtrij. Zodra de applicatie volledig is gehydrateerd, worden deze clicks alsnog correct uitgevoerd.
-
-239. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of document?
-
-     De Node.js-serveromgeving bezit geen browser-objecten zoals window, document, localStorage of navigator. Als Angular code tegenkomt die deze objecten rechtstreeks probeert aan te spreken tijdens het renderen op de server, zal het Node-proces crashen met een ReferenceError.
-
-240. Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-omgeving?
-
-     Om te voorkomen dat browser-specifieke code op de server draait, controleer je het huidige platform met de functies isPlatformBrowser of isPlatformServer.
-
-```typescript
-import { PLATFORM_ID } from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
-
+225. Wat is 'Event Dispatch' (onderdeel van Angular's geavanceerde
+Hydration)?
+Als een gebruiker op een server-side gerenderde pagina klikt voordat de JavaScript in de browser
+volledig is ingeladen, gaan die interacties normaal gesproken verloren. Angular maakt gebruik van
+Event Dispatch: een lichtgewicht script vangt de vroege gebruikers-events (zoals clicks) op in de
+browser en bewaart deze in een wachtrij. Zodra de applicatie volledig is gehydrateerd, worden deze
+clicks alsnog correct uitgevoerd.
+226. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of
+document?
+De Node.js-serveromgeving bezit geen browser-objecten zoals window, document,
+localStorage of navigator. Als Angular code tegenkomt die deze objecten rechtstreeks
+probeert aan te spreken tijdens het renderen op de server, zal het Node-proces crashen met een
+ReferenceError.
+227. Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-
+omgeving?
+Om te voorkomen dat browser-specifieke code op de server draait, controleer je het huidige
+platform met de functies isPlatformBrowser of isPlatformServer.
+TypeScript
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 export class OpslagComponent {
-  private platformId = inject(PLATFORM_ID);
-
-  getLocalStorageItem() {
-    // Voer dit ALLEEN uit als we daadwerkelijk in de browser draaien
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem("sleutel");
-    }
-    return null;
-  }
+private platformId = inject(PLATFORM_ID);
+getLocalStorageItem() {
+// Voer dit ALLEEN uit als we daadwerkelijk in de browser
+draaien
+if (isPlatformBrowser(this.platformId)) {
+return localStorage.getItem('sleutel');
 }
-```
-
-241. Wat is de taak van TransferState bij SSR?
-
-     Als een component tijdens het server-side renderen een API-call doet om data op te halen, zal diezelfde component bij aankomst in de browser die API-call normaal gesproken nóg een keer uitvoeren. TransferState lost dit op: het cachet de data die op de server is opgehaald en sluit dit als een JSON-string achteraan de HTML aan. In de browser leest de HttpClient deze cache direct uit, wat een dubbele API-call bespaart.
-
-242. Wat is een Progressive Web App (PWA)?
-
-     Een PWA is een webapplicatie die gebruikmaakt van moderne browsertechnologieën om gebruikers een app-achtige ervaring te bieden. Een PWA kan op het startscherm van een telefoon worden geïnstalleerd, werkt offline, ondersteunt push-notificaties en laadt dankzij slimme caching onmiddellijk op.
-
-243. Wat is de rol van een Service Worker in een PWA?
-
-     Een Service Worker is een JavaScript-bestand dat op de achtergrond in de browser draait, los van de webpagina zelf. Het fungeert als een netwerk-proxy: het kan uitgaande netwerkverzoeken onderscheppen en besluiten om bestanden direct vanuit een lokale cache te serveren, waardoor de applicatie volledig offline kan functioneren.
-
-244. Hoe voeg je PWA-functionaliteit toe aan Angular?
-
-     Dit voeg je eenvoudig toe via de CLI: ng add @angular/pwa. Dit commando genereert automatisch een configuratiebestand (ngsw-config.json), voegt de benodigde iconen toe en registreert de Angular Service Worker in je app.config.ts.
-
-245. Hoe werkt het ngsw-config.json configuratiebestand?
-
-     In dit bestand bepaal je de caching-strategieën van de Angular Service Worker. Je deelt resources op in groepen:
-     assetGroups: Voor statische bestanden (index.html, CSS, JS, afbeeldingen). Je kunt kiezen voor installMode: 'prefetch' om alles direct bij de eerste start lokaal op te slaan.
-     dataGroups: Voor dynamische API-verzoeken. Hier kies je tussen freshness (eerst netwerk proberen, handig voor live data) of performance (eerst cache proberen, handig voor semi-statische data).
-
-246. Hoe dwing je een applicatie-update af met de SwUpdate service?
-
-     Wanneer je een nieuwe versie van je Angular-app deployed, downloadt de Service Worker deze op de achtergrond. Met de SwUpdate service kun je de gebruiker direct een melding tonen zodra de nieuwe versie klaarstaat om geactiveerd te worden.
-
-```typescript
-import { SwUpdate } from "@angular/service-worker";
-
+return null;
+}
+}
+228. Wat is de taak van TransferState bij SSR?
+Als een component tijdens het server-side renderen een API-call doet om data op te halen, zal
+diezelfde component bij aankomst in de browser die API-call normaal gesproken nóg een keer
+uitvoeren. TransferState lost dit op: het cachet de data die op de server is opgehaald en sluit
+dit als een JSON-string achteraan de HTML aan. In de browser leest de HttpClient deze cache
+direct uit, wat een dubbele API-call bespaart.
+229. Wat is een Progressive Web App (PWA)?
+Een PWA is een webapplicatie die gebruikmaakt van moderne browsertechnologieën om gebruikers
+een app-achtige ervaring te bieden. Een PWA kan op het startscherm van een telefoon worden
+geïnstalleerd, werkt offline, ondersteunt push-notificaties en laadt dankzij slimme caching
+onmiddellijk op.
+230. Wat is de rol van een Service Worker in een PWA?
+Een Service Worker is een JavaScript-bestand dat op de achtergrond in de browser draait, los van de
+webpagina zelf. Het fungeert als een netwerk-proxy: het kan uitgaande netwerkverzoeken
+onderscheppen en besluiten om bestanden direct vanuit een lokale cache te serveren, waardoor de
+applicatie volledig offline kan functioneren.
+231. Hoe voeg je PWA-functionaliteit toe aan Angular?
+Dit voeg je eenvoudig toe via de CLI: ng add @angular/pwa. Dit commando genereert
+automatisch een configuratiebestand (ngsw-config.json), voegt de benodigde iconen toe en
+registreert de Angular Service Worker in je app.config.ts.
+232. Hoe werkt het ngsw-config.json configuratiebestand?
+In dit bestand bepaal je de caching-strategieën van de Angular Service Worker. Je deelt resources op
+in groepen:
+• assetGroups: Voor statische bestanden (index.html, CSS, JS, afbeeldingen). Je kunt
+kiezen voor installMode: 'prefetch' om alles direct bij de eerste start lokaal op
+te slaan.
+• dataGroups: Voor dynamische API-verzoeken. Hier kies je tussen freshness (eerst
+netwerk proberen, handig voor live data) of performance (eerst cache proberen, handig
+voor semi-statische data).
+233. Hoe dwing je een applicatie-update af met de SwUpdate service?
+Wanneer je een nieuwe versie van je Angular-app deployed, downloadt de Service Worker deze op
+de achtergrond. Met de SwUpdate service kun je de gebruiker direct een melding tonen zodra de
+nieuwe versie klaarstaat om geactiveerd te worden.
+TypeScript
+import { SwUpdate } from '@angular/service-worker';
 export class UpdateService {
-  private swUpdate = inject(SwUpdate);
-
-  constructor() {
-    if (this.swUpdate.isEnabled) {
-      this.swUpdate.versionUpdates.subscribe((evt) => {
-        if (evt.type === "VERSION_READY") {
-          if (confirm("Nieuwe versie beschikbaar. Nu herladen?")) {
-            window.location.reload();
-          }
-        }
-      });
-    }
-  }
+private swUpdate = inject(SwUpdate);
+constructor() {
+if (this.swUpdate.isEnabled) {
+this.swUpdate.versionUpdates.subscribe(evt => {
+if (evt.type === 'VERSION_READY') {
+if (confirm('Nieuwe versie beschikbaar. Nu
+herladen?')) {
+window.location.reload();
 }
-```
-
-247. Wat is de betekenis van het manifest.webmanifest bestand?
-
-     Dit JSON-bestand vertelt de browser hoe de PWA zich moet gedragen wanneer deze geïnstalleerd wordt op een mobiel apparaat of desktop. Het bevat cruciale metadata zoals de naam van de app, de achtergrondkleur, de start-URL en de paden naar de icoonbestanden die gebruikt moeten worden op het startscherm.
-
-248. Hoe test je of de Service Worker correct functioneert tijdens lokale ontwikkeling?
-
-     De Angular Service Worker is standaard uitgeschakeld tijdens het draaien van ng serve om te voorkomen dat je constant tegen gecachte code aanloopt tijdens het programmeren. Om de PWA lokaal te testen, moet je een productie-build maken (ng build) en de resulterende dist map serveren met een losse HTTP-server (zoals de npm package http-server).
-
-249. Wat is 'App Shell' architectuur?
-
-     De App Shell is de minimale HTML, CSS en JavaScript die nodig is om de vaste gebruikersinterface (zoals de navigatiebalk, de header en de zijbalk) van een pagina direct te tonen. Tijdens een server-build kan Angular deze App Shell vooraf renderen in de index.html. Hierdoor krijgt de gebruiker direct de visuele lay-out te zien, terwijl de specifieke paginacontent er vlak daarna in wordt geladen.
-
-250. Welke invloed heeft SSR op Web Vitals zoals TTFB, FCP en INP?
-
-     TTFB (Time to First Byte): Kan iets omhoog gaan, omdat de server tijd nodig heeft om de HTML op te bouwen.
-     FCP (First Contentful Paint): Gaat drastisch omlaag (verbetert), aangezien de browser direct bruikbare HTML ontvangt en kan tekenen.
-     INP (Interaction to Next Paint): Moet goed gemonitord worden tijdens de hydration-fase. Als de main-thread te lang geblokkeerd raakt door hydration, reageert de pagina tijdelijk traag op clicks. Dit wordt opgevangen door Event Dispatch.
-
-251. Wat is de HydrationSkip directive en wanneer zet je deze in?
-
-     Als je een component hebt die direct de DOM manipuleert op een manier die Angular niet kan voorspellen (bijvoorbeeld een component die een externe jQuery-plugin inschiet), zal hydration fouten (mismatches) gooien. Met het attribuut ngSkipHydration dwing je Angular om hydration voor die specifieke component over te slaan en hem ouderwets puur aan de client-kant op te bouwen.
-
-```html
+}
+});
+}
+}
+}
+234. Wat is de betekenis van het manifest.webmanifest bestand?
+Dit JSON-bestand vertelt de browser hoe de PWA zich moet gedragen wanneer deze geïnstalleerd
+wordt op een mobiel apparaat of desktop. Het bevat cruciale metadata zoals de naam van de app, de
+achtergrondkleur, de start-URL en de paden naar de icoonbestanden die gebruikt moeten worden op
+het startscherm.
+235. Hoe test je of de Service Worker correct functioneert tijdens lokale
+ontwikkeling?
+De Angular Service Worker is standaard uitgeschakeld tijdens het draaien van ng serve om te
+voorkomen dat je constant tegen gecachte code aanloopt tijdens het programmeren. Om de PWA
+lokaal te testen, moet je een productie-build maken (ng build) en de resulterende dist map
+serveren met een losse HTTP-server (zoals de npm package http-server).
+236. Wat is 'App Shell' architectuur?
+De App Shell is de minimale HTML, CSS en JavaScript die nodig is om de vaste
+gebruikersinterface (zoals de navigatiebalk, de header en de zijbalk) van een pagina direct te tonen.
+Tijdens een server-build kan Angular deze App Shell vooraf renderen in de index.html.
+Hierdoor krijgt de gebruiker direct de visuele lay-out te zien, terwijl de specifieke paginacontent er
+vlak daarna in wordt geladen.
+237. Welke invloed heeft SSR op Web Vitals zoals TTFB, FCP en INP?
+• TTFB (Time to First Byte): Kan iets omhoog gaan, omdat de server tijd nodig heeft om de
+HTML op te bouwen.
+• FCP (First Contentful Paint): Gaat drastisch omlaag (verbetert), aangezien de browser
+direct bruikbare HTML ontvangt en kan tekenen.
+• INP (Interaction to Next Paint): Moet goed gemonitord worden tijdens de hydration-fase.
+Als de main-thread te lang geblokkeerd raakt door hydration, reageert de pagina tijdelijk
+traag op clicks. Dit wordt opgevangen door Event Dispatch.
+238. Wat is de HydrationSkip directive en wanneer zet je deze in?
+Als je een component hebt die direct de DOM manipuleert op een manier die Angular niet kan
+voorspellen (bijvoorbeeld een component die een externe jQuery-plugin inschiet), zal hydration
+fouten (mismatches) gooien. Met het attribuut ngSkipHydration dwing je Angular om
+hydration voor die specifieke component over te slaan en hem ouderwets puur aan de client-kant op
+te bouwen.
+HTML
 <app-legacy-chart ngSkipHydration />
-```
-
-252. Hoe kun je dynamische SEO tags instellen bij gebruik van SSR?
-
-     Angular biedt de Meta en Title services waarmee je runtime vanuit je componenten metadata (zoals open-graph tags voor Facebook/LinkedIn of meta-descriptions voor Google) kunt aanpassen. Omdat dit tijdens SSR al gebeurt, zien scrapers en zoekmachines direct de juiste unieke tags per pagina.
-
-```typescript
-import { Meta, Title } from "@angular/platform-browser";
-
+239. Hoe kun je dynamische SEO tags instellen bij gebruik van SSR?
+Angular biedt de Meta en Title services waarmee je runtime vanuit je componenten metadata
+(zoals open-graph tags voor Facebook/LinkedIn of meta-descriptions voor Google) kunt aanpassen.
+Omdat dit tijdens SSR al gebeurt, zien scrapers en zoekmachines direct de juiste unieke tags per
+pagina.
+TypeScript
+import { Meta, Title } from '@angular/platform-browser';
 export class ArtikelComponent implements OnInit {
-  private title = inject(Title);
-  private meta = inject(Meta);
-
-  ngOnInit() {
-    this.title.setTitle("Modern Angular Artikel");
-    this.meta.updateTag({
-      name: "description",
-      content: "Diepgaande uitleg over SSR.",
-    });
-  }
+private title = inject(Title);
+private meta = inject(Meta);
+ngOnInit() {
+this.title.setTitle('Modern Angular Artikel');
+this.meta.updateTag({ name: 'description', content:
+'Diepgaande uitleg over SSR.' });
 }
-```
-
-253. Wat is Server Context in Angular SSR?
-
-     Server Context is een ingebouwde configuratie waarmee de applicatie weet via welke specifieke server-engine of build-tool hij op dat moment gerenderd wordt (bijvoorbeeld of de app draait via een Express-server of een pre-rendering script). Dit helpt Angular om interne optimalisaties toe te passen voor het specifieke runtime-platform.
-
-## Micro Frontends en Monorepos (241-260)
-
+}
+240. Wat is Server Context in Angular SSR?
+Server Context is een ingebouwde configuratie waarmee de applicatie weet via welke specifieke
+server-engine of build-tool hij op dat moment gerenderd wordt (bijvoorbeeld of de app draait via
+een Express-server of een pre-rendering script). Dit helpt Angular om interne optimalisaties toe te
+passen voor het specifieke runtime-platform.
+Micro Frontends en Monorepos (241-260)
 241. Wat is een Monorepo?
-
-     Een Monorepo is een software-architectuur waarbij meerdere softwareprojecten (zoals verschillende Angular-applicaties, gedeelde bibliotheken en backend-services) in één enkele git-repository worden beheerd. Het vergemakkelijkt code-sharing, zorgt voor eenduidige tooling en stroomlijnt grote refactoring-trajecten.
-
-242. Wat is Nx en waarom is het de industriestandaard voor Angular Monorepos?
-
-     Nx is een geavanceerd build-systeem dat specifiek is ontworpen voor het beheren van monorepos. Het biedt krachtige tools die de nadelen van een grote repository wegnemen, zoals:
-     Computation Caching: Het onthoudt eerdere test- en build-resultaten. Is er niets veranderd in een component? Dan hergebruikt Nx de cache en is je build direct klaar.
-     Affected Commands: Nx analyseert de git-historie en bouwt/test uitsluitend de applicaties en bibliotheken die direct of indirect geraakt zijn door de laatste codewijziging.
-
+Een Monorepo is een software-architectuur waarbij meerdere softwareprojecten (zoals
+verschillende Angular-applicaties, gedeelde bibliotheken en backend-services) in één enkele git-
+repository worden beheerd. Het vergemakkelijkt code-sharing, zorgt voor eenduidige tooling en
+stroomlijnt grote refactoring-trajecten.
+242. Wat is Nx en waarom is het de industriestandaard voor Angular
+Monorepos?
+Nx is een geavanceerd build-systeem dat specifiek is ontworpen voor het beheren van monorepos.
+Het biedt krachtige tools die de nadelen van een grote repository wegnemen, zoals:
+• Computation Caching: Het onthoudt eerdere test- en build-resultaten. Is er niets veranderd
+in een component? Dan hergebruikt Nx de cache en is je build direct klaar.
+• Affected Commands: Nx analyseert de git-historie en bouwt/test uitsluitend de applicaties
+en bibliotheken die direct of indirect geraakt zijn door de laatste codewijziging.
 243. Hoe structureer je code in een Monorepo met 'Apps' en 'Libs'?
-
-     Apps (Applicaties): Bevatten de minimale opstartconfiguratie en routing-mappen van de daadwerkelijke projecten. Apps horen zo slank mogelijk te zijn.
-     Libs (Bibliotheken): De plek waar 95% van de daadwerkelijke code leeft. Libs worden opgedeeld in functionele domeinen (bijv. shared-ui, auth-data-access, dashboard-feature). Apps importeren deze Libs vervolgens naadloos via TypeScript pad-aliasing (@monorepo/auth).
-
+• Apps (Applicaties): Bevatten de minimale opstartconfiguratie en routing-mappen van de
+daadwerkelijke projecten. Apps horen zo slank mogelijk te zijn.
+• Libs (Bibliotheken): De plek waar 95% van de daadwerkelijke code leeft. Libs worden
+opgedeeld in functionele domeinen (bijv. shared-ui, auth-data-access,
+dashboard-feature). Apps importeren deze Libs vervolgens naadloos via
+TypeScript pad-aliasing (@monorepo/auth).
 244. Wat is een Micro Frontend architectuur?
-
-     Micro Frontends is een architectuurpatroon waarbij een grote, complexe webapplicatie wordt opgeknipt in onafhankelijke, kleine sub-applicaties die autonoom door verschillende teams gebouwd, getest en gedeployed kunnen worden. Deze sub-apps worden runtime samengevoegd in een centrale 'Host' applicatie.
-
+Micro Frontends is een architectuurpatroon waarbij een grote, complexe webapplicatie wordt
+opgeknipt in onafhankelijke, kleine sub-applicaties die autonoom door verschillende teams
+gebouwd, getest en gedeployed kunnen worden. Deze sub-apps worden runtime samengevoegd in
+een centrale 'Host' applicatie.
 245. Wat is Module Federation?
-
-     Module Federation is een technologie (geïntroduceerd in Webpack 5 en nu breed ondersteund in moderne bundlers zoals Vite/Rspack via Module Federation v2) die Micro Frontends technisch mogelijk maakt. Het stelt een JavaScript-applicatie in staat om runtime dynamisch code (zoals Angular componenten) in te laden vanuit een compleet andere applicatie die op een heel andere server of URL draait, zonder compile-time afhankelijkheden.
-
+Module Federation is een technologie (geïntroduceerd in Webpack 5 en nu breed ondersteund in
+moderne bundlers zoals Vite/Rspack via Module Federation v2) die Micro Frontends technisch
+mogelijk maakt. Het stelt een JavaScript-applicatie in staat om runtime dynamisch code (zoals
+Angular componenten) in te laden vanuit een compleet andere applicatie die op een heel andere
+server of URL draait, zonder compile-time afhankelijkheden.
 246. Wat is het verschil tussen een 'Host' en een 'Remote' in Module Federation?
-
-     Host (Shell): De hoofdapplicatie die de basislay-out (zoals het hoofdmenu) verzorgt en verantwoordelijk is voor het runtime inladen van de sub-applicaties.
-     Remote: Een onafhankelijke sub-applicatie (bijv. een betalingsmodule) die specifieke componenten of code 'exposeert' (beschikbaar stelt) aan de Host.
-
+• Host (Shell): De hoofdapplicatie die de basislay-out (zoals het hoofdmenu) verzorgt en
+verantwoordelijk is voor het runtime inladen van de sub-applicaties.
+• Remote: Een onafhankelijke sub-applicatie (bijv. een betalingsmodule) die specifieke
+componenten of code 'exposeert' (beschikbaar stelt) aan de Host.
 247. Hoe configureer je een dynamische Remote route in de Host applicatie?
-
-     Met de helper-functies van moderne Module Federation libraries kun je een Remote applicatie direct koppelen aan Angular's lazy-loaded routing:
-
-```typescript
+Met de helper-functies van moderne Module Federation libraries kun je een Remote applicatie
+direct koppelen aan Angular's lazy-loaded routing:
+TypeScript
 // app.routes.ts
-import { loadRemoteModule } from "@module-federation/enhanced/runtime";
-
+import { loadRemoteModule } from '@module-federation/
+enhanced/runtime';
 export const routes: Routes = [
-  {
-    path: "instellingen",
-    loadChildren: () =>
-      loadRemoteModule({
-        exposedModule: "./Module",
-        remoteEntry: "http://localhost:4201/remoteEntry.js",
-      }).then((m) => m.InstellingenModule),
-  },
+{
+path: 'instellingen',
+loadChildren: () => loadRemoteModule({
+exposedModule: './Module',
+remoteEntry: 'http://localhost:4201/remoteEntry.js'
+}).then(m => m.InstellingenModule)
+}
 ];
-```
-
-248. Hoe ga je om met gedeelde afhankelijkheden (Shared Dependencies) in Module Federation?
-
-     Als zowel de Host als de Remote gebruikmaken van @angular/core, wil je niet dat de browser deze zware bibliotheek twee keer moet downloaden. In de Module Federation configuratie definieer je deze pakketten als shared. De browser downloadt de bibliotheek dan één keer, en deelt de actieve instantie runtime tussen alle Micro Frontends.
-
+248. Hoe ga je om met gedeelde afhankelijkheden (Shared Dependencies) in
+Module Federation?
+Als zowel de Host als de Remote gebruikmaken van @angular/core, wil je niet dat de
+browser deze zware bibliotheek twee keer moet downloaden. In de Module Federation configuratie
+definieer je deze pakketten als shared. De browser downloadt de bibliotheek dan één keer, en
+deelt de actieve instantie runtime tussen alle Micro Frontends.
 249. Wat is het risico van 'Version Mismatch' bij gedeelde bibliotheken?
-
-     Als de Host applicatie draait op Angular v18 en een Remote applicatie op Angular v19, kan het runtime delen van @angular/core leiden tot onvoorspelbare crashes door API-verschillen. Het is een best-practice om binnen een Micro Frontend ecosysteem de core-frameworks strak op dezelfde versie te houden (wat een monorepo-aanpak extra waardevol maakt).
-
+Als de Host applicatie draait op Angular v18 en een Remote applicatie op Angular v19, kan het
+runtime delen van @angular/core leiden tot onvoorspelbare crashes door API-verschillen. Het
+is een best-practice om binnen een Micro Frontend ecosysteem de core-frameworks strak op
+dezelfde versie te houden (wat een monorepo-aanpak extra waardevol maakt).
 250. Hoe isoleer je CSS/Styles tussen verschillende Micro Frontends?
-
-     Omdat Micro Frontends runtime in dezelfde DOM worden samengevoegd, kunnen globale CSS-regels van een Remote de stijl van de Host verruineren. In Angular los je dit op door consequent gebruik te maken van de standaard ViewEncapsulation.Emulated (of ShadowDom) op componentniveau, waardoor CSS-regels strikt binnen de component-scoping blijven.
-
+Omdat Micro Frontends runtime in dezelfde DOM worden samengevoegd, kunnen globale CSS-
+regels van een Remote de stijl van de Host verruineren. In Angular los je dit op door consequent
+gebruik te maken van de standaard ViewEncapsulation.Emulated (of ShadowDom)
+op componentniveau, waardoor CSS-regels strikt binnen de component-scoping blijven.
 251. Hoe communiceer je veilig tussen de Host en een Remote applicatie?
-
-     Communicatie moet losgekoppeld (loosely coupled) plaatsvinden. Vermijd directe imports van elkaars services. Veilige communicatiemethoden zijn:
-     Het gebruik van een lichtgewicht, native browser event-systeem via window.dispatchEvent(new CustomEvent(...)).
-     Het doorgeven van state via query-parameters in de URL.
-
+Communicatie moet losgekoppeld (loosely coupled) plaatsvinden. Vermijd directe imports van
+elkaars services. Veilige communicatiemethoden zijn:
+• Het gebruik van een lichtgewicht, native browser event-systeem via
+window.dispatchEvent(new CustomEvent(...)).
+• Het doorgeven van state via query-parameters in de URL.
 252. Wat zijn Nx 'Tags' en hoe handhaaf je architectuurregels in een Monorepo?
-
-     In een grote monorepo wil je voorkomen dat een generieke bibliotheek (shared-ui) stiekem code importeert uit een specifieke app-omgeving. Met Nx kun je bibliotheken taggen (bijv. type:ui, type:feature). Vervolgens dwing je via ESLint-regels restricties af:
-
-```json
-
+In een grote monorepo wil je voorkomen dat een generieke bibliotheek (shared-ui) stiekem
+code importeert uit een specifieke app-omgeving. Met Nx kun je bibliotheken taggen (bijv.
+type:ui, type:feature). Vervolgens dwing je via ESLint-regels restricties af:
+JSON
 // eslintrc.json snippet
 "options": {
 "rules": [
-{ "sourceTag": "type:ui", "onlyDependOnLibsWithTags": ["type:ui", "type:util"] }
+{ "sourceTag": "type:ui", "onlyDependOnLibsWithTags":
+["type:ui", "type:util"] }
 ]
 }
-```
-
 253. Wat is een 'Shell' applicatie in de context van Micro Frontends?
-
-     De Shell is een ander woord voor de Host applicatie. Het is het skelet van de website. De Shell regelt meestal de authenticatie (inloggen), de globale navigatiebalk, het laden van de juiste taalbestanden (i18n) en het routeren naar de juiste standalone Remote modules.
-
+De Shell is een ander woord voor de Host applicatie. Het is het skelet van de website. De Shell
+regelt meestal de authenticatie (inloggen), de globale navigatiebalk, het laden van de juiste
+taalbestanden (i18n) en het routeren naar de juiste standalone Remote modules.
 254. Wat zijn de nadelen van een Micro Frontend architectuur?
-
-     Hoewel het uitstekend schaalt voor grote teams, brengt het significante nadelen met zich mee:
-     Complexe CI/CD pipelines: Het orchestreren van losse deployments vereist geavanceerde DevOps-kennis.
-     Operationele overhead: Lokale ontwikkeling vereist het tegelijkertijd opstarten van meerdere servers.
-     Kans op performance-degradatie: Als shared dependencies niet optimaal zijn geconfigureerd, downloadt de browser onnodig veel dubbele code.
-
-255. Wat is het verschil tussen compile-time en runtime integratie van Micro Frontends?
-
-     Compile-time: De sub-apps worden tijdens het build-proces via npm-packages samengevoegd tot één applicatie. Wijziging in sub-app A? Dan moet de hele hoofd-app opnieuw worden gebouwd.
-     Runtime (Module Federation): De sub-apps worden als onafhankelijke bundels op eigen servers gezet. De hoofd-app haalt de code pas live op het moment dat de gebruiker de pagina bezoekt. Dit biedt échte onafhankelijkheid.
-
+Hoewel het uitstekend schaalt voor grote teams, brengt het significante nadelen met zich mee:
+• Complexe CI/CD pipelines: Het orchestreren van losse deployments vereist geavanceerde
+DevOps-kennis.
+• Operationele overhead: Lokale ontwikkeling vereist het tegelijkertijd opstarten van
+meerdere servers.
+• Kans op performance-degradatie: Als shared dependencies niet optimaal zijn
+geconfigureerd, downloadt de browser onnodig veel dubbele code.
+255. Wat is het verschil tussen compile-time en runtime integratie van Micro
+Frontends?
+• Compile-time: De sub-apps worden tijdens het build-proces via npm-packages
+samengevoegd tot één applicatie. Wijziging in sub-app A? Dan moet de hele hoofd-app
+opnieuw worden gebouwd.
+• Runtime (Module Federation): De sub-apps worden als onafhankelijke bundels op eigen
+servers gezet. De hoofd-app haalt de code pas live op het moment dat de gebruiker de
+pagina bezoekt. Dit biedt échte onafhankelijkheid.
 256. Wat is Nx Cloud en hoe versnelt dit CI/CD pipelines?
-
-     Nx Cloud breidt de lokale computation cache van Nx uit naar een centrale cloud-omgeving. Dit betekent dat als Developer A lokaal een build heeft gedraaid, de CI/CD pipeline (of Developer B) die exacte build-resultaten direct uit de cloud kan trekken zonder de code zelf te compileren. Dit verkort test- en buildtijden in pipelines vaak met 70-80%.
-
-257. Hoe werkt onafhankelijke deployment (Independent Deployment) bij Micro Frontends?
-
-     Dankzij Module Federation kan een team dat verantwoordelijk is voor een Remote (bijv. de 'profiel-pagina') een bugfix live zetten door alleen de code van hun eigen Remote te builden en te uploaden naar hun server. De Host applicatie pikt bij de volgende pagina-refresh automatisch de nieuwste code op van die URL, zonder dat de Host zelf opnieuw gedeployed hoeft te worden.
-
+Nx Cloud breidt de lokale computation cache van Nx uit naar een centrale cloud-omgeving. Dit
+betekent dat als Developer A lokaal een build heeft gedraaid, de CI/CD pipeline (of Developer B)
+die exacte build-resultaten direct uit de cloud kan trekken zonder de code zelf te compileren. Dit
+verkort test- en buildtijden in pipelines vaak met 70-80%.
+257. Hoe werkt onafhankelijke deployment (Independent Deployment) bij Micro
+Frontends?
+Dankzij Module Federation kan een team dat verantwoordelijk is voor een Remote (bijv. de 'profiel-
+pagina') een bugfix live zetten door alleen de code van hun eigen Remote te builden en te uploaden
+naar hun server. De Host applicatie pikt bij de volgende pagina-refresh automatisch de nieuwste
+code op van die URL, zonder dat de Host zelf opnieuw gedeployed hoeft te worden.
 258. Wat is een 'Polyglot' Micro Frontend en ondersteunt Angular dit?
-
-     Een Polyglot Micro Frontend houdt in dat de Host in Angular is gebouwd, maar een Remote in React of Vue is geschreven. Hoewel Module Federation dit technisch toestaat (het laadt immers gewoon JavaScript in), is dit binnen Angular-apps complex vanwege de manier waarop Angular's compiler en runtime lifecycle werken. Het is sterk aan te raden om binnen één Micro Frontend ecosysteem vast te houden aan hetzelfde basisframework.
-
+Een Polyglot Micro Frontend houdt in dat de Host in Angular is gebouwd, maar een Remote in
+React of Vue is geschreven. Hoewel Module Federation dit technisch toestaat (het laadt immers
+gewoon JavaScript in), is dit binnen Angular-apps complex vanwege de manier waarop Angular's
+compiler en runtime lifecycle werken. Het is sterk aan te raden om binnen één Micro Frontend
+ecosysteem vast te houden aan hetzelfde basisframework.
 259. Wat is de taak van een 'Remote Entry' bestand?
-
-     Het remoteEntry.js bestand is het controlecentrum van een Remote applicatie. Het is een piepklein JavaScript-bestand dat door Module Federation wordt gegenereerd. Het bevat een catalogus (mapping) van alle componenten die deze specifieke Remote exposeert en vertelt de Host exact welke specifieke code-chunks hij moet downloaden als er om een module wordt gevraagd.
-
+Het remoteEntry.js bestand is het controlecentrum van een Remote applicatie. Het is een
+piepklein JavaScript-bestand dat door Module Federation wordt gegenereerd. Het bevat een
+catalogus (mapping) van alle componenten die deze specifieke Remote exposeert en vertelt de Host
+exact welke specifieke code-chunks hij moet downloaden als er om een module wordt gevraagd.
 260. Hoe ga je om met State Management over meerdere Micro Frontends heen?
-
-     Houd state strikt lokaal binnen de Micro Frontend zelf. Een Micro Frontend moet functioneren als een onafhankelijk micro-organisme. Als er echt globale state gedeeld moet worden (zoals de actieve gebruikerssessie), sluis deze data dan bij het opstarten vanuit de Shell door naar de Remote via parameters of een gecontroleerd, gedeeld window-event kanaal.
-
-## Signals en Moderne Reactiviteit (261-280)
-
-261. Wat is het fundamentele verschil in reactiviteit tussen RxJS en Angular Signals?
-
-     RxJS (Stream-gebaseerd): Is ontworpen rondom asynchrone gebeurtenissen (events) over tijd. Het pusht data door een pijplijn van operators en vereist een expliciet abonnement (subscribe of async pipe) om actie te ondernemen. RxJS blinkt uit in asynchrone orchestration (zoals debouncing of switchMapping).
-     Signals (State-gebaseerd): Zijn ontworpen voor het beheren van toestand (state). Ze zijn synchroon en trekken (pull) waarden pas op het moment dat ze nodig zijn. Signals zijn fijnmazig: ze weten exact welke specifieke HTML-node in de DOM van hen afhankelijk is.
-
+Houd state strikt lokaal binnen de Micro Frontend zelf. Een Micro Frontend moet functioneren als
+een onafhankelijk micro-organisme. Als er echt globale state gedeeld moet worden (zoals de actieve
+gebruikerssessie), sluis deze data dan bij het opstarten vanuit de Shell door naar de Remote via
+parameters of een gecontroleerd, gedeeld window-event kanaal.
+Signals en Moderne Reactiviteit (261-280)
+261. Wat is het fundamentele verschil in reactiviteit tussen RxJS en Angular
+Signals?
+• RxJS (Stream-gebaseerd): Is ontworpen rondom asynchrone gebeurtenissen (events) over
+tijd. Het pusht data door een pijplijn van operators en vereist een expliciet abonnement
+(subscribe of async pipe) om actie te ondernemen. RxJS blinkt uit in asynchrone
+orchestration (zoals debouncing of switchMapping).
+• Signals (State-gebaseerd): Zijn ontworpen voor het beheren van toestand (state). Ze zijn
+synchroon en trekken (pull) waarden pas op het moment dat ze nodig zijn. Signals zijn
+fijnmazig: ze weten exact welke specifieke HTML-node in de DOM van hen afhankelijk is.
 262. Waarom introduceerde Angular Signals als aanvulling op RxJS?
-
-     RxJS is fantastisch voor complexe asynchrone stromen, maar overdreven complex voor het simpelweg bijhouden van een boolean (zoals isOpen = true). Daarnaast heeft RxJS geen weet van de Angular DOM-rendering: een gewijzigde RxJS stream dwingt Zone.js nog steeds om de hele app-componentenboom te scannen. Signals bieden een eenvoudigere syntax voor state en maken rendementsoptimaliseringen (zoals Zoneless change detection) mogelijk.
-
+RxJS is fantastisch voor complexe asynchrone stromen, maar overdreven complex voor het
+simpelweg bijhouden van een boolean (zoals isOpen = true). Daarnaast heeft RxJS geen
+weet van de Angular DOM-rendering: een gewijzigde RxJS stream dwingt Zone.js nog steeds om
+de hele app-componentenboom te scannen. Signals bieden een eenvoudigere syntax voor state en
+maken rendementsoptimaliseringen (zoals Zoneless change detection) mogelijk.
 263. Wat is de betekenis van 'Glitch-Free Execution' bij Signals?
-
-     In RxJS kun je te maken krijgen met een 'glitch': een tijdelijke inconsistente status waarbij een afgeleide waarde onnodig twee keer berekent wordt omdat twee afhankelijke stromen net na elkaar updaten (het diamant-probleem). Signals lossen dit native op. Omdat computed signals hun berekening pas asynchroon uitstellen tot het meetmoment (lazy pull), bestaat er nooit een tijdelijke, foutieve tussenstatus.
-
+In RxJS kun je te maken krijgen met een 'glitch': een tijdelijke inconsistente status waarbij een
+afgeleide waarde onnodig twee keer berekent wordt omdat twee afhankelijke stromen net na elkaar
+updaten (het diamant-probleem). Signals lossen dit native op. Omdat computed signals hun
+berekening pas asynchroon uitstellen tot het meetmoment (lazy pull), bestaat er nooit een tijdelijke,
+foutieve tussenstatus.
 264. Hoe werkt de Equality Evaluation functie in een Signal?
-
-     Bij het aanmaken van een signal() kun je een aangepaste equal vergelijkingsfunctie meegeven. Hiermee bepaal je zelf wanneer Angular een nieuwe waarde als 'gewijzigd' moet beschouwen. Dit is handig om onnodige UI-updates bij objecten te voorkomen.
-
-```typescript
-// Signal dat alleen updates triggert als de ID daadwerkelijk verschilt
-const gebruiker = signal(
-  { id: 1, naam: "An" },
-  {
-    equal: (a, b) => a.id === b.id,
-  },
-);
-```
-
-265. Wat gebeurt er als je een Writable Signal rechtstreeks muteert zonder .set() of .update()?
-
-     Als je een array of object binnen een signal direct muteert (bijv. mijnSignal().push(item)), verander je weliswaar de data in het geheugen, maar de referentie van het object blijft exact gelijk. Omdat Angular controleert op referentiegelijkheid, krijgt het framework de wijziging niet mee. De UI zal dus niet verversen. Werk daarom altijd onveranderbaar (immutable): mijnSignal.update(lijst => [...lijst, item]).
-
-266. Waarom kun je een computed signal niet handmatig beschrijven met .set()?
-
-     Een computed signal is inherent read-only. De waarde is een directe, wiskundige afgeleide van andere onderliggende signals. Als je de waarde handmatig zou kunnen overschrijven, verbreek je de reactieve keten en is de data niet langer gegarandeerd synchroon met de bronstromen.
-
+Bij het aanmaken van een signal() kun je een aangepaste equal vergelijkingsfunctie
+meegeven. Hiermee bepaal je zelf wanneer Angular een nieuwe waarde als 'gewijzigd' moet
+beschouwen. Dit is handig om onnodige UI-updates bij objecten te voorkomen.
+TypeScript
+// Signal dat alleen updates triggert als de ID daadwerkelijk
+verschilt
+const gebruiker = signal({ id: 1, naam: 'An' }, {
+equal: (a, b) => a.id === b.id
+});
+265. Wat gebeurt er als je een Writable Signal rechtstreeks muteert
+zonder .set() of .update()?
+Als je een array of object binnen een signal direct muteert (bijv.
+mijnSignal().push(item)), verander je weliswaar de data in het geheugen, maar de
+referentie van het object blijft exact gelijk. Omdat Angular controleert op referentiegelijkheid, krijgt
+het framework de wijziging niet mee. De UI zal dus niet verversen. Werk daarom altijd
+onveranderbaar (immutable): mijnSignal.update(lijst => [...lijst,
+item]).
+266. Waarom kun je een computed signal niet handmatig beschrijven
+met .set()?
+Een computed signal is inherent read-only. De waarde is een directe, wiskundige afgeleide van
+andere onderliggende signals. Als je de waarde handmatig zou kunnen overschrijven, verbreek je de
+reactieve keten en is de data niet langer gegarandeerd synchroon met de bronstromen.
 267. Kun je een Signal uitlezen binnen een reguliere JavaScript setTimeout?
-
-     Ja. Een signal kan overal ter wereld worden uitgelezen door simpelweg de functie aan te roepen (bijv. status()). Let wel op: als je dit binnen een setTimeout doet, bevind je je niet in een reactieve context (zoals een computed of effect), dus er zal geen automatische dependency tracking plaatsvinden voor die setTimeout-omgeving.
-
-268. Hoe gebruik je output() en outputFromObservable() in moderne componenten?
-
-     De oude @Output() en EventEmitter decorators zijn vervangen door de gestroomlijnde output() API. Als je een bestaande RxJS stream als output wilt aanbieden, gebruik je outputFromObservable().
-
-```typescript
+Ja. Een signal kan overal ter wereld worden uitgelezen door simpelweg de functie aan te roepen
+(bijv. status()). Let wel op: als je dit binnen een setTimeout doet, bevind je je niet in een
+reactieve context (zoals een computed of effect), dus er zal geen automatische dependency
+tracking plaatsvinden voor die setTimeout-omgeving.
+268. Hoe gebruik je output() en outputFromObservable() in
+moderne componenten?
+De oude @Output() en EventEmitter decorators zijn vervangen door de gestroomlijnde
+output() API. Als je een bestaande RxJS stream als output wilt aanbieden, gebruik je
+outputFromObservable().
+TypeScript
 export class FilterComponent {
-  // Moderne, slanke output definitie
-  statusVeranderd = output<boolean>();
-
-  verstuur(status: boolean) {
-    this.statusVeranderd.emit(status);
-  }
+// Moderne, slanke output definitie
+statusVeranderd = output<boolean>();
+verstuur(status: boolean) {
+this.statusVeranderd.emit(status);
 }
-```
-
+}
 269. Wat is de functie van allowSignalWrites in een effect?
-
-     Standaard verbiedt Angular het schrijven (muteren) van signals binnen een effect. Dit is een architectonische bescherming om oneindige lussen (infinite loops) te voorkomen. Je kunt dit forceren via { allowSignalWrites: true } in de configuratie, maar dit duidt in 99% van de gevallen op een slecht software-ontwerp. Gebruik in plaats daarvan liever een computed signal.
-
-270. Hoe werkt dynamic dependency tracking bij conditionele logica in een computed signal?
-
-     Angular hercalculeert de afhankelijkheden van een computed of effect dynamisch bij elke uitvoering. Als je conditionele logica (if/else) gebruikt, luistert Angular alleen naar de signals die op dat moment daadwerkelijk door de code-route zijn geraakt.
-
-```typescript
+Standaard verbiedt Angular het schrijven (muteren) van signals binnen een effect. Dit is een
+architectonische bescherming om oneindige lussen (infinite loops) te voorkomen. Je kunt dit
+forceren via { allowSignalWrites: true } in de configuratie, maar dit duidt in 99%
+van de gevallen op een slecht software-ontwerp. Gebruik in plaats daarvan liever een computed
+signal.
+270. Hoe werkt dynamic dependency tracking bij conditionele logica in een
+computed signal?
+Angular hercalculeert de afhankelijkheden van een computed of effect dynamisch bij elke
+uitvoering. Als je conditionele logica (if/else) gebruikt, luistert Angular alleen naar de signals
+die op dat moment daadwerkelijk door de code-route zijn geraakt.
+TypeScript
 const weergave = computed(() => {
-  if (toonUitgebreid()) {
-    return `Details: ${detailSignal()}`; // Nu luistert Angular naar 'toonUitgebreid' én 'detailSignal'
-  }
-  return "Simpel"; // Nu luistert Angular ALLEEN naar 'toonUitgebreid'
-});
-```
-
-271. Hoe converteer je een formulier-waarde direct naar een Signal?
-
-     Omdat Reactive Forms onder de motorkap RxJS streams gebruiken, gebruik je de toSignal helper om de waarde-wijzigingen live om te zetten naar een synchroon uitleesbaar signal.
-
-```typescript
-export class FormComponent {
-  zoekForm = new FormGroup({ term: new FormControl("") });
-
-  // Live gesynchroniseerd signal van de invoer
-  zoekTerm = toSignal(this.zoekForm.controls.term.valueChanges, {
-    initialValue: "",
-  });
+if (toonUitgebreid()) {
+return `Details: ${detailSignal()}`; // Nu luistert
+Angular naar 'toonUitgebreid' én 'detailSignal'
 }
-```
-
-272. Wat is de rol van de linkedSignal API?
-
-     linkedSignal (geïntroduceerd als krachtige vla-primitieve) lost een veelvoorkomend probleem op: een schrijfbaar signal dat moet resetten of mee-veranderen zodra een ander bronsignal wijzigt. Denk aan een 'actief product' signal; zodra de geselecteerde product-ID verandert, moet het signal 'hoeveelheid' automatisch resetten naar
-
-1.
-
-```typescript
-// Een linkedSignal reset of hercalculeert zodra de bron (source) verandert
-const hoeveelheid = linkedSignal({
-  source: geselecteerdProductId,
-  computation: (newId, previous) => 1, // Reset naar 1 bij nieuw product
+return 'Simpel'; // Nu luistert Angular ALLEEN naar
+'toonUitgebreid'
 });
-```
-
-273. Moet je een computed signal handmatig vernietigen om geheugenlekken te voorkomen?
-
-     Nee. computed signals maken gebruik van zwakke referenties (weak references) naar hun onderliggende afhankelijkheden. Zodra de component die het computed signal gebruikt uit de DOM wordt verwijderd en vernietigd, wordt het signal automatisch opgeruimd door de garbage collector van de browser.
-
-274. Wat is het verschil in uitvoeringstijd tussen een effect en een RxJS .subscribe()?
-
-     RxJS .subscribe(): Vuurt in de regel direct (synchroon) zodra de .next() methode op de stream wordt aangeroepen.
-     effect: Vuurt altijd asynchroon via een microtask scheduler. Angular bundelt alle signal-wijzigingen en voert het effect pas uit nadat de huidige code-executie en veranderingsdetectie-cyclus stabiel is afgerond.
-
+271. Hoe converteer je een formulier-waarde direct naar een Signal?
+Omdat Reactive Forms onder de motorkap RxJS streams gebruiken, gebruik je de toSignal
+helper om de waarde-wijzigingen live om te zetten naar een synchroon uitleesbaar signal.
+TypeScript
+export class FormComponent {
+zoekForm = new FormGroup({ term: new FormControl('') });
+// Live gesynchroniseerd signal van de invoer
+zoekTerm =
+toSignal(this.zoekForm.controls.term.valueChanges,
+{ initialValue: '' });
+}
+272. Wat is de rol van de linkedSignal API?
+linkedSignal (geïntroduceerd als krachtige vla-primitieve) lost een veelvoorkomend
+probleem op: een schrijfbaar signal dat moet resetten of mee-veranderen zodra een ander bronsignal
+wijzigt. Denk aan een 'actief product' signal; zodra de geselecteerde product-ID verandert, moet het
+signal 'hoeveelheid' automatisch resetten naar 1.
+TypeScript
+// Een linkedSignal reset of hercalculeert zodra de bron
+(source) verandert
+const hoeveelheid = linkedSignal({
+source: geselecteerdProductId,
+computation: (newId, previous) => 1 // Reset naar 1 bij
+nieuw product
+});
+273. Moet je een computed signal handmatig vernietigen om geheugenlekken
+te voorkomen?
+Nee. computed signals maken gebruik van zwakke referenties (weak references) naar hun
+onderliggende afhankelijkheden. Zodra de component die het computed signal gebruikt uit de
+DOM wordt verwijderd en vernietigd, wordt het signal automatisch opgeruimd door de garbage
+collector van de browser.
+274. Wat is het verschil in uitvoeringstijd tussen een effect en een
+RxJS .subscribe()?
+• RxJS .subscribe(): Vuurt in de regel direct (synchroon) zodra de .next()
+methode op de stream wordt aangeroepen.
+• effect: Vuurt altijd asynchroon via een microtask scheduler. Angular bundelt alle
+signal-wijzigingen en voert het effect pas uit nadat de huidige code-executie en
+veranderingsdetectie-cyclus stabiel is afgerond.
 275. Waarom werken Signals uitstekend samen met de async/await syntax?
-
-     RxJS streams combineren moeizaam met async/await omdat Observables over tijd meerdere waarden kunnen uitstoten, terwijl Promises (waar async/await op leunt) eenmalig zijn. Signals daarentegen bevatten altijd direct een synchrone, actuele waarde. Je kunt een signal dus probleemloos en direct uitlezen in elke asynchrone async/await functie zonder te hoeven stoeien met .toPromise() conversies.
-
+RxJS streams combineren moeizaam met async/await omdat Observables over tijd meerdere
+waarden kunnen uitstoten, terwijl Promises (waar async/await op leunt) eenmalig zijn. Signals
+daarentegen bevatten altijd direct een synchrone, actuele waarde. Je kunt een signal dus
+probleemloos en direct uitlezen in elke asynchrone async/await functie zonder te hoeven
+stoeien met .toPromise() conversies.
 276. Hoe ga je om met fouten (Error Handling) binnen een computed signal?
-
-     Als er een runtime-fout optreedt binnen een computed signal (bijv. je probeert een property te lezen van een undefined object), zal het signal die fout cachen. Telkens als iemand de waarde van het signal probeert op te vragen, zal het signal die exacte fout opnieuw opwerpen (throw). Je vangt dit op met een reguliere try/catch om het signal heen.
-
+Als er een runtime-fout optreedt binnen een computed signal (bijv. je probeert een property te
+lezen van een undefined object), zal het signal die fout cachen. Telkens als iemand de waarde
+van het signal probeert op te vragen, zal het signal die exacte fout opnieuw opwerpen (throw). Je
+vangt dit op met een reguliere try/catch om het signal heen.
 277. Kun je Signals gebruiken in Angular Directives?
-
-     Ja, absoluut. Signals werken exact hetzelfde in @Directive als in @Component. Je kunt signal-inputs, model-inputs en effects definiëren binnen een directive om gedrag in de DOM fijnmazig aan te sturen op basis van reactieve staat.
-
+Ja, absoluut. Signals werken exact hetzelfde in @Directive als in @Component. Je kunt
+signal-inputs, model-inputs en effects definiëren binnen een directive om gedrag in de DOM
+fijnmazig aan te sturen op basis van reactieve staat.
 278. Hoe beïnvloeden Signals de architectuur van Angular Services (Stores)?
-
-     Signals maken services een stuk overzichtelijker. Waar je vroeger een complexe combinatie nodig had van een private BehaviorSubject en een publieke .asObservable(), gebruik je nu simpelweg een private signal() en een publieke .asReadonly() variant. De code krimpt met de helft en is direct synchroon leesbaar.
-
+Signals maken services een stuk overzichtelijker. Waar je vroeger een complexe combinatie nodig
+had van een private BehaviorSubject en een publieke .asObservable(), gebruik je nu
+simpelweg een private signal() en een publieke .asReadonly() variant. De code krimpt
+met de helft en is direct synchroon leesbaar.
 279. Wat is het 'Push-Pull' model van Angular Signals?
-
-     Signals werken via een gecombineerd Push-Pull mechanisme:
-     Push: Wanneer een bronsignal verandert, stuurt het een minimaal notificatie-signaal (push) naar al zijn consumenten (computed signals of de UI) om te zeggen: "Ik ben vuil (dirty)". Er wordt nog niets berekend.
-     Pull: Pas wanneer de UI daadwerkelijk gerenderd moet worden of een effect start, trekken (pull) de consumenten de allernieuwste waarde synchroon naar zich toe en voeren ze de berekening uit.
-
+Signals werken via een gecombineerd Push-Pull mechanisme:
+• Push: Wanneer een bronsignal verandert, stuurt het een minimaal notificatie-signaal (push)
+naar al zijn consumenten (computed signals of de UI) om te zeggen: "Ik ben vuil (dirty)".
+Er wordt nog niets berekend.
+• Pull: Pas wanneer de UI daadwerkelijk gerenderd moet worden of een effect start, trekken
+(pull) de consumenten de allernieuwste waarde synchroon naar zich toe en voeren ze de
+berekening uit.
 280. Betekent de komst van Signals het definitieve einde van RxJS in Angular?
-
-     Nee. RxJS blijft een onmisbaar en krachtig onderdeel van Angular voor alles wat te maken heeft met complexe asynchrone stromen, timing en events (zoals websockets, event-streams, API-foutafhandeling met retries, of geavanceerd debouncing). De vuistregel is: Signals voor toestand (State), RxJS voor stromen (Asynchrone Events).
-
-## Deployment en DevOps (281-300)
-
+Nee. RxJS blijft een onmisbaar en krachtig onderdeel van Angular voor alles wat te maken heeft
+met complexe asynchrone stromen, timing en events (zoals websockets, event-streams, API-
+foutafhandeling met retries, of geavanceerd debouncing). De vuistregel is: Signals voor toestand
+(State), RxJS voor stromen (Asynchrone Events).
+Deployment en DevOps (281-300)
 281. Wat is het doel van de ng build opdracht?
-
-     De ng build opdracht compileert de Angular TypeScript- en HTML-code naar sterk geoptimaliseerde, geminificeerde en gecachte JavaScript- en CSS-bestanden (statische assets). Deze bestanden worden geplaatst in de dist/ map en zijn klaar om geserveerd te worden door een webserver.
-
-282. Wat is Ahead-of-Time (AOT) compilatie en waarom is het de standaard voor productie?
-
-     AOT-compilatie betekent dat de Angular-compiler de templates en componenten vertaalt naar efficiënte JavaScript-code tijdens het build-proces op je machine of CI/CD pipeline. Dit verschilt van Just-in-Time (JIT) compilatie, waarbij de browser dit runtime pas doet. AOT zorgt voor een veel snellere opstarttijd in de browser en voorkomt dat de zware Angular-compiler mee gedownload moet worden naar de client.
-
+De ng build opdracht compileert de Angular TypeScript- en HTML-code naar sterk
+geoptimaliseerde, geminificeerde en gecachte JavaScript- en CSS-bestanden (statische assets). Deze
+bestanden worden geplaatst in de dist/ map en zijn klaar om geserveerd te worden door een
+webserver.
+282. Wat is Ahead-of-Time (AOT) compilatie en waarom is het de standaard
+voor productie?
+AOT-compilatie betekent dat de Angular-compiler de templates en componenten vertaalt naar
+efficiënte JavaScript-code tijdens het build-proces op je machine of CI/CD pipeline. Dit verschilt
+van Just-in-Time (JIT) compilatie, waarbij de browser dit runtime pas doet. AOT zorgt voor een
+veel snellere opstarttijd in de browser en voorkomt dat de zware Angular-compiler mee gedownload
+moet worden naar de client.
 283. Wat is de betekenis van 'Cache Busting' in Angular builds?
-
-     Wanneer je een productie-build draait, voegt Angular een unieke cryptografische hash toe aan de bestandsnamen (bijv. main.a8b3cd62.js). Dit heet Cache Busting. Het zorgt ervoor dat als je een nieuwe release uitrolt, de browser van de eindgebruiker direct herkent dat de bestandsnaam is veranderd en dwingt hem om het nieuwste bestand te downloaden in plaats van een oude, lokale cache te gebruiken.
-
-284. Hoe configureer je omgevingsvariabelen (Environment Variables) in moderne Angular-apps?
-
-     In moderne Angular-apps is de environments/ map niet meer standaard aanwezig om builds clean te houden. Je activeert dit eenvoudig via de CLI: ng g environments. Dit maakt een environment.ts (voor dev) en environment.development.ts aan. Tijdens een productie-build vervangt de Angular-compiler de bestanden automatisch op basis van de configuratie in je angular.json.
-
-```typescript
+Wanneer je een productie-build draait, voegt Angular een unieke cryptografische hash toe aan de
+bestandsnamen (bijv. main.a8b3cd62.js). Dit heet Cache Busting. Het zorgt ervoor dat als je
+een nieuwe release uitrolt, de browser van de eindgebruiker direct herkent dat de bestandsnaam is
+veranderd en dwingt hem om het nieuwste bestand te downloaden in plaats van een oude, lokale
+cache te gebruiken.
+284. Hoe configureer je omgevingsvariabelen (Environment Variables) in
+moderne Angular-apps?
+In moderne Angular-apps is de environments/ map niet meer standaard aanwezig om builds
+clean te houden. Je activeert dit eenvoudig via de CLI: ng g environments. Dit maakt een
+environment.ts (voor dev) en environment.development.ts aan. Tijdens een
+productie-build vervangt de Angular-compiler de bestanden automatisch op basis van de
+configuratie in je angular.json.
+TypeScript
 // environment.ts (Productie)
 export const environment = {
-  production: true,
-  apiUrl: "https://api.mijnproductie.nl",
+production: true,
+apiUrl: 'https://api.mijnproductie.nl'
 };
-```
-
 285. Wat is het belang van de angular.json bestand?
-
-     De angular.json is het centrale configuratie-hoofdkwartier van de Angular CLI. Hier definieer je hoe projecten gebouwd moeten worden, welke polyfills ingeladen worden, welke styling-preprocessors (SASS/LESS) actief zijn, en stel je specifieke build-budgetten en omgevings-vervangingen (file replacements) in per build-configuratie (dev, staging, productie).
-
+De angular.json is het centrale configuratie-hoofdkwartier van de Angular CLI. Hier
+definieer je hoe projecten gebouwd moeten worden, welke polyfills ingeladen worden, welke
+styling-preprocessors (SASS/LESS) actief zijn, en stel je specifieke build-budgetten en omgevings-
+vervangingen (file replacements) in per build-configuratie (dev, staging, productie).
 286. Wat zijn Build Budgets en hoe beschermen ze je applicatieomvang?
-
-     Build Budgets zijn drempelwaarden die je instelt in angular.json. Hiermee geef je aan hoe groot de JavaScript- en CSS-bundels maximaal mogen worden. Als een ontwikkelaar per ongeluk een loodzware npm-pakket importeert waardoor de bundelgrootte de limiet passeert, zal de build in de CI/CD pipeline falen met een error. Dit voorkomt dat de app ongemerkt dichtgroeit.
-
-```json
-
+Build Budgets zijn drempelwaarden die je instelt in angular.json. Hiermee geef je aan hoe
+groot de JavaScript- en CSS-bundels maximaal mogen worden. Als een ontwikkelaar per ongeluk
+een loodzware npm-pakket importeert waardoor de bundelgrootte de limiet passeert, zal de build in
+de CI/CD pipeline falen met een error. Dit voorkomt dat de app ongemerkt dichtgroeit.
+JSON
 "budgets": [
-{ "type": "initial", "maximumWarning": "500kb", "maximumError": "1mb" }
+{ "type": "initial", "maximumWarning": "500kb",
+"maximumError": "1mb" }
 ]
-```
-
 287. Hoe configureer je een Nginx server om een Angular SPA correct te hosten?
-
-     Omdat Angular een Single Page Application (SPA) is, regelt Angular de routing intern in de browser. Als een gebruiker direct navigeert naar [domain.com/dashboard](https://domain.com/dashboard) en de pagina ververst, zal Nginx een 404 Not Found geven omdat dat bestand fysiek niet bestaat op de server. Je moet Nginx configureren om bij elke aanvraag altijd index.html terug te geven.
-
-```nginx
-
+Omdat Angular een Single Page Application (SPA) is, regelt Angular de routing intern in de
+browser. Als een gebruiker direct navigeert naar [domain.com/dashboard](https://
+domain.com/dashboard) en de pagina ververst, zal Nginx een 404 Not Found geven
+omdat dat bestand fysiek niet bestaat op de server. Je moet Nginx configureren om bij elke aanvraag
+altijd index.html terug te geven.
+Nginx
 server {
 listen 80;
 server_name mijnangularapp.nl;
 root /usr/share/nginx/html;
-
-    location / {
-        # Probeer het exacte bestand te serveren, val anders terug op index.html
-        try_files $uri $uri/ /index.html;
-    }
-
+location / {
+# Probeer het exacte bestand te serveren, val anders
+terug op index.html
+try_files $uri $uri/ /index.html;
 }
-```
-
+}
 288. Wat is een Docker Multi-stage Build en hoe pas je dit toe op Angular?
-
-     Een multi-stage Dockerfile gebruikt meerdere tijdelijke containers om het uiteindelijke image zo klein en veilig mogelijk te maken. Fase 1 gebruikt een zware Node.js container om de Angular-app te bouwen. Fase 2 kopieert alleen de resulterende dist/ bestanden naar een vederlichte, kale Nginx container.
-     Dockerfile
-
-
-    # Fase 1: Bouwen
-
-    FROM node:20 AS build
-    WORKDIR /app
-    COPY . .
-    RUN npm ci && npm run build --configuration=production
-
-    # Fase 2: Serveren
-
-    FROM nginx:alpine
-    COPY --from=build /app/dist/mijn-app/browser /usr/share/nginx/html
-    COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+Een multi-stage Dockerfile gebruikt meerdere tijdelijke containers om het uiteindelijke image zo
+klein en veilig mogelijk te maken. Fase 1 gebruikt een zware Node.js container om de Angular-app
+te bouwen. Fase 2 kopieert alleen de resulterende dist/ bestanden naar een vederlichte, kale
+Nginx container.
+Dockerfile
+# Fase 1: Bouwen
+FROM node:20 AS build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build --configuration=production
+# Fase 2: Serveren
+FROM nginx:alpine
+COPY --from=build /app/dist/mijn-app/browser /usr/share/
+nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 289. Wat is CI/CD en wat doet het voor een Angular project?
-
-     CI/CD (Continuous Integration / Continuous Deployment) is een geautomatiseerd proces (bijv. via GitHub Actions, GitLab CI of Azure DevOps). Bij elke commit of pull request voert de pipeline automatisch de linters uit (npm run lint), draait de unit-tests (npm run test), bouwt de applicatie (npm run build) en uploadt de bestanden bij succes direct naar de cloud of hosting-provider.
-
-290. Wat is de rol van Source Maps (--source-maps) bij foutopsporing in productie?
-
-     Source Maps koppelen de gecomprimeerde, onleesbare productie-JavaScript code terug naar je originele TypeScript-bestanden. Standaard staan ze uit in productie om code-diefstal en extra bundelomvang te voorkomen. Als je onduidelijke foutmeldingen uit productie krijgt (bijv. via foutrapportage-tools zoals Sentry), kun je source maps uploaden naar die tools om fouten exact te herleiden naar de juiste regel TypeScript-code.
-
+CI/CD (Continuous Integration / Continuous Deployment) is een geautomatiseerd proces (bijv. via
+GitHub Actions, GitLab CI of Azure DevOps). Bij elke commit of pull request voert de pipeline
+automatisch de linters uit (npm run lint), draait de unit-tests (npm run test), bouwt de
+applicatie (npm run build) en uploadt de bestanden bij succes direct naar de cloud of hosting-
+provider.
+290. Wat is de rol van Source Maps (--source-maps) bij foutopsporing in
+productie?
+Source Maps koppelen de gecomprimeerde, onleesbare productie-JavaScript code terug naar je
+originele TypeScript-bestanden. Standaard staan ze uit in productie om code-diefstal en extra
+bundelomvang te voorkomen. Als je onduidelijke foutmeldingen uit productie krijgt (bijv. via
+foutrapportage-tools zoals Sentry), kun je source maps uploaden naar die tools om fouten exact te
+herleiden naar de juiste regel TypeScript-code.
 291. Hoe optimaliseer je npm installatietijden in CI/CD pipelines?
-
-     Gebruik in pipelines altijd npm ci (Clean Install) in plaats van npm install. De npm ci opdracht negeert aanpassingen, kijkt strikt naar de package-lock.json en installeert de exacte dependencies op een deterministische manier. Dit is tot wel twee keer sneller en garandeert dat de pipeline exact dezelfde pakketversies gebruikt als de ontwikkelaar lokaal.
-
+Gebruik in pipelines altijd npm ci (Clean Install) in plaats van npm install. De npm ci
+opdracht negeert aanpassingen, kijkt strikt naar de package-lock.json en installeert de
+exacte dependencies op een deterministische manier. Dit is tot wel twee keer sneller en garandeert
+dat de pipeline exact dezelfde pakketversies gebruikt als de ontwikkelaar lokaal.
 292. Wat is 'Tree Shaking' en hoe beïnvloedt dit de deployment?
-
-     Tree Shaking is een optimalisatiestap waarbij de bundler (zoals Esbuild) de code analyseert en alle ongebruikte functies, klassen of dode code uit de uiteindelijke JavaScript-bestanden sloopt ("als je schudt aan een boom, vallen de dode bladeren eraf"). Grote bibliotheken (zoals Lodash of RxJS) worden hierdoor alleen voor die specifieke functies meegenomen die je daadwerkelijk gebruikt.
-
-293. Hoe ga je om met CORS-problemen (Cross-Origin Resource Sharing) na deployment?
-
-     CORS is een browser-beveiliging. Als je Angular-app op [https://app.nl](https://app.nl) draait en data opvraagt bij [https://api.nl](https://api.nl), blokkeert de browser dit tenzij de API-server expliciet de HTTP-header Access-Control-Allow-Origin: [https://app.nl](https://app.nl) meestuurt in zijn antwoord. Je lost CORS-problemen dus op door de backend-server correct te configureren, niet de Angular-client.
-
-294. Wat is het voordeel van het hosten van een Angular app op een Content Delivery Network (CDN)?
-
-     Omdat een gebouwde Angular-app volledig bestaat uit statische bestanden (HTML, JS, CSS), leent het zich perfect voor een CDN (zoals Cloudflare, AWS CloudFront of Netlify). Een CDN kopieert je bestanden naar honderden servers wereldwijd. Als een gebruiker in Tokio je site opvraagt, krijgt hij de bestanden direct geserveerd vanaf een server in Tokio in plaats van een server in Amsterdam. Dit verlaagt de laadtijd (latency) gigantisch.
-
+Tree Shaking is een optimalisatiestap waarbij de bundler (zoals Esbuild) de code analyseert en alle
+ongebruikte functies, klassen of dode code uit de uiteindelijke JavaScript-bestanden sloopt ("als je
+schudt aan een boom, vallen de dode bladeren eraf"). Grote bibliotheken (zoals Lodash of RxJS)
+worden hierdoor alleen voor die specifieke functies meegenomen die je daadwerkelijk gebruikt.
+293. Hoe ga je om met CORS-problemen (Cross-Origin Resource Sharing) na
+deployment?
+CORS is een browser-beveiliging. Als je Angular-app op [https://app.nl](https://
+app.nl) draait en data opvraagt bij [https://api.nl](https://api.nl),
+blokkeert de browser dit tenzij de API-server expliciet de HTTP-header Access-Control-
+Allow-Origin: [https://app.nl](https://app.nl) meestuurt in zijn
+antwoord. Je lost CORS-problemen dus op door de backend-server correct te configureren, niet de
+Angular-client.
+294. Wat is het voordeel van het hosten van een Angular app op een Content
+Delivery Network (CDN)?
+Omdat een gebouwde Angular-app volledig bestaat uit statische bestanden (HTML, JS, CSS), leent
+het zich perfect voor een CDN (zoals Cloudflare, AWS CloudFront of Netlify). Een CDN kopieert
+je bestanden naar honderden servers wereldwijd. Als een gebruiker in Tokio je site opvraagt, krijgt
+hij de bestanden direct geserveerd vanaf een server in Tokio in plaats van een server in Amsterdam.
+Dit verlaagt de laadtijd (latency) gigantisch.
 295. Wat is compression (Gzip / Brotli) en waarom is het cruciaal voor DevOps?
-
-     JavaScript- en CSS-bestanden zijn tekstbestanden en kunnen extreem efficiënt worden gecomprimeerd (ingepakt). Door je webserver (Nginx/Apache) zo in te stellen dat deze bestanden serveert met Brotli of Gzip compressie, verklein je de overgedragen bestandsgrootte over het netwerk met wel 70%. Dit resulteert in een flitsende laadtijd op mobiele netwerken en bespaart bakken met bandbreedtekosten.
-
+JavaScript- en CSS-bestanden zijn tekstbestanden en kunnen extreem efficiënt worden
+gecomprimeerd (ingepakt). Door je webserver (Nginx/Apache) zo in te stellen dat deze bestanden
+serveert met Brotli of Gzip compressie, verklein je de overgedragen bestandsgrootte over het
+netwerk met wel 70%. Dit resulteert in een flitsende laadtijd op mobiele netwerken en bespaart
+bakken met bandbreedtekosten.
 296. Hoe ga je om met runtime configuraties die pas na de build bekend zijn?
-
-     Soms wil je dezelfde Angular-build deployen naar Staging én Productie, waarbij alleen de API-URL verschilt. Omdat environment.ts hardcoded wordt meegecompileerd, werkt dat hiervoor niet. De oplossing is om een config.json bestand in de assets/ map te zetten. Je laat Angular dit bestand runtime inladen via de APP_INITIALIZER (zie vraag 136). Tijdens deployment kan je DevOps-pipeline die config.json eenvoudig per server overschrijven met de juiste variabelen.
-
-297. Wat is Semantic Versioning (SemVer) en hoe pas je dit toe op Angular projecten?
-
-     SemVer is het versienummerings-systeem opgebouwd als MAJOR.MINOR.PATCH (bijv. 17.2.1):
-     MAJOR: Bijbreken van achterwaartse compatibiliteit (breaking changes).
-     MINOR: Toevoegen van functionaliteit op een achterwaarts compatibele manier.
-     PATCH: Achterwaarts compatibele bugfixes. Angular volgt dit schema strikt; updates binnen dezelfde MAJOR-versie zijn gegarandeerd veilig uit te voeren.
-
+Soms wil je dezelfde Angular-build deployen naar Staging én Productie, waarbij alleen de API-URL
+verschilt. Omdat environment.ts hardcoded wordt meegecompileerd, werkt dat hiervoor
+niet. De oplossing is om een config.json bestand in de assets/ map te zetten. Je laat
+Angular dit bestand runtime inladen via de APP_INITIALIZER (zie vraag 136). Tijdens
+deployment kan je DevOps-pipeline die config.json eenvoudig per server overschrijven met
+de juiste variabelen.
+297. Wat is Semantic Versioning (SemVer) en hoe pas je dit toe op Angular
+projecten?
+SemVer is het versienummerings-systeem opgebouwd als MAJOR.MINOR.PATCH (bijv.
+17.2.1):
+• MAJOR: Bijbreken van achterwaartse compatibiliteit (breaking changes).
+• MINOR: Toevoegen van functionaliteit op een achterwaarts compatibele manier.
+• PATCH: Achterwaarts compatibele bugfixes. Angular volgt dit schema strikt; updates binnen
+dezelfde MAJOR-versie zijn gegarandeerd veilig uit te voeren.
 298. Wat doet de ng update opdracht?
-
-     De ng update opdracht is een van Angular's meest krachtige tools. Het kijkt naar de nieuwste frameworkversies en update niet alleen de regels in je package.json, maar voert ook automatische code-migraties (schematics) uit. Als een bepaalde methode in de nieuwste Angular-versie is hernoemd, herschrijft ng update automatisch jouw TypeScript-code door het hele project om aan de nieuwe standaarden te voldoen.
-
+De ng update opdracht is een van Angular's meest krachtige tools. Het kijkt naar de nieuwste
+frameworkversies en update niet alleen de regels in je package.json, maar voert ook
+automatische code-migraties (schematics) uit. Als een bepaalde methode in de nieuwste Angular-
+versie is hernoemd, herschrijft ng update automatisch jouw TypeScript-code door het hele
+project om aan de nieuwe standaarden te voldoen.
 299. Hoe monitor je fouten (Error Logging) van een gedeleployde Angular app?
-
-     Omdat Angular in de browser van de gebruiker draait, zie je server-side geen foutmeldingen voorbijkomen in je backend-logs als de UI crasht. Om dit te tackelen implementeer je een centrale ErrorHandler-service die onopgevangen runtime-fouten automatisch via een API-call doorsluist naar een monitoring-platform (zoals Sentry, LogRocket of Azure Application Insights).
-
-```typescript
+Omdat Angular in de browser van de gebruiker draait, zie je server-side geen foutmeldingen
+voorbijkomen in je backend-logs als de UI crasht. Om dit te tackelen implementeer je een centrale
+ErrorHandler-service die onopgevangen runtime-fouten automatisch via een API-call doorsluist
+naar een monitoring-platform (zoals Sentry, LogRocket of Azure Application Insights).
+TypeScript
 @Injectable()
-export class CentraalLogGevaarHandler implements ErrorHandler {
-  handleError(error: any): void {
-    console.error("Fout gevangen:", error);
-    // Sluis de fout direct door naar Sentry/externe API
-    // Sentry.captureException(error.originalError || error);
-  }
+export class CentraalLogGevaarHandler implements ErrorHandler
+{
+handleError(error: any): void {
+console.error('Fout gevangen:', error);
+// Sluis de fout direct door naar Sentry/externe API
+// Sentry.captureException(error.originalError || error);
 }
-```
-
-300. Wat is de betekenis van een 'Green-Blue Deployment' strategie voor een Angular app?
-
-     Bij een Blue-Green deployment draai je twee identieke productie-omgevingen: 'Blue' (de actieve live-omgeving met de huidige versie) en 'Green' (de nieuwe versie die klaarstaat). De DevOps-pipeline uploadt de nieuwe Angular-build naar de Green-omgeving en test of alles werkt. Is de controle succesvol? Dan switcht de router/load-balancer het verkeer binnen een milliseconde van Blue naar Green. Dit garandeert een zero-downtime deployment; de gebruiker merkt geen enkele onderbreking tijdens de release.
+}
+300. Wat is de betekenis van een 'Green-Blue Deployment' strategie voor een
+Angular app?
+Bij een Blue-Green deployment draai je twee identieke productie-omgevingen: 'Blue' (de actieve
+live-omgeving met de huidige versie) en 'Green' (de nieuwe versie die klaarstaat). De DevOps-
+pipeline uploadt de nieuwe Angular-build naar de Green-omgeving en test of alles werkt. Is de
+controle succesvol? Dan switcht de router/load-balancer het verkeer binnen een milliseconde van
+Blue naar Green. Dit garandeert een zero-downtime deployment; de gebruiker merkt geen enkele
+onderbreking tijdens de release
