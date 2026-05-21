@@ -2271,32 +2271,44 @@ export const appConfig: ApplicationConfig = {
 ```typescript
 import { HttpContext, HttpContextToken } from "@angular/common/http";
 
-//
+// 1. Maak een token aan met een standaardwaarde
+const BYPASS_LOGGING = new HttpContextToken<boolean>(() => false);
+
+// 2. Gebruik het token in een HTTP-verzoek
+this.http.get("/api/data", {
+  context: new HttpContext().set(BYPASS_LOGGING, true),
+});
+
+// 3. Lees het token uit in een interceptor
+export const logInterceptor: HttpInterceptorFn = (req, next) => {
+  if (req.context.get(BYPASS_LOGGING)) {
+    return next(req); // Sla de logging over
+  }
+  // ... voer normale logging uit ...
+  return next(req);
+};
 ```
 
-194. Maak een token aan met een standaardwaarde
+195. Hoe implementeer je een automatische 'Retry'-strategie bij falende
+     netwerkverzoeken?
 
-     const BYPASS_LOGGING = new HttpContextToken<boolean>(() => false);
+Soms faalt een verzoek door een tijdelijke hik in de internetverbinding. Met de RxJS retry
+operator kun je Angular instrueren het verzoek automatisch een aantal keer opnieuw te
+proberen voordat de app definitief een foutmelding geeft. Je kunt hierbij een vertraging
+(delay) instellen.
 
-//
+```ts
+import { retry, timer } from 'rxjs';
 
-195. Gebruik het token in een HTTP-verzoek
-
-     this.http.get('/api/data', {
-     context: new HttpContext().set(BYPASS_LOGGING, true)
-     });
-
-//
-
-196. Lees het token uit in een interceptor
-
-     export const logInterceptor: HttpInterceptorFn = (req, next) => {
-     if (req.context.get(BYPASS_LOGGING)) {
-     return next(req); // Sla de logging over
-     }
-     // ... voer normale logging uit ...
-     return next(req);
-     };
+getDataMetRetry() {
+  return this.http.get('/api/wankele-verbinding').pipe(
+    retry({
+      count: 3, // Probeer het maximaal 3 keer opnieuw
+      delay: (error, retryCount) => timer(retryCount * 1000) // Exponentiële vertraging (1s, 2s, 3s)
+    })
+  );
+}
+```
 
 197. Hoe hanteer je robuuste foutafhandeling bij HTTP-verzoeken met HttpErrorResponse?
 
