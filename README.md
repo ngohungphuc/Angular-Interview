@@ -2448,18 +2448,17 @@ it("zou gebruikers moeten ophalen via een GET-verzoek", () => {
 });
 ```
 
-Hier is het volledige, diepgaande blok voor de elfde sectie: State Management en Signals (vragen
-201 tot en met 220). Deze antwoorden weerspiegelen de absolute state-of-the-art architectuur van
-Angular, waarin Signals de primaire drijfveer zijn geworden voor fijnmazige (fine-grained)
-reactiviteit en moderne state-patronen.
+## State Management en Signals (201-220).
 
-State Management en Signals (201-220) 201. Wat is State Management en waarom is het cruciaal in complexe front-end
-applicaties?
+201. Wat is State Management en waarom is het cruciaal in complexe front-end
+     applicaties?
+
 State (toestand) is de verzameling van alle data die op een bepaald moment de applicatie definieert,
 zoals ingelogde gebruikersgegevens, UI-instellingen (dark mode), gecachte API-data en
-formulierinvoer. State Management is het gestructureerd beheren, muteren en distribueren van deze
-data. Zonder centrale regie over je state leidt een applicatie al snel tot inconsistente data tussen
-componenten, onvoorspelbare bugs en onnodige re-renders. 202. Wat zijn Angular Signals en welk fundamenteel probleem lossen ze op?
+formulierinvoer. State Management is het gestructureerd beheren, muteren en distribueren van deze data. Zonder centrale regie over je state leidt een applicatie al snel tot inconsistente data tussen componenten, onvoorspelbare bugs en onnodige re-renders.
+
+202. Wat zijn Angular Signals en welk fundamenteel probleem lossen ze op?
+
 Signals zijn een reactief primitief dat een waarde bevat en de applicatie op de hoogte stelt wanneer
 die waarde verandert.
 Vóór de introductie van Signals leunde Angular volledig op Zone.js voor veranderingsdetectie
@@ -2468,12 +2467,17 @@ controleert vervolgens de volledige componentenboom van top tot teen op wijzigin
 lossen dit performance-probleem op door fijnmazige (fine-grained) reactiviteit te introduceren:
 Angular weet dankzij een Signal exact welke specifieke component of HTML-tag afhankelijk is van
 welke waarde, waardoor alleen dat specifieke stukje DOM wordt bijgewerkt zonder de rest van de
-app te scannen. 203. Hoe maak en muteer je een basis signal?
+app te scannen.
+
+203. Hoe maak en muteer je een basis signal?
+
 Je maakt een writable (schrijfbaar) signal aan met de signal() functie. Je kunt de waarde op
 twee manieren muteren:
-• set(newValue): Overschrijft de huidige waarde direct met een gloednieuwe waarde.
-• update(fn): Berekent een nieuwe waarde op basis van de huidige waarde (perfect voor
-tellers of het toevoegen van items aan een array).
+
+- set(newValue): Overschrijft de huidige waarde direct met een gloednieuwe waarde.
+- update(fn): Berekent een nieuwe waarde op basis van de huidige waarde (perfect voor
+  tellers of het toevoegen van items aan een array).
+
 TypeScript
 import { signal } from '@angular/core';
 // Initialisatie
