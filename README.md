@@ -2562,32 +2562,30 @@ export class ThemeComponent {
 	});
 ```
 
-208. Waarom mag je een effect niet overal declareren?
+208.  Waarom mag je een effect niet overal declareren?
 
-     Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf
-     moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor,
-     als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect
-     probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een
-     runtime-fout gooien.
+      Een effect heeft een zogenaamde Injection Context nodig om te weten wanneer hij zichzelf
+      moet vernietigen. Daarom kun je een effect alleen succesvol aanmaken binnen een constructor,
+      als class property initialisatie, of door handmatige doorgave van een Injector. Als je een effect
+      probeert te declareren in een reguliere methode (zoals een klik-event handler), zal Angular een
+      runtime-fout gooien.
 
-209. Wat is de untracked functie en hoe voorkom je ongewenste dependency
+209.  Wat is de untracked functie en hoe voorkom je ongewenste dependency
+      tracking?
 
-     tracking?
-     Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
-     zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
-     signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
+Soms wil je in een computed signal of een effect de waarde van een bepaald signal uitlezen,
+zonder dat dit signal als afhankelijkheid wordt geregistreerd. Met untracked() isoleer je het
+signal. Het effect zal dan niet opnieuw triggeren als dat specifieke signal muteert.
 
 ```ts
-	import { untracked } from '@angular/core';
-	effect(() => {
-	tracking
-	const huidigeStatus = logInStatusSignal(); // Dit activeert
-	// We willen de gebruikersnaam loggen, maar het effect mag
-	NIET opnieuw vuren
-	// puur en alleen omdat de gebruikersnaam verandert.
-	const naam = untracked(() => gebruikersNaamSignal());
-	console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
-	});
+import { untracked } from "@angular/core";
+effect(() => {
+  const huidigeStatus = logInStatusSignal(); // Dit activeert tracking
+  // We willen de gebruikersnaam loggen, maar het effect mag NIET opnieuw vuren
+  // puur en alleen omdat de gebruikersnaam verandert.
+  const naam = untracked(() => gebruikersNaamSignal());
+  console.log(`Gebruiker ${naam} is nu: ${huidigeStatus}`);
+});
 ```
 
 210. Wat zijn Signal-based Inputs (input en input.required)?
