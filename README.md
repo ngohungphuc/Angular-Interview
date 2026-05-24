@@ -2553,13 +2553,12 @@ export class ThemeComponent {
      netjes kunt opruimen om memory leaks te voorkomen.
 
 ```ts
-	effect((onCleanup) => {
-	const query = ditZoekSignal();
-	const timerId = setTimeout(() => console.log('Zoeken
-	naar:', query), 500);
-	// Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist deze callback de oude timer
-	onCleanup(() => clearTimeout(timerId));
-	});
+effect((onCleanup) => {
+  const query = ditZoekSignal();
+  const timerId = setTimeout(() => console.log("Zoeken naar:", query), 500);
+  // Als 'ditZoekSignal' binnen 500ms opnieuw verandert, wist deze callback de oude timer
+  onCleanup(() => clearTimeout(timerId));
+});
 ```
 
 208.  Waarom mag je een effect niet overal declareren?
@@ -2641,6 +2640,7 @@ export class TellerComponent {
 ```
 
 213. Wat zijn Signal-based Queries (viewChild, viewChildren, contentChild)?
+
      De oude decorators @ViewChild en @ContentChild zijn vervangen door functies die direct
      een Signal opleveren. Dit betekent dat je niet meer hoeft te wachten op de ngAfterViewInit
      lifecycle hook om veilig interactie te zoeken met elementen uit je template; je kunt er direct reactief
@@ -2759,160 +2759,9 @@ het belang van een solide Signal-based state management-architectuur alleen maar
 	// Controleer direct de geupdate computed waarde
 	expect(store.aantalItems()).toBe(1);
 	});
-	Hier zijn de resterende, diepgaande secties die de complete reeks sluiten. De nummering en inhoud
-	zijn naadloos gestructureerd en volledig bijgewerkt naar de modernste standaarden, inclusief
-	Zoneless change detection, Deferrable Views, Event Dispatch (Hydration), Module Federation
-	v2, en geavanceerde Signal-patronen.
-	Performance en Security (191-200)
 ```
 
-191. Wat zijn Deferrable Views (@defer) en hoe verbeteren ze de Initial Page
-
-     Load?
-     @defer is een ingebouwde control flow feature waarmee je componenten, directives en pipes
-     binnen een template kunt splitsen in aparte JavaScript-chunks (lazy loading). Deze code wordt pas
-     gedownload en gerenderd wanneer aan een specifieke triggerconditie wordt voldaan (bijvoorbeeld
-     wanneer het element in de viewport scrollt). Dit verlaagt de initiële bundelomvang drastisch.
-
-```ts
-	@defer (on viewport) {
-```
-
-<!-- Deze zware component laadt pas als hij in beeld
-scrollt -->
-<app-heavy-chart />
-} @placeholder {
-<div>Laden...</div>
-}
-192. Wat is het verschil tussen de triggers on viewport, on idle, on
-
-interaction en on hover?
-
-- on viewport: Vuurt zodra het placeholder-gebied zichtbaar wordt in het scherm van de
-  gebruiker.
-- on idle: Vuurt automatisch zodra de browser klaar is met de initiële taken (via
-  requestIdleCallback). Dit is de standaardtrigger.
-- on interaction: Vuurt wanneer de gebruiker klikt of typt in het placeholder-gebied.
-- on hover: Vuurt zodra de muis van de gebruiker over het placeholder-gebied beweegt.
-
-193. Wat is Cross-Site Scripting (XSS) en hoe beschermt Angular je hier
-
-standaard tegen?
-XSS is een kwetsbaarheid waarbij kwaadwillende scripts in een vertrouwde website worden
-geïnjecteerd. Angular beschermt je hiertegen door alle waarden die via databinding ({{ waarde
-}} of [innerHtml]) in de DOM worden geplaatst, automatisch te sanitizen (opschonen).
-Potentieel gevaarlijke HTML-, CSS- of script-tags worden geneutraliseerd voordat ze worden
-gerenderd. 194. Hoe omzeil je bewust Angular's ingebouwde XSS-beveiliging met de
-
-DomSanitizer?
-Als je expliciet vertrouwde code (zoals een ingesloten YouTube iFrame of vertrouwde HTML uit
-een CMS) moet tonen, kun je Angular's sanitization passeren met de DomSanitizer service.
-Gebruik dit uiterst voorzichtig.
-
-```ts
-	export class VeiligeComponent {
-	private sanitizer = inject(DomSanitizer);
-	// Markeer de URL expliciet als veilig voor gebruik in een
-	iFrame
-	veiligeUrl =
-	this.sanitizer.bypassSecurityTrustResourceUrl('https://
-	trusted.com/embed');
-	}
-	app?
-```
-
-195. Wat is Content Security Policy (CSP) en hoe pas je dit toe in een Angular
-
-CSP is een HTTP-beveiligingsheader die bepaalt welke bronnen (scripts, afbeeldingen, stylesheets)
-door de browser mogen worden ingeladen. Dit vormt een krachtige verdedigingslinie tegen XSS-
-aanvallen. In een Angular-applicatie configureer je CSP via je webserver (Nginx/Apache), waarbij
-je het gebruik van unsafe-inline scripts verbiedt en eventueel werkt met cryptografische
-nonces voor dynamische inline stijlen. 196. Wat is de 'Change Detection Strategy' en hoe optimaliseert
-
-ChangeDetectionStrategy.OnPush de prestaties?
-Standaard controleert Angular bij elk asynchroon event de gehele applicatie (Default). Wanneer je
-een component instelt op ChangeDetectionStrategy.OnPush, reageert deze
-component alleen op veranderingsdetectie als:
-
-1. Een @Input() of Signal-input verandert van waarde (referentiewijziging).
-2. Er een event (zoals een klik) plaatsvindt binnen de component zelf.
-3. Er handmatig om een controle wordt gevraagd via
-   ChangeDetectorRef.markForCheck().
-
-```ts
-	@Component({
-	selector: 'app-perf-kaart',
-	standalone: true,
-	changeDetection: ChangeDetectionStrategy.OnPush, //
-	Voorkomt onnodige re-renders
-	template: `...`
-	})
-	export class PerfKaartComponent {}
-```
-
-197. Wat is het gevaar van het aanroepen van functies rechtstreeks in je HTML-
-
-templates?
-Als je een reguliere TypeScript-functie aanroept binnen een template (bijv.
-
-<p>{{ berekenNaam(gebruiker) }}</p>), wordt deze functie bij elke
-veranderingsdetectie-cyclus opnieuw uitgevoerd — soms wel honderden keren per seconde. Dit
-leidt tot ernstige prestatieproblemen. Los dit op door gebruik te maken van Pipes (die het resultaat
-cachen/memoizen) of door de waarde op te slaan in een Signal.
-198. Hoe helpt de track parameter in de moderne @for loop de prestaties van
-
-lijsten te verbeteren?
-In de moderne @for loop is de track expressie verplicht. Dit vertelt Angular welke unieke
-eigenschap (zoals een id) hij moet gebruiken om items in een lijst te identificeren. Als de lijst
-verandert (bijv. er wordt één item toegevoegd), hoeft Angular dankzij track alleen dat specifieke
-DOM-element aan te maken, in plaats van de volledige lijst opnieuw te vernietigen en op te
-bouwen.
-
-```ts
-	@for (item of producten(); track item.id) {
-	<li>{{ item.naam }}</li>
-	}
-```
-
-199. Wat doet NgZone.runOutsideAngular() en wanneer zet je dit in?
-
-Sommige asynchrone taken (zoals intensieve animaties met requestAnimationFrame,
-herhaalde setInterval tellers, of realtime muisbewegingen) triggeren continu
-veranderingsdetectie. Door deze code buiten de Angular-zone uit te voeren, voorkom je dat de app
-constant de UI probeert te herberekenen.
-
-```ts
-	export class AnimatieComponent {
-	private zone = inject(NgZone);
-	startZwareAnimatie() {
-	this.zone.runOutsideAngular(() => {
-	// Dit draait in de achtergrond zonder Angular's
-	veranderingsdetectie te belasten
-	window.addEventListener('mousemove',
-	this.berekenPositie);
-	});
-	}
-	}
-```
-
-200. Hoe elimineer je Zone.js volledig voor maximale performance (Zoneless
-
-Angular)?
-Je kunt Angular volledig 'Zoneless' draaien. Dit voorkomt dat applicatie-brede controles
-plaatsvinden en dwingt Angular om alleen de HTML bij te werken die daadwerkelijk gekoppeld is
-aan gewijzigde Signals. Je configureert dit in app.config.ts. Hierna kun je Zone.js uit je
-angular.json polyfills verwijderen.
-
-```ts
-	// app.config.ts
-	export const appConfig: ApplicationConfig = {
-	providers: [
-	provideExperimentalZonelessChangeDetection() // Activeert
-	de ultrasnelle Zoneless-modus
-	]
-	};
-	SSR, Hydration en PWA (221-240)
-```
+### SSR, Hydration en PWA (221-240)
 
 221. Wat is Server-Side Rendering (SSR) in Angular?
 
