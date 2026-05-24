@@ -2849,21 +2849,29 @@ Als een component tijdens het server-side renderen een API-call doet om data op 
 diezelfde component bij aankomst in de browser die API-call normaal gesproken nóg een keer
 uitvoeren. TransferState lost dit op: het cachet de data die op de server is opgehaald en sluit
 dit als een JSON-string achteraan de HTML aan. In de browser leest de HttpClient deze cache
-direct uit, wat een dubbele API-call bespaart. 229. Wat is een Progressive Web App (PWA)?
+direct uit, wat een dubbele API-call bespaart.
+
+229. Wat is een Progressive Web App (PWA)?
 
 Een PWA is een webapplicatie die gebruikmaakt van moderne browsertechnologieën om gebruikers
 een app-achtige ervaring te bieden. Een PWA kan op het startscherm van een telefoon worden
 geïnstalleerd, werkt offline, ondersteunt push-notificaties en laadt dankzij slimme caching
-onmiddellijk op. 230. Wat is de rol van een Service Worker in een PWA?
+onmiddellijk op.
+
+230. Wat is de rol van een Service Worker in een PWA?
 
 Een Service Worker is een JavaScript-bestand dat op de achtergrond in de browser draait, los van de
 webpagina zelf. Het fungeert als een netwerk-proxy: het kan uitgaande netwerkverzoeken
 onderscheppen en besluiten om bestanden direct vanuit een lokale cache te serveren, waardoor de
-applicatie volledig offline kan functioneren. 231. Hoe voeg je PWA-functionaliteit toe aan Angular?
+applicatie volledig offline kan functioneren.
+
+231.  Hoe voeg je PWA-functionaliteit toe aan Angular?
 
 Dit voeg je eenvoudig toe via de CLI: ng add @angular/pwa. Dit commando genereert
 automatisch een configuratiebestand (ngsw-config.json), voegt de benodigde iconen toe en
-registreert de Angular Service Worker in je app.config.ts. 232. Hoe werkt het ngsw-config.json configuratiebestand?
+registreert de Angular Service Worker in je app.config.ts.
+
+232.  Hoe werkt het ngsw-config.json configuratiebestand?
 
 In dit bestand bepaal je de caching-strategieën van de Angular Service Worker. Je deelt resources op
 in groepen:
@@ -2905,19 +2913,25 @@ nieuwe versie klaarstaat om geactiveerd te worden.
 Dit JSON-bestand vertelt de browser hoe de PWA zich moet gedragen wanneer deze geïnstalleerd
 wordt op een mobiel apparaat of desktop. Het bevat cruciale metadata zoals de naam van de app, de
 achtergrondkleur, de start-URL en de paden naar de icoonbestanden die gebruikt moeten worden op
-het startscherm. 235. Hoe test je of de Service Worker correct functioneert tijdens lokale
+het startscherm.
+
+235. Hoe test je of de Service Worker correct functioneert tijdens lokale
 
 ontwikkeling?
 De Angular Service Worker is standaard uitgeschakeld tijdens het draaien van ng serve om te
 voorkomen dat je constant tegen gecachte code aanloopt tijdens het programmeren. Om de PWA
 lokaal te testen, moet je een productie-build maken (ng build) en de resulterende dist map
-serveren met een losse HTTP-server (zoals de npm package http-server). 236. Wat is 'App Shell' architectuur?
+serveren met een losse HTTP-server (zoals de npm package http-server).
+
+236. Wat is 'App Shell' architectuur?
 
 De App Shell is de minimale HTML, CSS en JavaScript die nodig is om de vaste
 gebruikersinterface (zoals de navigatiebalk, de header en de zijbalk) van een pagina direct te tonen.
 Tijdens een server-build kan Angular deze App Shell vooraf renderen in de index.html.
 Hierdoor krijgt de gebruiker direct de visuele lay-out te zien, terwijl de specifieke paginacontent er
-vlak daarna in wordt geladen. 237. Welke invloed heeft SSR op Web Vitals zoals TTFB, FCP en INP?
+vlak daarna in wordt geladen.
+
+237.  Welke invloed heeft SSR op Web Vitals zoals TTFB, FCP en INP?
 
 - TTFB (Time to First Byte): Kan iets omhoog gaan, omdat de server tijd nodig heeft om de
   HTML op te bouwen.
@@ -2967,12 +2981,17 @@ Server Context is een ingebouwde configuratie waarmee de applicatie weet via wel
 server-engine of build-tool hij op dat moment gerenderd wordt (bijvoorbeeld of de app draait via
 een Express-server of een pre-rendering script). Dit helpt Angular om interne optimalisaties toe te
 passen voor het specifieke runtime-platform.
-Micro Frontends en Monorepos (241-260) 241. Wat is een Monorepo?
+
+### Micro Frontends en Monorepos (241-260)
+
+241. Wat is een Monorepo?
 
 Een Monorepo is een software-architectuur waarbij meerdere softwareprojecten (zoals
 verschillende Angular-applicaties, gedeelde bibliotheken en backend-services) in één enkele git-
 repository worden beheerd. Het vergemakkelijkt code-sharing, zorgt voor eenduidige tooling en
-stroomlijnt grote refactoring-trajecten. 242. Wat is Nx en waarom is het de industriestandaard voor Angular
+stroomlijnt grote refactoring-trajecten.
+
+242.  Wat is Nx en waarom is het de industriestandaard voor Angular
 
 Monorepos?
 Nx is een geavanceerd build-systeem dat specifiek is ontworpen voor het beheren van monorepos.
@@ -2997,13 +3016,17 @@ Het biedt krachtige tools die de nadelen van een grote repository wegnemen, zoal
 Micro Frontends is een architectuurpatroon waarbij een grote, complexe webapplicatie wordt
 opgeknipt in onafhankelijke, kleine sub-applicaties die autonoom door verschillende teams
 gebouwd, getest en gedeployed kunnen worden. Deze sub-apps worden runtime samengevoegd in
-een centrale 'Host' applicatie. 245. Wat is Module Federation?
+een centrale 'Host' applicatie.
+
+245.  Wat is Module Federation?
 
 Module Federation is een technologie (geïntroduceerd in Webpack 5 en nu breed ondersteund in
 moderne bundlers zoals Vite/Rspack via Module Federation v2) die Micro Frontends technisch
 mogelijk maakt. Het stelt een JavaScript-applicatie in staat om runtime dynamisch code (zoals
 Angular componenten) in te laden vanuit een compleet andere applicatie die op een heel andere
-server of URL draait, zonder compile-time afhankelijkheden. 246. Wat is het verschil tussen een 'Host' en een 'Remote' in Module Federation?
+server of URL draait, zonder compile-time afhankelijkheden.
+
+246. Wat is het verschil tussen een 'Host' en een 'Remote' in Module Federation?
 
 - Host (Shell): De hoofdapplicatie die de basislay-out (zoals het hoofdmenu) verzorgt en
   verantwoordelijk is voor het runtime inladen van de sub-applicaties.
@@ -3036,17 +3059,23 @@ Module Federation?
 Als zowel de Host als de Remote gebruikmaken van @angular/core, wil je niet dat de
 browser deze zware bibliotheek twee keer moet downloaden. In de Module Federation configuratie
 definieer je deze pakketten als shared. De browser downloadt de bibliotheek dan één keer, en
-deelt de actieve instantie runtime tussen alle Micro Frontends. 249. Wat is het risico van 'Version Mismatch' bij gedeelde bibliotheken?
+deelt de actieve instantie runtime tussen alle Micro Frontends.
+
+249.  Wat is het risico van 'Version Mismatch' bij gedeelde bibliotheken?
 
 Als de Host applicatie draait op Angular v18 en een Remote applicatie op Angular v19, kan het
 runtime delen van @angular/core leiden tot onvoorspelbare crashes door API-verschillen. Het
 is een best-practice om binnen een Micro Frontend ecosysteem de core-frameworks strak op
-dezelfde versie te houden (wat een monorepo-aanpak extra waardevol maakt). 250. Hoe isoleer je CSS/Styles tussen verschillende Micro Frontends?
+dezelfde versie te houden (wat een monorepo-aanpak extra waardevol maakt).
+
+250. Hoe isoleer je CSS/Styles tussen verschillende Micro Frontends?
 
 Omdat Micro Frontends runtime in dezelfde DOM worden samengevoegd, kunnen globale CSS-
 regels van een Remote de stijl van de Host verruineren. In Angular los je dit op door consequent
 gebruik te maken van de standaard ViewEncapsulation.Emulated (of ShadowDom)
-op componentniveau, waardoor CSS-regels strikt binnen de component-scoping blijven. 251. Hoe communiceer je veilig tussen de Host en een Remote applicatie?
+op componentniveau, waardoor CSS-regels strikt binnen de component-scoping blijven.
+
+251.  Hoe communiceer je veilig tussen de Host en een Remote applicatie?
 
 Communicatie moet losgekoppeld (loosely coupled) plaatsvinden. Vermijd directe imports van
 elkaars services. Veilige communicatiemethoden zijn:
@@ -3075,7 +3104,9 @@ type:ui, type:feature). Vervolgens dwing je via ESLint-regels restricties af:
 
 De Shell is een ander woord voor de Host applicatie. Het is het skelet van de website. De Shell
 regelt meestal de authenticatie (inloggen), de globale navigatiebalk, het laden van de juiste
-taalbestanden (i18n) en het routeren naar de juiste standalone Remote modules. 254. Wat zijn de nadelen van een Micro Frontend architectuur?
+taalbestanden (i18n) en het routeren naar de juiste standalone Remote modules.
+
+254.  Wat zijn de nadelen van een Micro Frontend architectuur?
 
 Hoewel het uitstekend schaalt voor grote teams, brengt het significante nadelen met zich mee:
 
@@ -3102,30 +3133,41 @@ Frontends?
 Nx Cloud breidt de lokale computation cache van Nx uit naar een centrale cloud-omgeving. Dit
 betekent dat als Developer A lokaal een build heeft gedraaid, de CI/CD pipeline (of Developer B)
 die exacte build-resultaten direct uit de cloud kan trekken zonder de code zelf te compileren. Dit
-verkort test- en buildtijden in pipelines vaak met 70-80%. 257. Hoe werkt onafhankelijke deployment (Independent Deployment) bij Micro
+verkort test- en buildtijden in pipelines vaak met 70-80%.
+
+257.  Hoe werkt onafhankelijke deployment (Independent Deployment) bij Micro
 
 Frontends?
 Dankzij Module Federation kan een team dat verantwoordelijk is voor een Remote (bijv. de 'profiel-
 pagina') een bugfix live zetten door alleen de code van hun eigen Remote te builden en te uploaden
 naar hun server. De Host applicatie pikt bij de volgende pagina-refresh automatisch de nieuwste
-code op van die URL, zonder dat de Host zelf opnieuw gedeployed hoeft te worden. 258. Wat is een 'Polyglot' Micro Frontend en ondersteunt Angular dit?
+code op van die URL, zonder dat de Host zelf opnieuw gedeployed hoeft te worden.
+
+258.  Wat is een 'Polyglot' Micro Frontend en ondersteunt Angular dit?
 
 Een Polyglot Micro Frontend houdt in dat de Host in Angular is gebouwd, maar een Remote in
 React of Vue is geschreven. Hoewel Module Federation dit technisch toestaat (het laadt immers
 gewoon JavaScript in), is dit binnen Angular-apps complex vanwege de manier waarop Angular's
 compiler en runtime lifecycle werken. Het is sterk aan te raden om binnen één Micro Frontend
-ecosysteem vast te houden aan hetzelfde basisframework. 259. Wat is de taak van een 'Remote Entry' bestand?
+ecosysteem vast te houden aan hetzelfde basisframework.
+
+259.  Wat is de taak van een 'Remote Entry' bestand?
 
 Het remoteEntry.js bestand is het controlecentrum van een Remote applicatie. Het is een
 piepklein JavaScript-bestand dat door Module Federation wordt gegenereerd. Het bevat een
 catalogus (mapping) van alle componenten die deze specifieke Remote exposeert en vertelt de Host
-exact welke specifieke code-chunks hij moet downloaden als er om een module wordt gevraagd. 260. Hoe ga je om met State Management over meerdere Micro Frontends heen?
+exact welke specifieke code-chunks hij moet downloaden als er om een module wordt gevraagd.
+
+260.  Hoe ga je om met State Management over meerdere Micro Frontends heen?
 
 Houd state strikt lokaal binnen de Micro Frontend zelf. Een Micro Frontend moet functioneren als
 een onafhankelijk micro-organisme. Als er echt globale state gedeeld moet worden (zoals de actieve
 gebruikerssessie), sluis deze data dan bij het opstarten vanuit de Shell door naar de Remote via
 parameters of een gecontroleerd, gedeeld window-event kanaal.
-Signals en Moderne Reactiviteit (261-280) 261. Wat is het fundamentele verschil in reactiviteit tussen RxJS en Angular
+
+### Signals en Moderne Reactiviteit (261-280)
+
+261.  Wat is het fundamentele verschil in reactiviteit tussen RxJS en Angular
 
 Signals?
 
@@ -3143,13 +3185,17 @@ RxJS is fantastisch voor complexe asynchrone stromen, maar overdreven complex vo
 simpelweg bijhouden van een boolean (zoals isOpen = true). Daarnaast heeft RxJS geen
 weet van de Angular DOM-rendering: een gewijzigde RxJS stream dwingt Zone.js nog steeds om
 de hele app-componentenboom te scannen. Signals bieden een eenvoudigere syntax voor state en
-maken rendementsoptimaliseringen (zoals Zoneless change detection) mogelijk. 263. Wat is de betekenis van 'Glitch-Free Execution' bij Signals?
+maken rendementsoptimaliseringen (zoals Zoneless change detection) mogelijk.
+
+263.  Wat is de betekenis van 'Glitch-Free Execution' bij Signals?
 
 In RxJS kun je te maken krijgen met een 'glitch': een tijdelijke inconsistente status waarbij een
 afgeleide waarde onnodig twee keer berekent wordt omdat twee afhankelijke stromen net na elkaar
 updaten (het diamant-probleem). Signals lossen dit native op. Omdat computed signals hun
 berekening pas asynchroon uitstellen tot het meetmoment (lazy pull), bestaat er nooit een tijdelijke,
-foutieve tussenstatus. 264. Hoe werkt de Equality Evaluation functie in een Signal?
+foutieve tussenstatus.
+
+264.  Hoe werkt de Equality Evaluation functie in een Signal?
 
 Bij het aanmaken van een signal() kun je een aangepaste equal vergelijkingsfunctie
 meegeven. Hiermee bepaal je zelf wanneer Angular een nieuwe waarde als 'gewijzigd' moet
@@ -3174,9 +3220,10 @@ mijnSignal().push(item)), verander je weliswaar de data in het geheugen, maar de
 referentie van het object blijft exact gelijk. Omdat Angular controleert op referentiegelijkheid, krijgt
 het framework de wijziging niet mee. De UI zal dus niet verversen. Werk daarom altijd
 onveranderbaar (immutable): mijnSignal.update(lijst => [...lijst,
-item]). 266. Waarom kun je een computed signal niet handmatig beschrijven
+item]).
 
-met .set()?
+266.  Waarom kun je een computed signal niet handmatig beschrijven met .set()?
+
 Een computed signal is inherent read-only. De waarde is een directe, wiskundige afgeleide van
 andere onderliggende signals. Als je de waarde handmatig zou kunnen overschrijven, verbreek je de
 reactieve keten en is de data niet langer gegarandeerd synchroon met de bronstromen. 267. Kun je een Signal uitlezen binnen een reguliere JavaScript setTimeout?
@@ -3184,9 +3231,10 @@ reactieve keten en is de data niet langer gegarandeerd synchroon met de bronstro
 Ja. Een signal kan overal ter wereld worden uitgelezen door simpelweg de functie aan te roepen
 (bijv. status()). Let wel op: als je dit binnen een setTimeout doet, bevind je je niet in een
 reactieve context (zoals een computed of effect), dus er zal geen automatische dependency
-tracking plaatsvinden voor die setTimeout-omgeving. 268. Hoe gebruik je output() en outputFromObservable() in
+tracking plaatsvinden voor die setTimeout-omgeving.
 
-moderne componenten?
+268. Hoe gebruik je output() en outputFromObservable() in moderne componenten?
+
 De oude @Output() en EventEmitter decorators zijn vervangen door de gestroomlijnde
 output() API. Als je een bestaande RxJS stream als output wilt aanbieden, gebruik je
 outputFromObservable().
@@ -3207,9 +3255,10 @@ Standaard verbiedt Angular het schrijven (muteren) van signals binnen een effect
 architectonische bescherming om oneindige lussen (infinite loops) te voorkomen. Je kunt dit
 forceren via { allowSignalWrites: true } in de configuratie, maar dit duidt in 99%
 van de gevallen op een slecht software-ontwerp. Gebruik in plaats daarvan liever een computed
-signal. 270. Hoe werkt dynamic dependency tracking bij conditionele logica in een
+signal.
 
-computed signal?
+270. Hoe werkt dynamic dependency tracking bij conditionele logica in een computed signal?
+
 Angular hercalculeert de afhankelijkheden van een computed of effect dynamisch bij elke
 uitvoering. Als je conditionele logica (if/else) gebruikt, luistert Angular alleen naar de signals
 die op dat moment daadwerkelijk door de code-route zijn geraakt.
@@ -3263,9 +3312,9 @@ te voorkomen?
 Nee. computed signals maken gebruik van zwakke referenties (weak references) naar hun
 onderliggende afhankelijkheden. Zodra de component die het computed signal gebruikt uit de
 DOM wordt verwijderd en vernietigd, wordt het signal automatisch opgeruimd door de garbage
-collector van de browser. 274. Wat is het verschil in uitvoeringstijd tussen een effect en een
+collector van de browser.
 
-RxJS .subscribe()?
+274. Wat is het verschil in uitvoeringstijd tussen een effect en een RxJS .subscribe()?
 
 - RxJS .subscribe(): Vuurt in de regel direct (synchroon) zodra de .next()
   methode op de stream wordt aangeroepen.
@@ -3279,12 +3328,16 @@ RxJS streams combineren moeizaam met async/await omdat Observables over tijd mee
 waarden kunnen uitstoten, terwijl Promises (waar async/await op leunt) eenmalig zijn. Signals
 daarentegen bevatten altijd direct een synchrone, actuele waarde. Je kunt een signal dus
 probleemloos en direct uitlezen in elke asynchrone async/await functie zonder te hoeven
-stoeien met .toPromise() conversies. 276. Hoe ga je om met fouten (Error Handling) binnen een computed signal?
+stoeien met .toPromise() conversies.
+
+276.  Hoe ga je om met fouten (Error Handling) binnen een computed signal?
 
 Als er een runtime-fout optreedt binnen een computed signal (bijv. je probeert een property te
 lezen van een undefined object), zal het signal die fout cachen. Telkens als iemand de waarde
 van het signal probeert op te vragen, zal het signal die exacte fout opnieuw opwerpen (throw). Je
-vangt dit op met een reguliere try/catch om het signal heen. 277. Kun je Signals gebruiken in Angular Directives?
+vangt dit op met een reguliere try/catch om het signal heen.
+
+277.  Kun je Signals gebruiken in Angular Directives?
 
 Ja, absoluut. Signals werken exact hetzelfde in @Directive als in @Component. Je kunt
 signal-inputs, model-inputs en effects definiëren binnen een directive om gedrag in de DOM
@@ -3293,7 +3346,9 @@ fijnmazig aan te sturen op basis van reactieve staat. 278. Hoe beïnvloeden Sign
 Signals maken services een stuk overzichtelijker. Waar je vroeger een complexe combinatie nodig
 had van een private BehaviorSubject en een publieke .asObservable(), gebruik je nu
 simpelweg een private signal() en een publieke .asReadonly() variant. De code krimpt
-met de helft en is direct synchroon leesbaar. 279. Wat is het 'Push-Pull' model van Angular Signals?
+met de helft en is direct synchroon leesbaar.
+
+279.  Wat is het 'Push-Pull' model van Angular Signals?
 
 Signals werken via een gecombineerd Push-Pull mechanisme:
 
@@ -3310,32 +3365,39 @@ Nee. RxJS blijft een onmisbaar en krachtig onderdeel van Angular voor alles wat 
 met complexe asynchrone stromen, timing en events (zoals websockets, event-streams, API-
 foutafhandeling met retries, of geavanceerd debouncing). De vuistregel is: Signals voor toestand
 (State), RxJS voor stromen (Asynchrone Events).
-Deployment en DevOps (281-300) 281. Wat is het doel van de ng build opdracht?
+
+### Deployment en DevOps (281-300)
+
+281.  Wat is het doel van de ng build opdracht?
 
 De ng build opdracht compileert de Angular TypeScript- en HTML-code naar sterk
 geoptimaliseerde, geminificeerde en gecachte JavaScript- en CSS-bestanden (statische assets). Deze
 bestanden worden geplaatst in de dist/ map en zijn klaar om geserveerd te worden door een
-webserver. 282. Wat is Ahead-of-Time (AOT) compilatie en waarom is het de standaard
+webserver.
+
+282.  Wat is Ahead-of-Time (AOT) compilatie en waarom is het de standaard
 
 voor productie?
 AOT-compilatie betekent dat de Angular-compiler de templates en componenten vertaalt naar
 efficiënte JavaScript-code tijdens het build-proces op je machine of CI/CD pipeline. Dit verschilt
 van Just-in-Time (JIT) compilatie, waarbij de browser dit runtime pas doet. AOT zorgt voor een
 veel snellere opstarttijd in de browser en voorkomt dat de zware Angular-compiler mee gedownload
-moet worden naar de client. 283. Wat is de betekenis van 'Cache Busting' in Angular builds?
+moet worden naar de client.
+
+283. Wat is de betekenis van 'Cache Busting' in Angular builds?
 
 Wanneer je een productie-build draait, voegt Angular een unieke cryptografische hash toe aan de
 bestandsnamen (bijv. main.a8b3cd62.js). Dit heet Cache Busting. Het zorgt ervoor dat als je
 een nieuwe release uitrolt, de browser van de eindgebruiker direct herkent dat de bestandsnaam is
 veranderd en dwingt hem om het nieuwste bestand te downloaden in plaats van een oude, lokale
-cache te gebruiken. 284. Hoe configureer je omgevingsvariabelen (Environment Variables) in
+cache te gebruiken.
 
-moderne Angular-apps?
-In moderne Angular-apps is de environments/ map niet meer standaard aanwezig om builds
-clean te houden. Je activeert dit eenvoudig via de CLI: ng g environments. Dit maakt een
-environment.ts (voor dev) en environment.development.ts aan. Tijdens een
-productie-build vervangt de Angular-compiler de bestanden automatisch op basis van de
-configuratie in je angular.json.
+284. Hoe configureer je omgevingsvariabelen (Environment Variables) in moderne Angular-apps?
+     In moderne Angular-apps is de environments/ map niet meer standaard aanwezig om builds
+     clean te houden. Je activeert dit eenvoudig via de CLI: ng g environments. Dit maakt een
+     environment.ts (voor dev) en environment.development.ts aan. Tijdens een
+     productie-build vervangt de Angular-compiler de bestanden automatisch op basis van de
+     configuratie in je angular.json.
 
 ```ts
 // environment.ts (Productie)
@@ -3350,7 +3412,9 @@ export const environment = {
 De angular.json is het centrale configuratie-hoofdkwartier van de Angular CLI. Hier
 definieer je hoe projecten gebouwd moeten worden, welke polyfills ingeladen worden, welke
 styling-preprocessors (SASS/LESS) actief zijn, en stel je specifieke build-budgetten en omgevings-
-vervangingen (file replacements) in per build-configuratie (dev, staging, productie). 286. Wat zijn Build Budgets en hoe beschermen ze je applicatieomvang?
+vervangingen (file replacements) in per build-configuratie (dev, staging, productie).
+
+286.  Wat zijn Build Budgets en hoe beschermen ze je applicatieomvang?
 
 Build Budgets zijn drempelwaarden die je instelt in angular.json. Hiermee geef je aan hoe
 groot de JavaScript- en CSS-bundels maximaal mogen worden. Als een ontwikkelaar per ongeluk
@@ -3405,20 +3469,25 @@ RUN npm ci && npm run build --configuration=production
 FROM nginx:alpine
 COPY --from=build /app/dist/mijn-app/browser /usr/share/
 nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf 289. Wat is CI/CD en wat doet het voor een Angular project?
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+289. Wat is CI/CD en wat doet het voor een Angular project?
 
 CI/CD (Continuous Integration / Continuous Deployment) is een geautomatiseerd proces (bijv. via
 GitHub Actions, GitLab CI of Azure DevOps). Bij elke commit of pull request voert de pipeline
 automatisch de linters uit (npm run lint), draait de unit-tests (npm run test), bouwt de
 applicatie (npm run build) en uploadt de bestanden bij succes direct naar de cloud of hosting-
-provider. 290. Wat is de rol van Source Maps (--source-maps) bij foutopsporing in
+provider.
 
-productie?
+290. Wat is de rol van Source Maps (--source-maps) bij foutopsporing in productie?
+
 Source Maps koppelen de gecomprimeerde, onleesbare productie-JavaScript code terug naar je
 originele TypeScript-bestanden. Standaard staan ze uit in productie om code-diefstal en extra
 bundelomvang te voorkomen. Als je onduidelijke foutmeldingen uit productie krijgt (bijv. via
 foutrapportage-tools zoals Sentry), kun je source maps uploaden naar die tools om fouten exact te
-herleiden naar de juiste regel TypeScript-code. 291. Hoe optimaliseer je npm installatietijden in CI/CD pipelines?
+herleiden naar de juiste regel TypeScript-code.
+
+291. Hoe optimaliseer je npm installatietijden in CI/CD pipelines?
 
 Gebruik in pipelines altijd npm ci (Clean Install) in plaats van npm install. De npm ci
 opdracht negeert aanpassingen, kijkt strikt naar de package-lock.json en installeert de
@@ -3428,37 +3497,44 @@ dat de pipeline exact dezelfde pakketversies gebruikt als de ontwikkelaar lokaal
 Tree Shaking is een optimalisatiestap waarbij de bundler (zoals Esbuild) de code analyseert en alle
 ongebruikte functies, klassen of dode code uit de uiteindelijke JavaScript-bestanden sloopt ("als je
 schudt aan een boom, vallen de dode bladeren eraf"). Grote bibliotheken (zoals Lodash of RxJS)
-worden hierdoor alleen voor die specifieke functies meegenomen die je daadwerkelijk gebruikt. 293. Hoe ga je om met CORS-problemen (Cross-Origin Resource Sharing) na
+worden hierdoor alleen voor die specifieke functies meegenomen die je daadwerkelijk gebruikt.
 
-deployment?
+293.  Hoe ga je om met CORS-problemen (Cross-Origin Resource Sharing) na deployment?
+
 CORS is een browser-beveiliging. Als je Angular-app op [https://app.nl](https://
 app.nl) draait en data opvraagt bij [https://api.nl](https://api.nl),
 blokkeert de browser dit tenzij de API-server expliciet de HTTP-header Access-Control-
 Allow-Origin: [https://app.nl](https://app.nl) meestuurt in zijn
 antwoord. Je lost CORS-problemen dus op door de backend-server correct te configureren, niet de
-Angular-client. 294. Wat is het voordeel van het hosten van een Angular app op een Content
+Angular-client.
 
-Delivery Network (CDN)?
+294. Wat is het voordeel van het hosten van een Angular app op een Content Delivery Network (CDN)?
+
 Omdat een gebouwde Angular-app volledig bestaat uit statische bestanden (HTML, JS, CSS), leent
 het zich perfect voor een CDN (zoals Cloudflare, AWS CloudFront of Netlify). Een CDN kopieert
 je bestanden naar honderden servers wereldwijd. Als een gebruiker in Tokio je site opvraagt, krijgt
 hij de bestanden direct geserveerd vanaf een server in Tokio in plaats van een server in Amsterdam.
-Dit verlaagt de laadtijd (latency) gigantisch. 295. Wat is compression (Gzip / Brotli) en waarom is het cruciaal voor DevOps?
+Dit verlaagt de laadtijd (latency) gigantisch.
+
+295. Wat is compression (Gzip / Brotli) en waarom is het cruciaal voor DevOps?
 
 JavaScript- en CSS-bestanden zijn tekstbestanden en kunnen extreem efficiënt worden
 gecomprimeerd (ingepakt). Door je webserver (Nginx/Apache) zo in te stellen dat deze bestanden
 serveert met Brotli of Gzip compressie, verklein je de overgedragen bestandsgrootte over het
 netwerk met wel 70%. Dit resulteert in een flitsende laadtijd op mobiele netwerken en bespaart
-bakken met bandbreedtekosten. 296. Hoe ga je om met runtime configuraties die pas na de build bekend zijn?
+bakken met bandbreedtekosten.
+
+296. Hoe ga je om met runtime configuraties die pas na de build bekend zijn?
 
 Soms wil je dezelfde Angular-build deployen naar Staging én Productie, waarbij alleen de API-URL
 verschilt. Omdat environment.ts hardcoded wordt meegecompileerd, werkt dat hiervoor
 niet. De oplossing is om een config.json bestand in de assets/ map te zetten. Je laat
 Angular dit bestand runtime inladen via de APP_INITIALIZER (zie vraag 136). Tijdens
 deployment kan je DevOps-pipeline die config.json eenvoudig per server overschrijven met
-de juiste variabelen. 297. Wat is Semantic Versioning (SemVer) en hoe pas je dit toe op Angular
+de juiste variabelen.
 
-projecten?
+297. Wat is Semantic Versioning (SemVer) en hoe pas je dit toe op Angular projecten?
+
 SemVer is het versienummerings-systeem opgebouwd als MAJOR.MINOR.PATCH (bijv.
 17.2.1):
 
@@ -3473,7 +3549,9 @@ De ng update opdracht is een van Angular's meest krachtige tools. Het kijkt naar
 frameworkversies en update niet alleen de regels in je package.json, maar voert ook
 automatische code-migraties (schematics) uit. Als een bepaalde methode in de nieuwste Angular-
 versie is hernoemd, herschrijft ng update automatisch jouw TypeScript-code door het hele
-project om aan de nieuwe standaarden te voldoen. 299. Hoe monitor je fouten (Error Logging) van een gedeleployde Angular app?
+project om aan de nieuwe standaarden te voldoen.
+
+299. Hoe monitor je fouten (Error Logging) van een gedeleployde Angular app?
 
 Omdat Angular in de browser van de gebruiker draait, zie je server-side geen foutmeldingen
 voorbijkomen in je backend-logs als de UI crasht. Om dit te tackelen implementeer je een centrale
@@ -3491,9 +3569,8 @@ export class CentraalLogGevaarHandler implements ErrorHandler {
 }
 ```
 
-300. Wat is de betekenis van een 'Green-Blue Deployment' strategie voor een
+300. Wat is de betekenis van een 'Green-Blue Deployment' strategie voor een Angular app?
 
-Angular app?
 Bij een Blue-Green deployment draai je twee identieke productie-omgevingen: 'Blue' (de actieve
 live-omgeving met de huidige versie) en 'Green' (de nieuwe versie die klaarstaat). De DevOps-
 pipeline uploadt de nieuwe Angular-build naar de Green-omgeving en test of alles werkt. Is de
