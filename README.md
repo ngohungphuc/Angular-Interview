@@ -2811,13 +2811,17 @@ Als een gebruiker op een server-side gerenderde pagina klikt voordat de JavaScri
 volledig is ingeladen, gaan die interacties normaal gesproken verloren. Angular maakt gebruik van
 Event Dispatch: een lichtgewicht script vangt de vroege gebruikers-events (zoals clicks) op in de
 browser en bewaart deze in een wachtrij. Zodra de applicatie volledig is gehydrateerd, worden deze
-clicks alsnog correct uitgevoerd. 226. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of
+clicks alsnog correct uitgevoerd.
+
+226. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of
 
 document?
 De Node.js-serveromgeving bezit geen browser-objecten zoals window, document,
 localStorage of navigator. Als Angular code tegenkomt die deze objecten rechtstreeks
 probeert aan te spreken tijdens het renderen op de server, zal het Node-proces crashen met een
-ReferenceError. 227. Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-
+ReferenceError.
+
+227.  Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-
 
 omgeving?
 Om te voorkomen dat browser-specifieke code op de server draait, controleer je het huidige
