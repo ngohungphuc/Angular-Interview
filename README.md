@@ -2819,9 +2819,8 @@ localStorage of navigator. Als Angular code tegenkomt die deze objecten rechtstr
 probeert aan te spreken tijdens het renderen op de server, zal het Node-proces crashen met een
 ReferenceError.
 
-227.  Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-
+227.  Hoe gebruik je PLATFORM_ID om code veilig uit te voeren in een SSR-omgeving?
 
-omgeving?
 Om te voorkomen dat browser-specifieke code op de server draait, controleer je het huidige
 platform met de functies isPlatformBrowser of isPlatformServer.
 
