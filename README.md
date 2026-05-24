@@ -2812,9 +2812,8 @@ Event Dispatch: een lichtgewicht script vangt de vroege gebruikers-events (zoals
 browser en bewaart deze in een wachtrij. Zodra de applicatie volledig is gehydrateerd, worden deze
 clicks alsnog correct uitgevoerd.
 
-226. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of
+226. Waarom crasht een SSR-applicatie bij het direct aanroepen van window of document?
 
-document?
 De Node.js-serveromgeving bezit geen browser-objecten zoals window, document,
 localStorage of navigator. Als Angular code tegenkomt die deze objecten rechtstreeks
 probeert aan te spreken tijdens het renderen op de server, zal het Node-proces crashen met een
