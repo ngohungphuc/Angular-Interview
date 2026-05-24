@@ -2768,7 +2768,9 @@ het belang van een solide Signal-based state management-architectuur alleen maar
 SSR is een techniek waarbij Angular de applicatie op een Node.js-server compileert en een volledig
 opgebouwde, statische HTML-pagina naar de browser van de gebruiker stuurt. Dit zorgt voor een
 razendsnelle eerste weergave (First Contentful Paint) en een sterk verbeterde SEO-indexering door
-zoekmachines. 222. Wat is het verschil tussen SSR en Prerendering (SSG)?
+zoekmachines.
+
+222. Wat is het verschil tussen SSR en Prerendering (SSG)?
 
 - SSR (Server-Side Rendering): De HTML wordt on-the-fly op de server gegenereerd op het
   exacte moment dat een gebruiker de pagina opvraagt. Ideaal voor dynamische data (zoals
