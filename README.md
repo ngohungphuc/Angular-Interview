@@ -2804,9 +2804,8 @@ automatisch in je app.config.ts:
 	};
 ```
 
-225. Wat is 'Event Dispatch' (onderdeel van Angular's geavanceerde
+225. Wat is 'Event Dispatch' (onderdeel van Angular's geavanceerde Hydration)?
 
-Hydration)?
 Als een gebruiker op een server-side gerenderde pagina klikt voordat de JavaScript in de browser
 volledig is ingeladen, gaan die interacties normaal gesproken verloren. Angular maakt gebruik van
 Event Dispatch: een lichtgewicht script vangt de vroege gebruikers-events (zoals clicks) op in de
