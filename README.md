@@ -2830,8 +2830,7 @@ import { isPlatformBrowser } from "@angular/common";
 export class OpslagComponent {
   private platformId = inject(PLATFORM_ID);
   getLocalStorageItem() {
-    // Voer dit ALLEEN uit als we daadwerkelijk in de browser
-    draaien;
+    // Voer dit ALLEEN uit als we daadwerkelijk in de browser draaien;
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem("sleutel");
     }
