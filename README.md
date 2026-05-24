@@ -2786,7 +2786,9 @@ Wanneer de server de statische HTML naar de browser stuurt, kan de gebruiker de 
 zien, maar is deze nog niet interactief (er draait nog geen JavaScript). Hydration is het proces
 waarbij Angular in de browser de statische HTML-structuur hergebruikt, de interne
 applicatiestructuur (componentenboom) eraan koppelt en event-listeners activeert, zonder de pagina
-destructief opnieuw te hoeven renderen. 224. Hoe activeer je SSR en Hydration in een moderne Angular applicatie?
+destructief opnieuw te hoeven renderen.
+
+224. Hoe activeer je SSR en Hydration in een moderne Angular applicatie?
 
 Je voegt SSR-ondersteuning toe aan je project via de Angular CLI met het commando: ng add
 @angular/ssr. Dit configureert een Node.js server (server.ts) en activeert hydration
